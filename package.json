@@ -1,9 +1,12 @@
 {
-  "name": "yuantanzhang-personal",
-  "version": "0.1.0",
+  "name": "yuantanzhang-community",
+  "version": "0.2.0",
   "private": true,
   "license": "MIT",
   "author": "元探长",
+  "homepage": "https://yuantanzhang.cn/",
+  "repository": { "type": "git", "url": "https://github.com/wyghxy/yuantanzhang-community.git" },
+  "bugs": { "url": "https://github.com/wyghxy/yuantanzhang-community/issues" },
   "packageManager": "pnpm@9.15.9",
   "engines": { "node": ">=22.23.2 <23" },
   "scripts": {

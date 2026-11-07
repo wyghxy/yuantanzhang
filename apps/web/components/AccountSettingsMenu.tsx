@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { createPortal } from 'react-dom'
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
-import { Settings2, Settings, UserRound, Sun, Moon, Monitor, Check } from 'lucide-react'
+import { Settings2, Settings, UserRound, Sun, Moon, Monitor, Check, Globe } from 'lucide-react'
 import { useSiteTheme } from './SiteTheme'
 import styles from './account-settings-menu.module.css'
 
@@ -44,6 +44,7 @@ export default function AccountSettingsMenu({ className, workspace = false }: { 
       {workspace && <><span className={styles.caption}>外观</span>{([{ value: 'light', label: '浅色', Icon: Sun }, { value: 'dark', label: '深色', Icon: Moon }, { value: 'system', label: '跟随系统', Icon: Monitor }] as const).map(({ value, label, Icon }) => <button className={styles.appearance} key={value} type="button" role="menuitemradio" aria-checked={preference === value} onClick={() => { setPreference(value); close(true) }}><Icon size={17} /><span>{label}</span><Check size={16} style={{ visibility: preference === value ? 'visible' : 'hidden', marginLeft: 'auto' }} /></button>)}<hr className={styles.divider} /></>}
       <span className={styles.caption}>个人工作台</span>
       <Link role="menuitem" href="/workspace/settings" onClick={() => close()}><UserRound size={17} />账号设置与连接</Link>
+      <a role="menuitem" href="https://yuantanzhang.cn/" target="_blank" rel="noopener noreferrer" onClick={() => close()}><Globe size={17} />元探长官网</a>
     </div>, document.body)}
   </>
 }
