@@ -8,12 +8,15 @@ pnpm lint
 pnpm test
 pnpm test:integration
 VERIFY_PERSONAL_WORKER=1 pnpm test:backend-workflows
+pnpm test:demo
 pnpm test:browser
 pnpm build
 pnpm check:release
 ```
 
-集成测试和浏览器测试需要可用的独立 PostgreSQL、Redis 与运行服务。测试环境应使用专用数据库和上传目录，不能指向日常资料或其他部署。具体变量与启动方式以对应测试脚本为准。
+集成测试和浏览器测试使用独立 SQLite 文件、上传目录与运行服务，不需要 PostgreSQL、Redis 或 Docker。测试不能指向日常资料或其他版本的数据库；具体变量与启动方式以对应测试脚本为准。
+
+Python 3 仅用于 `check:release` 开发发布检查，普通安装和运行不需要 Python。
 
 浏览器验证首次运行前执行 `pnpm exec playwright install chromium`。Linux 若缺少浏览器运行库，可使用 `pnpm exec playwright install --with-deps chromium`。已有兼容 Chromium 时可通过 `PLAYWRIGHT_CHROMIUM_EXECUTABLE` 指定其绝对路径。
 
@@ -31,6 +34,8 @@ pnpm check:release
 8. 外部网络不可用时，承诺的本地浏览、录入和编辑流程仍可完成。
 9. 未接入的外部操作明确反馈，不产生虚假的任务或结果。
 10. 演示清理只处理明确标记的演示对象，不清空个人数据库。
+11. 默认三步安装完成安全配置、SQLite 迁移、个人身份和演示初始化，不要求手工安装数据库服务。
+12. WAL 模式、本地持久任务的独立 Worker 领取、状态落库和进程重启行为。
 
 ## 界面对照
 
@@ -38,13 +43,25 @@ pnpm check:release
 
 类型、构建、API、视觉与真实外部处理各自单独记录。一个范围通过不能推导其他范围已验证。
 
+## 持续集成范围
+
+GitHub CI 配置包含两个部分：
+
+- Windows 与 macOS 原生安装冒烟检查：冻结依赖安装、首次 `pnpm run setup` 和独立 Worker 单次启动。
+- Ubuntu 24.04 验证：类型、lint、单元测试、发布扫描、生产构建，以及编译 API/Worker、`next start` 环境下的 HTTP、演示清理、后端工作流和浏览器检查。
+
+配置存在不等于工作流已经通过。本地 WSL 验证、Windows 原生验证、macOS 原生验证与远端 CI 分别记录，实际结果以对应运行回执为准。
+
 ## 发布检查
 
 - 许可文件、版权声明、第三方声明和必要字体许可证齐全。
 - 仓库只包含可发布的源码、合成案例和必要资料；不携带环境文件、真实内容、凭据、运行数据和构建缓存。
 - 新环境可按 README 安装，不依赖任何维护者的本机路径或私有服务。
+- SQLite 文件、WAL 文件和上传资料不进入发布包；旧 PostgreSQL 数据、配置和回退版本不受新版本发布影响。
 - 最终源码与实际发布包分别扫描，检查文档、测试、静态资源和源映射。
 - 检查结果绑定实际版本，并说明未通过、未执行或未覆盖的内容。
 - 发布包附带文件清单和校验值；版本说明准确描述行为与兼容性。
 
 公开发布前审阅最终文件与验证结果，不以开发过程中某次成功代替最终版本检查。
+
+0.3.0 的验证结果单独记录在 [版本验证记录](release-verification.md)。0.2.0 的 PostgreSQL/Redis 检查仅说明旧版本，不能直接推导 SQLite 版本已通过。

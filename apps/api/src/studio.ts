@@ -3,7 +3,7 @@ import { db,txt,obj,show,fail,known,singular,record,type Data,type Scope } from 
 import { create,change,list } from './records'
 import { dashboard,prefs } from './views'
 import { upload,download } from './files'
-import { jobs,localCount } from './local-jobs'
+import { jobs,localCount,cancel } from './local-jobs'
 import {handoff} from './projects'
 import {roster} from './roster'
 import {images} from './attachments'
@@ -31,6 +31,7 @@ export async function route(req:Request,res:Response,s:Scope){
     return {items:rows.slice(offset,offset+limit),total:rows.length,hasMore:offset+limit<rows.length}
   }
   if(resource==='tasks'&&method==='GET')return jobs(s,id,action,q)
+  if(resource==='tasks'&&method==='POST'&&action==='cancel')return cancel(s,id)
   if(resource==='local-word-count'&&method==='POST'&&!id)return localCount(s,body)
   if(resource==='demo'&&((method==='DELETE'&&!id)||(id==='clear'&&method==='POST'))){
     const cleared=await db.$transaction(async tx=>{await tx.workspace.update({where:{id:s.workspaceId},data:{demoInitialized:true}});return (await tx.studioRecord.deleteMany({where:{workspaceId:s.workspaceId,workspace:{ownerId:s.ownerId},sample:true}})).count});return {cleared}
@@ -56,7 +57,7 @@ export async function route(req:Request,res:Response,s:Scope){
     return {materialId:id,status:file?'ready':'unavailable',url:file?'/api/workspace/studio/assets/'+file.id+'/download':null}
   }
   if(k==='accounts'&&method==='GET'&&['top5','materials','works'].includes(action)){await record(db,s,k,id);q.set('accountId',id);const page=await list(s,action==='works'?'works':'materials',q);if(action==='top5'){const metric=q.get('metric')||'likes',ranked=page.items.filter(r=>Number.isFinite(obj(obj(r).metrics)[metric])).sort((a,b)=>Number(obj(obj(b).metrics)[metric])-Number(obj(obj(a).metrics)[metric])).slice(0,5);return {items:ranked,total:ranked.length,metric}}return {...page,[action]:page.items}}
-  if(action==='candidates'&&method==='GET'){await record(db,s,k,id);const rows=await db.studioRecord.findMany({where:{workspaceId:s.workspaceId,kind:'candidates',deletedAt:null,data:{path:['materialId'],equals:id}}});return {candidates:rows.map(show)}}
+  if(action==='candidates'&&method==='GET'){await record(db,s,k,id);const rows=await db.studioRecord.findMany({where:{workspaceId:s.workspaceId,workspace:{ownerId:s.ownerId},kind:'candidates',deletedAt:null}});return {candidates:rows.filter(row=>obj(row.data).materialId===id).map(show)}}
   if(k==='materials'&&['analysis','transcript'].includes(action)&&method==='GET'){const row=await record(db,s,k,id);return {[action]:obj(row.data)[action]||null,version:row.version,sourceMaterialId:id,sourceVersion:row.version,readOnly:false}}
   if(k==='drafts'&&action==='finalize'&&method==='POST'){const item=await db.$transaction(tx=>change(tx,s,k,id,{expectedVersion:body.expectedVersion,status:'finalized'}));return {item,draft:item}}
   if(k==='drafts'&&['handoff','handoff-preview'].includes(action)&&method==='POST')return handoff(s,id,body,action==='handoff')

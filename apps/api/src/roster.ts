@@ -30,9 +30,11 @@ export async function roster(s:Scope,id:string,op:string,method:string,b:Data,q:
    const keys=b.rowKeys;if(b.confirmed!==true||!Array.isArray(keys)||!keys.length)fail(400,'select_rows','请选择并确认要保存的行')
    const rows=Array.isArray(d.rows)?d.rows.map(obj):[];if(keys.some(k=>!rows.some(x=>x.key===k&&x.status!=='failure')))fail(400,'invalid_rows','选择中包含无效行')
    const results:Data[]=[]
-   for(const row of rows.filter(x=>keys.includes(x.key))){const a=obj(row.account),existing=await tx.studioRecord.findFirst({where:{workspaceId:s.workspaceId,kind:'accounts',deletedAt:null,data:{path:['url'],equals:txt(a.url)}}})
-     if(existing){results.push({rowKey:row.key,status:'duplicate',accountId:existing.id});continue}
-     const account=await create(tx,s,'accounts',{...a,...obj(d.defaults)});results.push({rowKey:row.key,status:'success',accountId:account.id})
+   const accounts=await tx.studioRecord.findMany({where:{workspaceId:s.workspaceId,workspace:{ownerId:s.ownerId},kind:'accounts',deletedAt:null},select:{id:true,data:true}})
+   const byUrl=new Map(accounts.map(account=>[txt(obj(account.data).url),account.id]))
+   for(const row of rows.filter(x=>keys.includes(x.key))){const a=obj(row.account),existing=byUrl.get(txt(a.url))
+     if(existing){results.push({rowKey:row.key,status:'duplicate',accountId:existing});continue}
+     const account=await create(tx,s,'accounts',{...a,...obj(d.defaults)});byUrl.set(txt(a.url),account.id);results.push({rowKey:row.key,status:'success',accountId:account.id})
    }
    const changed=await tx.studioRecord.updateMany({where:{id:r.id,workspaceId:s.workspaceId,version:r.version},data:{version:{increment:1},data:json({...d,rowKeys:keys,results,status:'completed',canRetry:false})}});if(!changed.count)conflict()
    return {preview:publicPreview(await record(tx,s,'roster_imports',id))}

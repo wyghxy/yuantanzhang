@@ -33,6 +33,6 @@ export async function profile(s:Scope,b?:Data){
  if(Number(b.expectedVersion)!==(current?.version||0))conflict()
  const data={...defaults,...obj(current?.data)};for(const key of Object.keys(defaults) as (keyof typeof defaults)[])if(key in b)data[key]=txt(b[key]).slice(0,20000)
  if(current){const changed=await db.studioRecord.updateMany({where:{id,...scopeWhere(s),version:current.version},data:{version:{increment:1},data:json(data)}});if(!changed.count)conflict()}
- else {const created=await db.studioRecord.createMany({data:[{id,workspaceId:s.workspaceId,kind:'profile',data:json(data)}],skipDuplicates:true});if(!created.count)conflict()}
+ else {try{await db.studioRecord.create({data:{id,workspaceId:s.workspaceId,kind:'profile',data:json(data)}})}catch(error){if(obj(error).code==='P2002')conflict();throw error}}
  return {...data,version:(current?.version||0)+1}
 }

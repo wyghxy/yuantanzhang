@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SKIP = {'.git', 'node_modules', '.next', '.next-build', 'dist', 'data', 'test-results', 'playwright-report'}
-TEXT = {'.ts', '.tsx', '.js', '.mjs', '.json', '.css', '.html', '.md', '.yml', '.yaml', '.prisma', '.sql', '.py', '.txt', '.svg'}
+TEXT = {'.ts', '.tsx', '.cts', '.mts', '.js', '.mjs', '.cjs', '.json', '.css', '.html', '.md', '.yml', '.yaml', '.prisma', '.sql', '.py', '.txt', '.svg'}
 errors: list[str] = []
 files = 0
 for path in sorted(ROOT.rglob('*')):
@@ -23,10 +23,12 @@ for path in sorted(ROOT.rglob('*')):
         # Local configuration is excluded from source archives by the packager.
         continue
     files += 1
+    if path.name.endswith(('.db', '.sqlite', '.sqlite3', '-wal', '-shm', '-journal')):
+        errors.append(f'local database artifact outside data directory: {relative}')
     if path.suffix not in TEXT and path.name not in {'LICENSE', '.gitignore'}:
         continue
     content = path.read_text(encoding='utf-8')
-    if path.suffix in {'.ts', '.tsx', '.js', '.mjs', '.css', '.py', '.prisma'} and len(content.splitlines()) > 900:
+    if path.suffix in {'.ts', '.tsx', '.cts', '.mts', '.js', '.mjs', '.cjs', '.css', '.py', '.prisma'} and len(content.splitlines()) > 900:
         errors.append(f'source exceeds 900 lines: {relative}')
     if re.search(r'-----BEGIN (?:RSA |OPENSSH |EC )?PRIVATE KEY-----', content):
         errors.append(f'private key marker: {relative}')

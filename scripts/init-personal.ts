@@ -1,8 +1,9 @@
 import 'dotenv/config'
-import { PrismaClient } from '@prisma/client'
+import {personalDatabase,configureSqlite} from '../prisma/sqlite-runtime.cjs'
 import bcrypt from 'bcryptjs'
-const db = new PrismaClient()
+const db = personalDatabase()
 async function main(){
+  await configureSqlite(db)
   if(await db.personalUser.findUnique({where:{singleton:1}})){console.log('个人账号已初始化。');return}
   const username=(process.env.PERSONAL_USERNAME||'').trim(),password=process.env.PERSONAL_PASSWORD||''
   if(!username || username.length>100 || password.length<12 || Buffer.byteLength(password)>72)throw Error('请设置 PERSONAL_USERNAME 并提供至少 12 个字符且不超过 72 字节的 PERSONAL_PASSWORD')

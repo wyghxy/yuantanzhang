@@ -1,6 +1,7 @@
 import { HttpException } from '@nestjs/common'
-import { Prisma, PrismaClient, type StudioRecord } from '@prisma/client'
-export const db = new PrismaClient()
+import { Prisma, type StudioRecord } from '@prisma/client'
+import { personalDatabase } from '../../../prisma/sqlite-runtime.cjs'
+export const db = personalDatabase()
 export type Data = Record<string, unknown>
 export type Tx = Prisma.TransactionClient
 export type Scope = { ownerId: string; workspaceId: string }

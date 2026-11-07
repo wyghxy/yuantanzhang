@@ -1,4 +1,31 @@
-# 0.2.0 本地验证回执
+# 版本验证记录
+
+## 0.3.0 SQLite 版本
+
+验证日期：2026-11-07。环境为 Windows 主机上的 WSL Ubuntu 24.04、Node.js 22.23.2、pnpm 9.15.9、SQLite 与本地 Chromium。测试使用独立数据文件和合成案例，原 PostgreSQL、Redis 容器均已停止。
+
+| 检查 | 结果与范围 |
+| --- | --- |
+| 首次初始化 | 无 `.env` 的新环境执行 `pnpm run setup` 通过，生成本机配置、SQLite、个人身份和演示案例。 |
+| 类型、lint 与单元测试 | 工作区类型检查、ESLint 与 `pnpm test` 通过。 |
+| 发布扫描 | `check:release` 通过；包含 `.cjs`、`.cts`、`.mts` 内容检查及数据库产物检查。 |
+| 生产构建 | Nest API、独立 Worker 和 Next.js 生产构建全部通过。 |
+| SQLite HTTP | 12 组基础流程通过，覆盖个人会话、录入与关联、版本保护、文件和恢复等实际业务请求。 |
+| 演示清理 | 真实 SQLite 中验证只清除演示资料、保留个人记录，验证事务完成后回滚。 |
+| 后端与任务 | 6 组工作流通过，包含数据库任务租约崩溃恢复、双 Worker 领取与版本失效处理。 |
+| 编译产物复验 | 使用编译后的 API、Worker 及 `next start` 运行，HTTP 集成 12 组再次通过。 |
+| 浏览器 | 四主页面、拆解、稿件真实编辑与 Ctrl+S 保存后重载、内容项目、暗色和手机布局通过。 |
+| 状态位置 | 普通页面顶部保留采集调度入口；八个平台与一项转写状态集中在调度页。 |
+| 本地运行边界 | 已验证浏览器流程为 0 次外部请求、0 个页面运行异常。 |
+| 重复初始化 | 停止本实例 Web/API/Worker 后再次执行 `pnpm run setup`，退出 0；无待应用迁移，已有个人账号与工作空间保留，现有数据未重置。活跃服务期间不运行迁移。 |
+
+本次结果证明上述 WSL SQLite 环境与覆盖范围，不表示 Windows 或 macOS 原生首次安装已经通过。GitHub CI 已配置这两个平台的安装冒烟检查，实际结果另看工作流回执；远端 CI 尚不计入本次本地通过记录。外部处理服务仍不包含在本版本中。
+
+随附的[创作中心](screenshots/creation.png)、[拆解](screenshots/breakdown.png)、[暗色稿件](screenshots/writing-dark.png)、[手机](screenshots/mobile.png)与[采集调度](screenshots/schedule.png)截图来自本次 SQLite 实测。
+
+下方 0.2.0 的记录属于旧 PostgreSQL 版本，与本次 SQLite 验证分别保留。
+
+## 0.2.0 本地验证回执（历史记录）
 
 验证日期：2026-11-07。环境为 Node.js 22.23.2、pnpm 9.15.9、PostgreSQL 16、Redis 7、本地 Chromium；使用独立数据服务和合成案例。
 

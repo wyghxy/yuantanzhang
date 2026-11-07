@@ -73,17 +73,17 @@ export type Query = URLSearchParams
 export async function list(s:Scope,k:string,q:Query){
   const trash=['1','true','only','deleted'].includes(q.get('deleted')||'')||q.get('status')==='deleted'
   const where:Prisma.StudioRecordWhereInput={workspaceId:s.workspaceId,workspace:{ownerId:s.ownerId},kind:k,deletedAt:trash?{not:null}:null}
-  const filters:Prisma.StudioRecordWhereInput[]=[]
   if(['true','only','1'].includes(q.get('sample')||''))where.sample=true
   if(['false','exclude','0'].includes(q.get('sample')||''))where.sample=false
   if(q.get('ids'))where.id={in:q.get('ids')!.split(',').map(x=>x.trim()).filter(Boolean).slice(0,200)}
-  for(const key of ['platform','status','accountId','topicId','materialId','identityId','contentType','recordType','readState']){const v=q.get(key);if(v&& !['all','any','deleted'].includes(v))filters.push({data:{path:[key],equals:v}})}
-  const search=(q.get('q')||q.get('search')||q.get('keyword')||'').trim()
-  if(search)filters.push({OR:['title','name','description','body','text','content'].map(key=>({data:{path:[key],string_contains:search,mode:'insensitive' as const}}))})
+  const filters=['platform','status','accountId','topicId','materialId','identityId','contentType','recordType','readState']
+    .map(key=>[key,q.get(key)] as const).filter((entry):entry is readonly [string,string]=>!!entry[1]&&!['all','any','deleted'].includes(entry[1]))
+  const search=(q.get('q')||q.get('search')||q.get('keyword')||'').trim().toLowerCase()
   const since=q.get('from')||q.get('dateFrom'),until=q.get('to')||q.get('dateTo')
   if(since||until){const start=since?new Date(since):null;let end=until?new Date(until):null;if((start&&!Number.isFinite(+start))||(end&&!Number.isFinite(+end)))fail(400,'invalid_date','日期无效');if(end&&until?.length===10)end=new Date(+end+86400000-1);where.createdAt={...(start?{gte:start}:{}),...(end?{lte:end}:{})}}
-  if(filters.length)where.AND=filters
   const limit=Math.max(1,Math.min(200,Number(q.get('limit')||q.get('pageSize'))||50)),offset=Math.max(0,Number(q.get('offset')||q.get('cursor'))||((Math.max(1,Number(q.get('page'))||1)-1)*limit))
-  const [rows,total]=await db.$transaction([db.studioRecord.findMany({where,orderBy:[{updatedAt:'desc'},{id:'asc'}],take:limit,skip:offset}),db.studioRecord.count({where})])
+  const scoped=await db.studioRecord.findMany({where,orderBy:[{updatedAt:'desc'},{id:'asc'}]})
+  const matches=scoped.filter(row=>{const data=obj(row.data);return filters.every(([key,value])=>data[key]===value)&&(!search||['title','name','description','body','text','content'].some(key=>txt(data[key]).toLowerCase().includes(search)))})
+  const total=matches.length,rows=matches.slice(offset,offset+limit)
   return {items:rows.map(show),total,limit,offset,hasMore:offset+rows.length<total,nextCursor:offset+rows.length<total?String(offset+rows.length):null}
 }

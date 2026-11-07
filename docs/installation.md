@@ -4,8 +4,9 @@
 
 - Node.js 22，项目要求见根 `package.json` 的 `engines`。
 - pnpm 9.15.9。
-- PostgreSQL 16、Redis，以及可写的本地上传目录。
-- 使用 Docker Compose 时需要可用的 Docker 服务。
+- 可写的本地数据与上传目录。
+
+默认数据保存在本地 SQLite 单文件中，不需要安装 PostgreSQL、Redis 或 Docker。
 
 Windows 用户可在 WSL 中安装依赖、初始化数据库并启动项目。保持代码、命令运行目录和环境配置一致，不混用 Windows 与 Linux 的 `node_modules`。
 
@@ -14,31 +15,34 @@ Windows 用户可在 WSL 中安装依赖、初始化数据库并启动项目。�
 在项目根目录执行：
 
 ```bash
-cp .env.example .env
-pnpm install --frozen-lockfile
-docker compose up -d
-pnpm db:generate
-pnpm db:migrate
+pnpm install
 pnpm run setup
 pnpm dev
 ```
 
-执行 `setup` 前，编辑自己的 `.env`：
+`pnpm run setup` 自动生成本机 `.env` 与本地目录，依次完成 Prisma 客户端生成、SQLite 迁移、个人账号和演示案例初始化。不需要为安装额外准备 Python、数据库服务或容器。
+
+默认用户名为 `owner`。随机登录密码保存在本机 `.env` 的 `PERSONAL_PASSWORD` 中，随机会话密钥也保存在同一文件；密码不会打印到终端日志。打开该本地文件查看自己的密码，不要将其上传或转发。
+
+已有 SQLite `.env` 会保留。检测到旧 PostgreSQL 配置时，初始化会停止，不会自动覆盖旧配置或转换旧数据；请在独立目录按升级说明安装。
+
+再次初始化或升级前，先停止该实例的 Web、API 和 Worker，再运行 `pnpm run setup`。不要在运行中的 SQLite 数据库上并行执行迁移；若出现 `database is locked`，保留数据库和 WAL 文件，停止本实例服务后重试。
+
+需要调整设置时，参考 `.env.example` 修改自己的本地环境文件。不要将已有部署的环境文件直接覆盖为示例。
 
 | 变量 | 说明 |
 | --- | --- |
-| `DATABASE_URL` | 个人版 PostgreSQL 连接；数据库应单独使用。 |
-| `REDIS_URL` | 本地 Redis 连接。 |
+| `DATABASE_URL` | 默认 `file:../data/yuantanzhang.db`，按 Prisma schema 目录解析，对应项目根目录的 `data/yuantanzhang.db`。 |
 | `PERSONAL_USERNAME` | 个人登录用户名。 |
-| `PERSONAL_PASSWORD` | 自己设置的强密码，没有预设登录密码。 |
-| `SESSION_SECRET` | 至少 32 字符的随机值，用于个人会话。 |
-| `UPLOAD_DIR` | 上传文件的存储目录。 |
+| `PERSONAL_PASSWORD` | 初始化生成的随机个人登录密码，只保存在本机 `.env`。 |
+| `SESSION_SECRET` | 初始化生成的随机会话密钥。 |
+| `UPLOAD_DIR` | 上传文件的存储目录，默认为项目的 `data/uploads/`。 |
 | `WEB_PORT` / `API_PORT` | 默认分别为 3310 / 3311。 |
 | `API_ORIGIN` | Web 服务访问本地 API 的地址。 |
 
 环境文件不应提交到 Git。这里的数据库、密码和会话配置只服务于自己的部署，不涉及外部处理接口配置。
 
-浏览器打开 <http://127.0.0.1:3310>，使用自己的账号登录。`setup` 初始化个人身份和演示内容，案例通过普通页面直接使用。
+浏览器打开 <http://127.0.0.1:3310>，使用本机初始化的个人账号登录。案例通过普通页面直接打开、编辑与保存，不需要教学引导。
 
 ## 生产构建
 
@@ -46,11 +50,15 @@ pnpm dev
 pnpm build
 ```
 
-运行入口和环境要求以根目录脚本为准。公网部署前应配置 HTTPS、访问控制及反向代理，不把数据库和 Redis 端口直接公开。个人版不包含面向公众的注册运营体系。
+运行入口和环境要求以根目录脚本为准。公网部署前应配置 HTTPS、访问控制及反向代理，SQLite 文件和上传目录不得作为无认证静态目录公开。个人版不包含面向公众的注册运营体系。
 
 ## 数据与升级
 
-PostgreSQL 和上传目录共同构成个人业务数据。升级前备份二者，确认对应版本的迁移与兼容说明，再应用迁移。不要对正在使用的数据库执行测试重置。
+SQLite 文件和上传目录共同构成个人业务数据。备份前停止应用及独立 Worker，再复制本地数据库、仍存在的同名 `-wal` / `-shm` 文件、上传目录和自己的环境配置。保留这些文件之间的一致关系，不在写入过程中只复制主数据库文件。
+
+升级前确认对应版本的迁移与兼容说明。测试使用独立 SQLite 文件和上传目录，不能对日常资料运行重置。
+
+从 PostgreSQL 版或旧浏览器版升级时，先阅读 [数据保留与升级说明](migrating-from-browser-edition.md)。当前没有 PostgreSQL 到 SQLite 的自动迁移器；旧数据库、媒体和配置继续单独保留。
 
 停止 Web/API/Worker 不会替代数据库备份。重新安装依赖也不应该删除自己的数据库、稿件和媒体。
 
@@ -58,11 +66,12 @@ PostgreSQL 和上传目录共同构成个人业务数据。升级前备份二者
 
 | 现象 | 检查内容 |
 | --- | --- |
-| 初始化失败 | 数据库是否启动、连接是否正确、迁移是否完成。 |
+| 初始化失败 | Node.js 版本、依赖安装、本地目录写权限与迁移错误。 |
 | 登录失败 | 初始化是否成功、用户名和密码是否与自己的环境一致。 |
 | 页面无法取得内容 | API 是否启动、`API_ORIGIN` 是否正确、当前会话是否有效。 |
 | 文件上传失败 | 文件类型与大小、上传目录写权限、API 请求限制。 |
 | 外部处理操作提示未接入 | 这是该能力的当前状态；可继续使用已有内容和本地编辑，或自行实现扩展。 |
 | 演示案例未显示 | 检查是否执行 `pnpm demo:seed`，以及界面是否筛选为个人内容。 |
+| 出现数据库忙碌或锁定 | 检查是否有重复启动的写入进程，等待正在进行的本地任务完成；不要删除 WAL 文件。 |
 
 反馈问题时保留错误类型和复现步骤，删除密码、连接信息、Cookie 和私人正文后再分享日志。

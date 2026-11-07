@@ -1,9 +1,13 @@
 import 'dotenv/config'
 import assert from 'node:assert/strict'
+import { personalDatabase } from '../prisma/sqlite-runtime.cjs'
+import { assertLoopbackApi, assertPersonalSqlite, deleteOwnFixtures } from './demo-cleanup.integration'
 import { mkdir, writeFile } from 'node:fs/promises'
 
 const origin = process.env.API_ORIGIN || 'http://127.0.0.1:3311'
-let cookie = ''
+const db = personalDatabase()
+let cookie = '', workspaceId = ''
+const assetIds: string[] = []
 const checks: string[] = []
 type Data = Record<string, unknown>
 const object = (v: unknown) => v as Data
@@ -19,11 +23,16 @@ async function call(path: string, method = 'GET', body?: Data, authenticated = t
 const api = (path: string, method = 'GET', body?: Data) => call('/api/workspace/studio/' + path, method, body)
 
 async function main() {
+assertLoopbackApi(origin)
+await assertPersonalSqlite(db)
+checks.push('Prisma opened the intended local SQLite file')
 assert.equal((await call('/api/workspace/studio/accounts', 'GET', undefined, false)).response.status, 401)
 checks.push('unauthenticated data request rejected')
 assert.equal((await call('/api/auth/login', 'POST', { username: process.env.PERSONAL_USERNAME, password: 'invalid-password' }, false)).response.status, 401)
 const login = await call('/api/auth/login', 'POST', { username: process.env.PERSONAL_USERNAME, password: process.env.PERSONAL_PASSWORD }, false)
 assert.equal(login.response.status, 200)
+workspaceId = String(object(login.data.workspace).id)
+assert.ok(await db.workspace.findUnique({ where: { id: workspaceId } }), 'HTTP 会话与测试必须连接相同的工作区')
 const setCookie = login.response.headers.get('set-cookie') || ''
 assert.match(setCookie, /HttpOnly/i)
 assert.match(setCookie, /SameSite=Strict/i)
@@ -61,7 +70,7 @@ assert.ok(draftItem.id)
 createdRecords.push({ kind: 'drafts', id: String(draftItem.id) })
 const tasks = await api('tasks?status=active')
 assert.equal(tasks.response.status, 200)
-assert.equal((tasks.data.items as unknown[]).length, 0)
+assert.ok(!(tasks.data.items as Data[]).some(task => createdRecords.some(row => row.id === task.targetId)))
 checks.push('creating local records does not enqueue online processing')
 assert.equal((await api('materials/missing-record')).response.status, 404)
 const invalidReference = await api('materials', 'POST', { title: '错误引用', platform: 'local', accountId: '00000000-0000-4000-8000-000000000001', autoProcess: false })
@@ -76,6 +85,7 @@ const upload = await fetch(origin + '/api/workspace/studio/uploads', { method: '
 assert.equal(upload.status, 200)
 const uploaded = await upload.json() as { material: Data; assetKey: string; task: unknown }
 createdRecords.push({ kind: 'materials', id: String(uploaded.material.id) })
+assetIds.push(uploaded.assetKey)
 assert.equal(uploaded.task, null)
 const downloaded = await fetch(origin + '/api/workspace/studio/assets/' + uploaded.assetKey + '/download', { headers: { cookie } })
 assert.equal(downloaded.status, 200)
@@ -95,15 +105,17 @@ for (const item of [{ kind: 'drafts', value: draftItem }, { kind: 'materials', v
 checks.push('deletion hides records and dependent edits stay scoped')
 await call('/api/auth/logout', 'POST', {})
 assert.equal((await api('accounts')).response.status, 401)
+cookie = ''
 checks.push('logout invalidates server session')
 await mkdir('test-results', { recursive: true })
 await writeFile('test-results/integration.json', JSON.stringify({ ok: true, checks }, null, 2))
 console.log(JSON.stringify({ ok: true, checks }, null, 2))
 }
-void main().catch(async error => {
-  for (const item of createdRecords.reverse()) {
-    const current = await api(`${item.kind}/${item.id}`).catch(() => null)
-    if (current?.response.ok) await api(`${item.kind}/${item.id}`, 'DELETE', { expectedVersion: object(current.data.item).version }).catch(() => {})
-  }
+void main().finally(async () => {
+  try {
+    await deleteOwnFixtures(db, workspaceId, createdRecords.map(record => record.id), assetIds)
+    if (cookie) await call('/api/auth/logout', 'POST', {})
+  } finally { await db.$disconnect() }
+}).catch(error => {
   console.error(error); process.exitCode = 1
 })

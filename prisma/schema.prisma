@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url = env("DATABASE_URL")
 }
 
@@ -47,6 +47,17 @@ model StudioRecord {
   versions RecordVersion[]
   files StudioFile[]
   @@index([workspaceId, kind, deletedAt, updatedAt])
+  localTask LocalTask?
+}
+model LocalTask {
+  recordId String @id
+  record StudioRecord @relation(fields: [recordId], references: [id], onDelete: Cascade)
+  state String @default("queued")
+  leaseToken String?
+  leaseUntil DateTime?
+  attempts Int @default(0)
+  createdAt DateTime @default(now())
+  @@index([state, leaseUntil, createdAt])
 }
 model RecordVersion {
   id String @id @default(uuid())

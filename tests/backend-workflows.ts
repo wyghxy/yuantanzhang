@@ -1,11 +1,17 @@
 import 'dotenv/config'
 import assert from 'node:assert/strict'
 import {randomUUID} from 'node:crypto'
-import {resolve,join} from 'node:path'
-import {unlink} from 'node:fs/promises'
+import { resolve, join, dirname, basename } from 'node:path'
+import { mkdtemp, realpath, readdir, unlink, rmdir } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { execFile } from 'node:child_process'
+import { promisify } from 'node:util'
+import { executeClaim } from '../apps/worker/src/queue'
+import { assertPersonalSqlite, assertLoopbackApi, deleteOwnFixtures } from './demo-cleanup.integration'
+import { personalDatabase } from '../prisma/sqlite-runtime.cjs'
 import { PrismaClient } from '@prisma/client'
 
-const base=process.env.API_ORIGIN||'http://127.0.0.1:3311', db=new PrismaClient()
+const base=process.env.API_ORIGIN||'http://127.0.0.1:3311', db=personalDatabase()
 type Data=Record<string,unknown>
 const obj=(v:unknown)=>v as Data, rows=(v:unknown)=>v as Data[]
 const marker='验证-'+randomUUID(), own=new Set<string>(),ownFiles=new Set<string>()
@@ -18,12 +24,81 @@ async function request(path:string,method='GET',body?:Data,expect=200){
 }
 const studio=(p:string,m='GET',b?:Data,e=200)=>request('workspace/studio/'+p,m,b,e)
 async function add(kind:string,data:Data){const item=obj((await studio(kind,'POST',{title:marker,...data},201)).item);ownId(item.id);return item}
+const execute = promisify(execFile)
+async function verifyWorkerRecovery() {
+ const root = resolve(__dirname, '..'), temp = await mkdtemp(join(await realpath(tmpdir()), 'ytz-worker-test-'))
+ const file = join(temp, 'worker.db'), url = 'file:' + file
+ const env = { ...process.env, DATABASE_URL: url }
+ // Allow no external database or queue configuration into any test worker.
+ for (const key of Object.keys(env)) if (/^(REDIS_|PGHOST|PGPORT|PGUSER|PGPASSWORD|PGDATABASE)/.test(key)) delete env[key as keyof typeof env]
+ const isolated = new PrismaClient({datasources:{db:{url}}})
+ const launch = (args:string[]) => execute(process.execPath,args,{cwd:root,env,timeout:60_000,maxBuffer:256*1024})
+ const worker = () => launch(['--import','tsx','apps/worker/src/main.ts','--once'])
+ const compete = async () => {
+   const runs=await Promise.allSettled([worker(),worker()])
+   for(const run of runs) if(run.status==='rejected') throw run.reason
+ }
+ try {
+   await launch([require.resolve('prisma/build/index.js'),'migrate','deploy','--schema',join(root,'prisma/schema.prisma')])
+   const owner=await isolated.personalUser.create({data:{username:marker,passwordHash:'test-fixture-no-login',workspace:{create:{name:marker}}},include:{workspace:true}})
+   const workspaceId=owner.workspace!.id
+   const source=await isolated.studioRecord.create({data:{workspaceId,kind:'drafts',data:{title:marker,body:'山 与 海。'}}})
+   const enqueue=()=>isolated.studioRecord.create({data:{
+     workspaceId,kind:'local_tasks',data:{status:'queued',type:'word_count',targetKind:'drafts',targetId:source.id,targetVersion:source.version},
+     localTask:{create:{}}
+   }})
+   const job=await enqueue()
+   // A real worker process acquires the lease and exits before completing the work.
+   const claimAndExit = [
+     "const { PrismaClient } = require('@prisma/client');",
+     "const { claimOne } = require('./apps/worker/src/queue.ts');",
+     "const db = new PrismaClient();",
+     "(async()=>{if(!await claimOne(db))throw Error('expected claim')})().catch(e=>{console.error(e.message);process.exitCode=1}).finally(()=>db.$disconnect());"
+   ].join('\n')
+   await launch(['--import','tsx','-e',claimAndExit])
+   const lease=await isolated.localTask.findUniqueOrThrow({where:{recordId:job.id}})
+   assert.equal(lease.state,'running');assert.equal(lease.attempts,1);assert.ok(lease.leaseToken&&lease.leaseUntil)
+   const oldClaim={recordId:job.id,leaseToken:lease.leaseToken,leaseUntil:lease.leaseUntil,workspaceId,ownerId:owner.id,
+     data:obj((await isolated.studioRecord.findUniqueOrThrow({where:{id:job.id}})).data)}
+   await worker()
+   const stillHeld=await isolated.localTask.findUniqueOrThrow({where:{recordId:job.id}})
+   assert.equal(stillHeld.leaseToken,lease.leaseToken);assert.equal(stillHeld.attempts,1)
+   const expiry=await isolated.localTask.updateMany({where:{recordId:job.id,state:'running',leaseToken:lease.leaseToken},data:{leaseUntil:new Date(Date.now()-1)}})
+   assert.equal(expiry.count,1)
+   assert.equal(await executeClaim(isolated,oldClaim),false,'过期的 Worker 不得发布结果')
+   await compete()
+   assert.equal(await executeClaim(isolated,oldClaim),false,'旧租约不得覆盖重启后的结果')
+   const completed=await isolated.localTask.findUniqueOrThrow({where:{recordId:job.id}})
+   assert.equal(completed.state,'succeeded');assert.equal(completed.attempts,2);assert.equal(completed.leaseToken,null)
+   const result=obj((await isolated.studioRecord.findUniqueOrThrow({where:{id:job.id}})).data)
+   assert.equal(result.characters,4);assert.equal(result.targetVersion,source.version)
+   const stale=await enqueue()
+   await isolated.studioRecord.update({where:{id:source.id},data:{version:{increment:1},data:{body:'编辑后的较长正文。'}}})
+   await compete()
+   const rejected=await isolated.localTask.findUniqueOrThrow({where:{recordId:stale.id}})
+   assert.equal(rejected.state,'failed');assert.equal(rejected.attempts,1)
+   const staleResult=obj((await isolated.studioRecord.findUniqueOrThrow({where:{id:stale.id}})).data)
+   assert.equal(staleResult.status,'failed');assert.equal(staleResult.characters,undefined)
+   checks.push('无外部队列的 SQLite 独立库：子进程退出后任务保留，未到期不抢领，过期后两个 Worker 仅领取一次，目标版本变化则拒绝发布旧结果')
+ } finally {
+   await isolated.$disconnect()
+   const actual=await realpath(temp)
+   assert.equal(dirname(actual),await realpath(tmpdir()))
+   assert.match(basename(actual),/^ytz-worker-test-[a-zA-Z0-9]{6}$/)
+   for(const name of await readdir(actual)){
+     assert.match(name,/^worker\.db(?:-journal|-wal|-shm)?$/)
+     await unlink(join(actual,name))
+   }
+   await rmdir(actual)
+ }
+}
 async function main(){
- assert.ok(['127.0.0.1','localhost'].includes(new URL(base).hostname),'仅允许本机验收')
- const dbUrl=new URL(process.env.DATABASE_URL||'');assert.ok(['127.0.0.1','localhost'].includes(dbUrl.hostname)&&['/ytz_personal_test','/ytz_personal'].includes(dbUrl.pathname),'仅允许专用个人版本机数据库')
+ assertLoopbackApi(base)
+ await assertPersonalSqlite(db)
  const login=await fetch(base+'/api/auth/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({username:process.env.PERSONAL_USERNAME,password:process.env.PERSONAL_PASSWORD})})
  assert.equal(login.status,200);cookie=(login.headers.get('set-cookie')||'').split(';')[0];assert.ok(cookie)
  wid=String(obj(obj(await login.json()).workspace).id)
+ assert.ok(await db.workspace.findUnique({where:{id:wid}}),'HTTP 会话必须属于验收数据库')
  const a=await add('accounts',{name:marker}),m=await add('materials',{text:'一段<不能当作HTML>的手写原文。',accountId:a.id}),n=await add('materials',{text:'第二份手写素材。'})
  const article=await studio('materials/'+m.id+'/article');assert.match(String(article.html),/&lt;不能当作HTML&gt;/)
  const topic=await add('topics',{references:[{materialId:m.id}]}), draft=await add('drafts',{materialId:m.id,topicId:topic.id,body:'第一段写场景。\n\n第二段进行观察。'})
@@ -75,18 +150,17 @@ async function main(){
    let status:Data={}
    for(let i=0;i<45;i++){status=obj((await studio('tasks/'+task.id)).task);if(status.status==='succeeded'||status.status==='failed')break;await new Promise(r=>setTimeout(r,150))}
    assert.equal(status.status,'succeeded');assert.equal(status.characters,Array.from(String(draft.body).replace(/\s/g,'')).length)
-   const {Queue}=await import('bullmq'),url=new URL(process.env.REDIS_URL||'redis://127.0.0.1:6397')
-   const queue=new Queue('personal-local-text',{connection:{host:url.hostname,port:Number(url.port)||6379,username:url.username||undefined,password:url.password||undefined,db:Number(url.pathname.slice(1))||0}})
-   try{await queue.remove(String(task.id))}finally{await queue.close()}
-   checks.push('显式本地字数任务经 Redis/BullMQ 进入 Worker，结果按当前草稿版本保存')
+   const ledger=await db.localTask.findUniqueOrThrow({where:{recordId:String(task.id)}})
+   assert.equal(ledger.state,'succeeded');assert.equal(ledger.attempts,1)
+   assert.equal(status.targetVersion,obj((await studio('drafts/'+draft.id)).draft).version)
+   checks.push('显式本地字数任务经 SQLite 持久队列进入独立 Worker，结果按目标版本保存')
+   await verifyWorkerRecovery()
  }
  console.log(JSON.stringify({ok:true,checks},null,2))
 }
 void main().finally(async()=>{
  try{
-   if(wid&&own.size){await db.studioRecord.deleteMany({where:{workspaceId:wid,sample:false,id:{in:[...own]}}})
-     for(const key of ownFiles)if(/^[a-f0-9-]{36}$/.test(key)&&/^[a-f0-9-]{36}$/.test(wid)){await unlink(join(resolve(process.env.UPLOAD_DIR||'data/uploads'),wid,key)).catch(()=>{})}
-   }
+   await deleteOwnFixtures(db,wid,[...own],[...ownFiles])
    if(cookie)await request('auth/logout','POST',{})
  }finally{await db.$disconnect()}
 }).catch(e=>{console.error(e instanceof Error?e.message:'工作流验证失败');process.exitCode=1})

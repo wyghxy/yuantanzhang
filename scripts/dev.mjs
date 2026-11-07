@@ -8,7 +8,10 @@ const port = process.env.WEB_PORT || '3310'
 const children = []
 let stopping = false
 function launch(args) {
-  const child = spawn('pnpm', args, { cwd: root, env: process.env, stdio: 'inherit' })
+  const cli = process.env.npm_execpath
+  const child = cli
+    ? spawn(process.execPath, [cli, ...args], { cwd: root, env: process.env, stdio: 'inherit' })
+    : spawn(process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm', args, { cwd: root, env: process.env, stdio: 'inherit', shell: process.platform === 'win32' })
   children.push(child)
   child.on('error', error => { console.error(error.message); stop(1) })
   child.on('exit', code => { if (!stopping) stop(code || 0) })

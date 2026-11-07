@@ -15,7 +15,6 @@
     "@nestjs/platform-express": "11.2.3",
     "@prisma/client": "6.19.3",
     "bcryptjs": "^3.0.3",
-    "bullmq": "6.3.4",
     "dotenv": "^17.2.2",
     "express": "5.1.0",
     "reflect-metadata": "0.2.2",

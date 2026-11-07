@@ -1,10 +1,10 @@
-# 元探长个人版
+# 元探长
 
 一个用于收集内容、研究对标、整理选题与创作稿件的个人工作台。
 
 [元探长官网](https://yuantanzhang.cn/) · [线上产品样例（免登录）](https://yuantanzhang.cn/preview?view=overview) · [进入线上工作台](https://yuantanzhang.cn/workspace/viral)
 
-以上链接对应元探长网站及线上产品；本仓库个人版按下方说明自部署运行。
+官网介绍产品，线上样例用于免登录查看界面，线上工作台使用网站账号登录。本仓库是可在自己电脑运行的开源版本，与这三个线上入口分别使用自己的运行环境和数据。
 
 元探长个人版开放 **情报中心、创作中心、对标中心、采集库** 四个板块及其全部子页面的前端、后端和相关业务源码，保留完整界面与功能入口，项目自有代码采用 [MIT 许可证](LICENSE)。
 
@@ -27,22 +27,19 @@
 
 从旧浏览器版升级的用户，请先阅读 [升级与数据保留说明](docs/migrating-from-browser-edition.md)。
 
-需要 Node.js 22、pnpm 9.15.9、PostgreSQL 16 和 Redis。开发与构建采用同一个 pnpm workspace。
+需要 Node.js 22.23.2 及以上的 22.x 版本和 pnpm 9.15.9。默认使用本地 SQLite 单文件存储，不需要额外安装 PostgreSQL、Redis 或 Docker。
 
 ```bash
-cp .env.example .env
-# 编辑 .env：设置自己的登录密码与至少 32 字符的随机 SESSION_SECRET。
-pnpm install --frozen-lockfile
-docker compose up -d
-pnpm db:generate
-pnpm db:migrate
+pnpm install
 pnpm run setup
 pnpm dev
 ```
 
-浏览器打开 <http://127.0.0.1:3310>。登录用户名使用 `.env` 中的 `PERSONAL_USERNAME`，密码使用自己设置的 `PERSONAL_PASSWORD`。没有预设登录密码。
+`setup` 自动生成本机 `.env`、SQLite 数据文件与上传目录，完成数据库生成和迁移，并初始化个人账号与演示案例。默认用户名为 `owner`，随机密码保存在本机 `.env` 的 `PERSONAL_PASSWORD` 中，不打印到日志。已有 SQLite 配置会保留；检测到旧 PostgreSQL 配置时会停止，避免覆盖旧环境。
 
-数据库、Redis、API 和网站默认使用本机连接。数据库连接与存储位置可以在自己的环境文件中调整。先备份已有数据，再进行升级或变更存储目录。
+浏览器打开 <http://127.0.0.1:3310>。正文、稿件、关系和任务默认保存在 `data/yuantanzhang.db`，上传文件保存在 `data/uploads/`。备份时停止应用与 Worker，保留数据库、上传文件及自己的配置；详情见安装说明。
+
+从 `v0.2.0` PostgreSQL 版本升级时，保留旧库、媒体、配置和旧版源码；目前没有自动迁移到 SQLite 的工具，不能直接用旧数据库目录覆盖新文件。
 
 详细说明见 [安装与运行](docs/installation.md) 和 [日常使用](docs/usage.md)。
 

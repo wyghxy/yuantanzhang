@@ -6,6 +6,7 @@ import {NestFactory} from '@nestjs/core'
 import { json as readJson, type Request,type Response } from 'express'
 import { scope,identity,login,logout,checkSecret } from './auth'
 import { db } from './shared'
+import { configureSqlite } from '../../../prisma/sqlite-runtime.cjs'
 import {route} from './studio'
 import {projectRoute} from './projects'
 config({path:resolve(__dirname,'../../..','.env'),quiet:true})
@@ -21,12 +22,14 @@ class ApiController {
 @Module({controllers:[ApiController]})class App{}
 async function main(){
  checkSecret()
+ await configureSqlite(db)
  const app=await NestFactory.create(App,{bodyParser:false})
  app.use((req:Request,res:Response,next:()=>void)=>{
    res.setHeader('Cache-Control','private, no-store')
    if(!['GET','HEAD','OPTIONS'].includes(req.method)&&req.headers.origin){
       let origin:URL;try{origin=new URL(req.headers.origin)}catch{res.status(403).json({error:'来源无效'});return}
-      const allowed=[process.env.WEB_ORIGIN||'http://127.0.0.1:3310','http://localhost:3310',process.env.API_ORIGIN||'http://127.0.0.1:3311']
+      const webPort=process.env.WEB_PORT||'3310',apiPort=process.env.API_PORT||'3311'
+      const allowed=[process.env.WEB_ORIGIN||`http://127.0.0.1:${webPort}`,`http://localhost:${webPort}`,process.env.API_ORIGIN||`http://127.0.0.1:${apiPort}`]
       if(!allowed.includes(origin.origin)){res.status(403).json({error:'不接受跨站写入'});return}
    }
    next()

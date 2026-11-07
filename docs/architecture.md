@@ -1,15 +1,15 @@
 # 架构
 
-个人版采用一个 pnpm workspace，保留 Web、API、数据库访问与独立后台执行的职责分工。
+元探长采用一个 pnpm workspace，保留 Web、API、数据库访问与独立后台执行的职责分工。0.3.0 默认面向个人本机运行，使用 SQLite 单文件数据库，不需要额外的数据库或队列服务。
 
 ```mermaid
 flowchart LR
   Browser[浏览器] --> Web[Next.js / React]
   Web --> API[NestJS 业务 API]
-  API --> DB[Prisma / PostgreSQL]
+  API --> DB[Prisma 6 / SQLite]
   API --> Files[本地文件存储]
-  API --> Queue[Redis / BullMQ]
-  Queue --> Worker[独立 Worker]
+  API --> Tasks[SQLite 持久任务]
+  Tasks --> Worker[独立 Worker]
   Worker --> DB
 ```
 
@@ -27,17 +27,21 @@ flowchart LR
 
 API 保留数据输入校验、关联一致性、版本冲突和清楚的错误状态。草稿、素材和对标档案的关联属于同一工作空间。
 
-## PostgreSQL 与文件
+## SQLite 与文件
 
-PostgreSQL 保存资料、稿件、版本、关系与状态；本地目录保存上传文件的二进制内容。迁移是新个人版数据库的结构来源，不导入其他部署的历史数据库。
+Prisma 6 访问本地 SQLite，保存资料、稿件、版本、关系、状态和任务。默认文件为项目内 `data/yuantanzhang.db`；数据库启用 WAL，本地 `data/uploads/` 另存上传文件的二进制内容。迁移描述本版本的 SQLite 结构，不导入或改写旧 PostgreSQL 数据库。
 
-文件访问由 API 校验归属后提供。上传文件名不是可信路径；磁盘位置、文件标识和显示名称应分开处理。备份同时覆盖数据库与上传目录。
+文件访问由 API 校验归属后提供。上传文件名不是可信路径；磁盘位置、文件标识和显示名称应分开处理。备份前停止写入，保留数据库及仍存在的 WAL 文件、上传目录和个人配置。
 
 ## Worker 与队列
 
-Redis/BullMQ 协调独立后台执行。长期业务状态和结果仍存 PostgreSQL。队列消息不应该成为唯一的内容存储。
+独立 Worker 领取保存在 SQLite 中的本地任务，执行状态和结果同样持久化到数据库。无需 Redis/BullMQ。任务领取、完成与失败处理必须依据数据库状态，避免重复执行；进程重启不能丢失已保存的任务。
 
 个人版默认录入、上传和保存不会隐式触发外部处理。未接入的外部能力明确返回不可用状态，不假造执行器或结果。
+
+## 与旧版本的关系
+
+`v0.2.0` 是 PostgreSQL 与 Redis/BullMQ 版本，源码和原验证记录保留在对应标签。0.3.0 的 SQLite 是独立存储格式，没有自动迁移器；不能将 PostgreSQL 表目录复制为 SQLite 数据库，也不能用旧版验证结果替代新存储链路验证。
 
 ## 演示数据
 
