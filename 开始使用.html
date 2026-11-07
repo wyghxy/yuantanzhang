@@ -21,7 +21,7 @@
     <div class="choices" id="start">
       <section class="choice" aria-labelledby="personal-title">
         <span class="tag">源码开放 · 自己掌握</span><h2 id="personal-title">个人版</h2>
-        <p>在自己的电脑运行，默认免登录，数据保存在本机。四个核心模块、编辑器与可点击案例一起提供。</p>
+        <p>完整开源，保留四个模块的界面与个人业务代码，去除线上商业账号运营体系及付费 API 调用。默认免登录，数据保存在本机；抓取和 AI 处理按需自配。</p>
         <a class="button secondary" href="http://127.0.0.1:3310/workspace/viral">打开本机个人版</a>
         <small class="note">先安装 Node.js、pnpm，并按 README 初始化与启动。本页用于选择入口。</small>
       </section>
@@ -46,8 +46,9 @@
     <section class="about" aria-labelledby="origin-title">
       <span class="eyebrow">为什么分享这个项目</span><h2 id="origin-title">从服务器版，到你自己的工作台。</h2>
       <p>元探长原版面向服务器部署与在线运营。我们将开发过程中积累的四个核心模块，整理为适合本机运行的个人版，开放其前端、后端、数据结构、演示案例与开发文档，方便你直接使用，也方便按自己的需求继续修改。</p>
-      <p>个人版已经适配 SQLite 与本地任务，不要求另装 PostgreSQL、Redis 或 Docker。按 README 启动后，可以管理内容和编辑稿件；需要自动抓取、生成或转写时，再接入自己的程序或处理服务。</p>
-      <details><summary>查看开源内容</summary><ul class="scope"><li>元探长个人版完整开源：四个模块、全部子页面、UI、业务前后端、本地存储、演示案例与开发文档一并提供。</li><li>官方在线版的商业账号运营和付费服务接入独立维护；个人版可按需要连接自己的采集程序或其他处理能力。</li><li>通用本机采集接入口已经提供；具体平台抓取程序及其定时运行由使用者自行实现和启动。</li><li>项目自有代码采用标准 MIT，允许修改、分发和商用，分发时保留版权声明与许可文本。</li></ul></details>
+      <p>个人版已经适配 SQLite 与本地任务，不要求另装 PostgreSQL、Redis 或 Docker。按 README 启动后，资料管理、原文和文件导入、稿件编辑与版本保存可以直接使用。与线上版相比，个人版去除了商业账号运营体系，以及原有付费 API 调用和接入实现；自动抓取、生成、分析或转写需要自行配置或开发接入。</p>
+      <p>建议优先使用自己运行的采集脚本或浏览器自动化，再从“采集调度 → 采集设置”连接本机程序。这可以避免按次购买商业采集 API；设备、网络或所选模型仍可能有成本。通用接入口已经提供，具体平台抓取和定时运行由自己的程序负责。</p>
+      <details><summary>查看开源内容与版本差异</summary><ul class="scope"><li>元探长个人版完整开源：四个模块、全部子页面、UI、业务前后端、本地存储、演示案例与开发文档一并提供。</li><li>已去除线上商业用户账号运营后台；个人版默认本机免登录，对标博主、作品档案和绑定功能继续保留。</li><li>原平台付费 API 调用和接入实现不随个人版提供，需要的外部处理能力可自行接入。</li><li>项目自有代码采用标准 MIT，允许修改、分发和商用，分发时保留版权声明与许可文本。</li></ul></details>
     </section>
     <footer><div><a href="https://yuantanzhang.cn/">元探长官网</a><a href="https://github.com/wyghxy/yuantanzhang/blob/main/README.md">安装与项目说明</a><a href="https://github.com/wyghxy/yuantanzhang/blob/main/LICENSE">MIT 许可证</a></div><span>Copyright © 2026 元探长</span></footer>
   </main>
