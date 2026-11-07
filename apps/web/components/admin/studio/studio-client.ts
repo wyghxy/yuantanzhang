@@ -22,6 +22,7 @@ export function apiFresh(path: string, signal?: AbortSignal): Promise<RecordData
 export async function apiRequest(path: string, method = 'GET', body?: RecordData, signal?: AbortSignal): Promise<RecordData> {
   const resource=path.split('?')[0]
   if(method.toUpperCase()==='GET' && resource==='capabilities')return { platforms:[], model:null,asr:null,media:null,storage:null }
+  if(method.toUpperCase()==='GET' && resource==='collections')return { items:[],total:0,available:false }
   if(method.toUpperCase()==='GET' && resource==='dispatch'){
     const accounts=await api('accounts?projection=summary&limit=200&sample=all', 'GET', undefined,signal)
     return {platforms:Object.keys(platforms).filter(p=>p!=='local'&&p!=='bilibili').map(platform=>({platform,accountCount:list(accounts.items).filter(a=>a.platform===platform).length,status:'未接入',mode:'local'}))}

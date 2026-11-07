@@ -22,9 +22,8 @@ import StudioInspirationDrawer from './StudioInspirationDrawer'
 import StudioWriting from './StudioWriting'
 import { useStudioTaskLog } from './useStudioTaskLog'
 import { useStudioEditGuard } from './useStudioEditGuard'
-import { capabilityIndicator } from './operations/studio-capability-presentation'
 import { api, text, list, object, errorText, type RecordItem } from './studio-client'
-import { originalLocation, originalPlatforms } from './original-studio-model'
+import { originalLocation } from './original-studio-model'
 import StudioWorkbenchSidebar from './StudioWorkbenchSidebar'
 import StudioStatusBar from './StudioStatusBar'
 import StudioRunLogDrawer from './StudioRunLogDrawer'
@@ -46,7 +45,7 @@ export default function StudioWorkbench() {
 }
 
 function WorkbenchContent() {
-  const { masked, platformLabel } = useStudioPrivacy()
+  const { platformLabel } = useStudioPrivacy()
   const query=useSearchParams(), preview=studioPreviewPath(usePathname()), initial=originalLocation(query,preview)
   const {expanded,toggleSidebar:switchWorkspace}=useAdminShell()
   const [view,setView]=useState(initial.view)
@@ -73,10 +72,9 @@ function WorkbenchContent() {
   const [initialTaskPending,setInitialTaskPending]=useState(!query.get('task')),[initialTaskError,setInitialTaskError]=useState('')
   const taskLog=useStudioTaskLog(taskId,!!taskId,revision,logOpen),task=taskLog.detail?object(taskLog.detail.task):null,taskError=taskLog.error,events=taskLog.events
   const accountsQuery=useStudioResource('accounts?limit=200&sample=all&projection=summary&view=picker',!draftId&&['feed','topics','works'].includes(view))
-  const dashboardQuery=useStudioResource(view==='overview'?'dashboard':'dashboard?projection=sidebar',true,view==='overview'),capabilitiesQuery=useStudioResource('capabilities')
+  const dashboardQuery=useStudioResource(view==='overview'?'dashboard':'dashboard?projection=sidebar',true,view==='overview')
   useEffect(()=>{if(taskId&&task)observeStudioTaskCompletion(taskId,task)},[taskId,task])
-  const accounts=list(accountsQuery.data?.items),dashboard=dashboardQuery.data,capabilities=capabilitiesQuery.data||null
-  const asrIndicator=capabilityIndicator(capabilities?.asr)
+  const accounts=list(accountsQuery.data?.items),dashboard=dashboardQuery.data
   const search=useStudioSearch(keyword)
   const feedScope=JSON.stringify([range,search,platform,author,status,sample])
   const currentPage=studioListPage(feedPage,feedScope,30),offset=currentPage.offset
@@ -133,7 +131,6 @@ function WorkbenchContent() {
   function choosePlatform(value:string){openCollection({kind:'platform',value})}
   function toggleNav(){if(window.matchMedia('(max-width:767px)').matches)setMobileNav(value=>!value);else setSidebarClosed(value=>!value)}
   async function stopTask(){if(!taskId)return;try{await api(`tasks/${encodeURIComponent(taskId)}/cancel`,'POST',{});changed();notify('已请求停止任务，已完成步骤会保留。')}catch(reason){notify(errorText(reason))}}
-  const capabilityPlatforms=list(capabilities?.platforms)
   const taskActive=!!task&&['queued','running'].includes(text(task.status)),focus=!!draftId
   const taskDisplay=task?studioTaskDisplay(task):null
   const footerError=taskError||(!taskId?initialTaskError:''),footerPending=!task&&!footerError&&(!!taskId||initialTaskPending)
@@ -141,7 +138,7 @@ function WorkbenchContent() {
   return <div className={`original-studio radar-integrated${sidebarClosed?' nav-collapsed':''}${mobileNav?' nav-open':''}`}><div id="appContainer" className={`radar-app${focus||readerFocus?' focus-creation-mode':''}`} data-mobile-nav={mobileNav} data-mobile-panel={mobilePanel}>
     <WorkspaceHeader title="探长雷达" expanded={expanded} onSwitch={switchWorkspace} onNavigation={toggleNav} navigationExpanded={navigationExpanded} actions={<WorkspaceToolButtons onIdeas={()=>setIdeasOpen(true)} onAssistant={openAssistant} ideasOpen={ideasOpen} assistantOpen={assistantOpen} />}>
       <><form className="import-bar" id="import-form" onSubmit={event=>{event.preventDefault();if(link.trim())setImportText(link)}}><Globe className="icon"/><input id="import-url" value={link} onChange={event=>setLink(event.target.value)} aria-label="收录新内容" placeholder="收录新内容：粘贴作品或博主链接…"/><button type="submit" hidden={!link.trim()}>添加 +</button></form>
-      <div className="connection-strip"><div className="latency-strip" aria-label="平台连接状态">{originalPlatforms.map(([key,label,,short])=>{const state=capabilityPlatforms.find(row=>row.platform===key), indicator=capabilityIndicator(state);return <button className="telemetry-pill" key={key} onClick={()=>selectView('capabilities')} title={`${platformLabel(key,label)}：${indicator.label}`}><i style={{backgroundColor:indicator.color}}/>{masked?platformLabel(key):short}<span>{indicator.label}</span></button>})}</div><button className="asr-status" onClick={()=>selectView('capabilities')}><i className="connection-dot" style={{backgroundColor:asrIndicator.color}} />转写 {asrIndicator.label}</button><button className="schedule-button" onClick={()=>selectView('schedule')}>采集调度</button></div></>
+      <div className="connection-strip"><button className="schedule-button" onClick={()=>selectView('schedule')}>采集调度</button></div></>
     </WorkspaceHeader>
     {mobileNav&&<button className="nav-scrim" aria-label="关闭创作导航" onClick={()=>setMobileNav(false)}/>}
     <StudioWorkbenchSidebar

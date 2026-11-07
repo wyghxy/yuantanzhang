@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { apiFresh, errorText, list, object, text, type RecordData } from '../studio-client'
 import { useStudioPrivacy } from '../StudioPrivacy'
+import { StudioConnectionStatus } from './StudioConnectionStatus'
 import { studioDateTime } from '../studio-operations-utils'
 import { StudioDispatchRecords, type CollectionControlFeedback } from './StudioDispatchRecords'
 import { StudioDispatchIcon as Icon } from './StudioDispatchIcons'
@@ -80,6 +81,7 @@ export function StudioDispatchPanel({ busy, schedule, perform, saveSchedule, col
       <button className="cs-button" onClick={() => void perform(async()=>{ throw new Error('当前版本未接入此项外部处理能力。') })}><Icon name="settings" />采集设置</button>
       <button className="cs-button cs-primary" disabled={busy || !selected.length} onClick={() => void perform(runSelected)}><Icon name="play" />{busy ? '处理中…' : '立即采集'}</button>
     </div></header>
+    <StudioConnectionStatus onDetails={() => onNavigate('capabilities')} />
     <section className="cs-plan" aria-labelledby="cs-plan-title"><form id="cs-schedule-form" onSubmit={event => { event.preventDefault(); void perform(save) }}>
       {!initialized ? <><h3 id="cs-plan-title">自动采集计划</h3><p role="status">自动计划尚未读取，请重试后编辑。</p></> : <>
       <div className="cs-plan-controls"><div className="cs-plan-title"><span className="cs-plan-icon"><Icon name="clock" /></span><h3 id="cs-plan-title">每日自动采集</h3>

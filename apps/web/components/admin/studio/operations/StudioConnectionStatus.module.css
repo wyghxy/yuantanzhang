@@ -1,0 +1,18 @@
+.panel {
+  padding: 16px 20px;
+  border: 1px solid var(--ui-border);
+  border-radius: 10px;
+  background: var(--ui-surface);
+}
+.panel h3 {
+  margin: 0 0 12px;
+  color: var(--ui-text);
+  font-size: 14px;
+  font-weight: 600;
+}
+.rows {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
