@@ -1,5 +1,8 @@
-require('dotenv').config({ path: require('node:path').resolve(__dirname, '../../.env'), quiet: true })
-module.exports = {
+import { config } from 'dotenv'
+import { fileURLToPath } from 'node:url'
+
+config({ path: fileURLToPath(new URL('../../.env', import.meta.url)), quiet: true })
+export default {
   distDir: process.env.NEXT_DIST_DIR || '.next',
   transpilePackages: ['@ytz/contracts'],
   poweredByHeader: false,
