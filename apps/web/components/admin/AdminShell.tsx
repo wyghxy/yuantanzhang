@@ -9,14 +9,14 @@ import {flushStudioWritingEdits,studioWritingEditsPending} from './studio/studio
 import '@/styles/personal-shell.css'
 type PersonalUser={id:string;username:string}
 const dormantImmersive=(v:boolean)=>{if(typeof document!=="undefined")document.documentElement.toggleAttribute("data-project-immersive",v)}
-const PersonalContext=createContext<{user:PersonalUser;expanded:boolean;toggleSidebar:()=>void}|null>(null)
-export function PersonalShell({user,children}:{user:PersonalUser;children:ReactNode}) {
+const PersonalContext=createContext<{user:PersonalUser;passwordProtected:boolean;expanded:boolean;toggleSidebar:()=>void}|null>(null)
+export function PersonalShell({user,children,passwordProtected=false}:{user:PersonalUser;children:ReactNode;passwordProtected?:boolean}) {
  const {theme}=useSiteTheme()
  const [menuOpen,setMenuOpen]=useState(false),[loggingOut,setLoggingOut]=useState(false),[logoutError,setLogoutError]=useState(''),dialog=useRef<HTMLDialogElement>(null)
- useEffect(()=>{const expired=()=>{clearStudioQueries(true);window.location.assign('/login')}
+ useEffect(()=>{const expired=()=>{clearStudioQueries(true);if(passwordProtected)window.location.assign('/login');else window.location.reload()}
    const off=onStudioSessionEnded(expired);window.addEventListener(studioAuthExpired,expired)
    return ()=>{off();window.removeEventListener(studioAuthExpired,expired)}
- },[])
+ },[passwordProtected])
   useEffect(() => {
     const pending = new Set<string>()
     let navigating = false
@@ -81,15 +81,16 @@ export function PersonalShell({user,children}:{user:PersonalUser;children:ReactN
     } catch { setLogoutError('退出失败，请重试') }
     finally { setLoggingOut(false) }
   }
- return <PersonalContext.Provider value={{user,expanded:menuOpen,toggleSidebar:()=>setMenuOpen(v=>!v)}}>
+ return <PersonalContext.Provider value={{user,passwordProtected,expanded:menuOpen,toggleSidebar:()=>setMenuOpen(v=>!v)}}>
    <div className="admin-workspace native-workspace" data-theme={theme} data-sidebar="hidden" data-immersive="true" data-workspace="viral">
     <div className="admin-shell-body"><main className="admin-main" id="workspace-content">{children}</main></div>
     {menuOpen&&<dialog ref={dialog} className="workspace-switcher" aria-labelledby="workspace-switcher-title" onCancel={()=>setMenuOpen(false)} onClick={e=>{if(e.target===e.currentTarget)setMenuOpen(false)}}>
       <div className="workspace-switcher-content"><div className="workspace-switcher-heading"><h2 id="workspace-switcher-title">切换工作台</h2><button type="button" className="admin-icon-button" aria-label="关闭工作台菜单" onClick={()=>setMenuOpen(false)}><X size={18}/></button></div>
        <nav className="admin-sidebar" aria-label="个人工作台"><Link className="admin-nav-link" href="/workspace/viral" onClick={()=>setMenuOpen(false)}><Target size={18}/>探长雷达</Link><Link className="admin-nav-link" href="/workspace/creation" onClick={()=>setMenuOpen(false)}><BookOpen size={18}/>内容项目</Link></nav>
-       <div className="workspace-switcher-account"><span>{user.username}</span><button type="button" disabled={loggingOut} onClick={()=>void logout()}><LogOut size={14}/>{loggingOut?'正在退出…':'退出登录'}</button></div>
+       <a className="admin-nav-link" href="https://yuantanzhang.cn/workspace/viral" target="_blank" rel="noopener noreferrer">官方在线版 · 立即使用 ↗</a>
+       <div className="workspace-switcher-account"><span>{passwordProtected?user.username:'个人版 · 本机'}</span>{passwordProtected&&<button type="button" disabled={loggingOut} onClick={()=>void logout()}><LogOut size={14}/>{loggingOut?'正在退出…':'退出登录'}</button>}</div>
        {logoutError&&<p role="alert">{logoutError}</p>}</div>
     </dialog>}
    </div></PersonalContext.Provider>
 }
-export function useAdminShell(){const v=useContext(PersonalContext);if(!v)throw new Error('请登录个人工作台');return {userId:v.user.id,role:'owner',setImmersive:dormantImmersive,features:['studio'],expanded:v.expanded,toggleSidebar:v.toggleSidebar}}
+export function useAdminShell(){const v=useContext(PersonalContext);if(!v)throw new Error('工作台尚未就绪');return {userId:v.user.id,passwordProtected:v.passwordProtected,role:'owner',setImmersive:dormantImmersive,features:['studio'],expanded:v.expanded,toggleSidebar:v.toggleSidebar}}

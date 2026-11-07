@@ -43,7 +43,8 @@ export default function AccountSettingsMenu({ className, workspace = false }: { 
     }}>
       {workspace && <><span className={styles.caption}>外观</span>{([{ value: 'light', label: '浅色', Icon: Sun }, { value: 'dark', label: '深色', Icon: Moon }, { value: 'system', label: '跟随系统', Icon: Monitor }] as const).map(({ value, label, Icon }) => <button className={styles.appearance} key={value} type="button" role="menuitemradio" aria-checked={preference === value} onClick={() => { setPreference(value); close(true) }}><Icon size={17} /><span>{label}</span><Check size={16} style={{ visibility: preference === value ? 'visible' : 'hidden', marginLeft: 'auto' }} /></button>)}<hr className={styles.divider} /></>}
       <span className={styles.caption}>个人工作台</span>
-      <Link role="menuitem" href="/workspace/settings" onClick={() => close()}><UserRound size={17} />账号设置与连接</Link>
+      <Link role="menuitem" href="/workspace/settings" onClick={() => close()}><UserRound size={17} />个人设置与连接</Link>
+      <a role="menuitem" href="https://yuantanzhang.cn/workspace/viral" target="_blank" rel="noopener noreferrer" onClick={() => close()}><Globe size={17} />官方在线版 · 立即使用</a>
       <a role="menuitem" href="https://yuantanzhang.cn/" target="_blank" rel="noopener noreferrer" onClick={() => close()}><Globe size={17} />元探长官网</a>
     </div>, document.body)}
   </>

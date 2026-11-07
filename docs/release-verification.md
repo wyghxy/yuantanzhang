@@ -2,26 +2,38 @@
 
 ## 0.3.0 SQLite 版本
 
-验证日期：2026-11-07。环境为 Windows 主机上的 WSL Ubuntu 24.04、Node.js 22.23.2、pnpm 9.15.9、SQLite 与本地 Chromium。测试使用独立数据文件和合成案例，原 PostgreSQL、Redis 容器均已停止。
+验证日期：2026-11-07。环境为 Windows 主机上的 WSL Ubuntu 24.04、Node.js 22.23.2、pnpm 9.15.9、SQLite 与本地 Chromium。测试使用独立数据文件和合成案例；本次个人版对应的旧 PostgreSQL、Redis 测试容器均已停止。
 
 | 检查 | 结果与范围 |
 | --- | --- |
 | 首次初始化 | 无 `.env` 的新环境执行 `pnpm run setup` 通过，生成本机配置、SQLite、个人身份和演示案例。 |
 | 类型、lint 与单元测试 | 工作区类型检查、ESLint 与 `pnpm test` 通过。 |
-| 发布扫描 | `check:release` 通过；包含 `.cjs`、`.cts`、`.mts` 内容检查及数据库产物检查。 |
+| 发布扫描 | 最新 `check:release` 扫描通过；包含 `.cjs`、`.cts`、`.mts` 内容检查及数据库产物检查。 |
 | 生产构建 | Nest API、独立 Worker 和 Next.js 生产构建全部通过。 |
-| SQLite HTTP | 12 组基础流程通过，覆盖个人会话、录入与关联、版本保护、文件和恢复等实际业务请求。 |
+| SQLite HTTP | 当前 14 组集成流程通过，覆盖本地链接分类、个人会话、录入与关联、版本保护、文件和恢复等实际业务请求。 |
 | 演示清理 | 真实 SQLite 中验证只清除演示资料、保留个人记录，验证事务完成后回滚。 |
 | 后端与任务 | 6 组工作流通过，包含数据库任务租约崩溃恢复、双 Worker 领取与版本失效处理。 |
-| 编译产物复验 | 使用编译后的 API、Worker 及 `next start` 运行，HTTP 集成 12 组再次通过。 |
+| 编译产物复验 | 使用最终编译后的 API、Worker 及 `next start` 运行，HTTP 集成 14 组通过。 |
 | 浏览器 | 四主页面、拆解、稿件真实编辑与 Ctrl+S 保存后重载、内容项目、暗色和手机布局通过。 |
 | 状态位置 | 普通页面顶部保留采集调度入口；八个平台与一项转写状态集中在调度页。 |
 | 本地运行边界 | 已验证浏览器流程为 0 次外部请求、0 个页面运行异常。 |
 | 重复初始化 | 停止本实例 Web/API/Worker 后再次执行 `pnpm run setup`，退出 0；无待应用迁移，已有个人账号与工作空间保留，现有数据未重置。活跃服务期间不运行迁移。 |
+| 默认本机直接进入 | 全新浏览器无 Cookie 直达 `/workspace/viral?view=topics`，地址和刷新后仍留在工作区；`/`、`/login` 进入工作区，本机模式不显示退出菜单。 |
+| 编辑中的会话恢复 | 输入尚未保存的正文后删除 Cookie，同一次 Ctrl+S 保存经历 PATCH 401、本机会话 POST 200、原保存 PATCH 200；稿件仅增加一个版本，刷新后内容保留。 |
+| 自动会话边界 | 缺少 Origin、跨站 Origin、错误 Host、跨站 Sec-Fetch-Site、伪造转发头均返回 403；匿名业务数据请求返回 401。 |
+| 可选密码模式 | 独立临时 SQLite 中分别启动本机与密码模式 API：切换后旧本机 Cookie 返回 401，自动会话入口 403，错密码 401、正确密码 200、退出后 401，注册入口 404。 |
+| 本机采集入库 | 使用隔离本机 HTTP 程序验证实际调用与入库；并发提交同一来源只新增 1 条，同源结果不覆盖个人内容，回收站中的已有素材不自动恢复。 |
+| 本机采集失败边界 | 断开后拒绝旧请求返回的结果；12 秒超时、超过 2 MiB、超过 20 项和无效 JSON 均明确失败，不写入素材。此项验证通用接入合同，不代表内置平台抓取器。 |
+| 最终浏览器复验 | 全套浏览器流程通过，继续覆盖四主板块、稿件编辑及过期会话恢复、暗色、手机和调度状态；`pageErrors=[]`、`externalRequests=[]`。 |
+| 下载包双入口 | 浏览器通过真实 `file://` 打开 `开始使用.html`，官方在线版与本机入口的地址正确，页面加载没有外部请求。 |
+| 新环境创作深链接 | 无 Cookie 打开 `/workspace/creation`，首次 API 401 后自动建立本机会话，项目请求 200，并保留原访问路径。 |
+| 个人版与采集弹窗 | 页头“个人版”和官方链接正确；录入来源链接后打开本机采集设置，来源保留。外站程序地址使用页内提示，已保存配置不变，没有原生浏览器弹窗。 |
+| 最终修订复核 | 全局类型、lint、单元测试、发布扫描与最终生产构建通过；后端 6 组、演示清理和四主页、拆解、稿件、暗色、手机浏览器检查继续通过，0 次外部请求、0 个页面运行异常。 |
+| 测试收口 | 本次临时测试资料、会话与临时数据库均已清理，保留 14 条明确标记的演示记录。 |
 
-本次结果证明上述 WSL SQLite 环境与覆盖范围，不表示 Windows 或 macOS 原生首次安装已经通过。GitHub CI 已配置这两个平台的安装冒烟检查，实际结果另看工作流回执；远端 CI 尚不计入本次本地通过记录。外部处理服务仍不包含在本版本中。
+本次结果证明上述 WSL SQLite 环境与覆盖范围。此前提交 `4628877` 的 GitHub CI 已通过 Windows、macOS 安装冒烟与 Linux 完整检查；本机免登录、双入口和通用采集接入的最新修订仍待对应最终提交的远端 CI 回执，不能套用此前成功结果。本站不包含平台抓取器或外部付费处理服务。
 
-随附的[创作中心](screenshots/creation.png)、[拆解](screenshots/breakdown.png)、[暗色稿件](screenshots/writing-dark.png)、[手机](screenshots/mobile.png)与[采集调度](screenshots/schedule.png)截图来自本次 SQLite 实测。
+随附的[创作中心](screenshots/creation.png)、[拆解](screenshots/breakdown.png)、[暗色稿件](screenshots/writing-dark.png)、[手机](screenshots/mobile.png)、[采集调度](screenshots/schedule.png)、[开始使用入口](screenshots/start.png)与[本机采集设置](screenshots/local-collector.png)截图来自本次实际浏览器验证。
 
 下方 0.2.0 的记录属于旧 PostgreSQL 版本，与本次 SQLite 验证分别保留。
 

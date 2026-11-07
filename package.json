@@ -16,6 +16,8 @@
     "lint": "eslint apps scripts tests --ext .ts,.tsx,.mjs",
     "test": "tsx --test tests/*.test.ts",
     "test:integration": "tsx tests/integration.ts",
+    "test:auth": "tsx tests/auth.integration.ts",
+    "test:collector": "tsx tests/collector.integration.ts",
     "test:backend-workflows": "tsx tests/backend-workflows.ts",
     "test:demo": "tsx tests/demo-cleanup.integration.ts",
     "test:browser": "tsx tests/browser.ts",

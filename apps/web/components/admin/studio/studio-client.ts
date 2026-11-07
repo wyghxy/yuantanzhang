@@ -25,7 +25,8 @@ export async function apiRequest(path: string, method = 'GET', body?: RecordData
   if(method.toUpperCase()==='GET' && resource==='collections')return { items:[],total:0,available:false }
   if(method.toUpperCase()==='GET' && resource==='dispatch'){
     const accounts=await api('accounts?projection=summary&limit=200&sample=all', 'GET', undefined,signal)
-    return {platforms:Object.keys(platforms).filter(p=>p!=='local'&&p!=='bilibili').map(platform=>({platform,accountCount:list(accounts.items).filter(a=>a.platform===platform).length,status:'未接入',mode:'local'}))}
+    const collector=await apiFresh('local-collector',signal)
+    return {collectorConfigured:collector.configured===true,platforms:Object.keys(platforms).filter(p=>p!=='local'&&p!=='bilibili').map(platform=>({platform,accountCount:list(accounts.items).filter(a=>a.platform===platform).length,status:collector.configured?'已配置本机程序':'未配置本机程序',mode:'local'}))}
   }
   if(method.toUpperCase()==='GET' && resource==='schedule')return {enabled:false,version:1,accounts:[],completeCollection:true}
   if(method.toUpperCase()!=='GET' && resource==='schedule')throw new Error('当前版本未接入此项外部处理能力。')
@@ -41,7 +42,7 @@ export async function apiRequest(path: string, method = 'GET', body?: RecordData
 export const errorText = (e: unknown) => e instanceof Error ? e.message : '操作未完成，请重试'
 export const dateLabel = (v: unknown) => typeof v === 'string' && Number.isFinite(Date.parse(v)) ? new Date(v).toLocaleDateString('zh-CN',{month:'2-digit',day:'2-digit'}) : '日期未知'
 export const isSample = (v: RecordData) => v.sample === true || v.isSample === true || v.source === 'sample'
-export const transcriptSourceLabel = (value: unknown) => ({manual:'人工输入',user_text:'人工输入',knowledge_snapshot:'知识库快照',platform_subtitles:'平台字幕',subtitle:'平台字幕',asr:'语音转写'}[text(value)] || text(value,'等待原文'))
+export const transcriptSourceLabel = (value: unknown) => ({manual:'人工输入',user_text:'人工输入',local_collector:'本机采集',knowledge_snapshot:'知识库快照',platform_subtitles:'平台字幕',subtitle:'平台字幕',asr:'语音转写'}[text(value)] || text(value,'等待原文'))
 export async function downloadStudio(path: string, name: string) {
   const blob = await studioRequest('/api/workspace/studio/' + path, {}, async response => {
     if (!response.ok) { const value = await response.json().catch(() => ({})); throw new Error(value.error || '下载失败') }

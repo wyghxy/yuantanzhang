@@ -6,6 +6,7 @@ import { mkdtemp, realpath, readdir, unlink, rmdir } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
+import { localSession } from './auth.integration'
 import { executeClaim } from '../apps/worker/src/queue'
 import { assertPersonalSqlite, assertLoopbackApi, deleteOwnFixtures } from './demo-cleanup.integration'
 import { personalDatabase } from '../prisma/sqlite-runtime.cjs'
@@ -95,9 +96,8 @@ async function verifyWorkerRecovery() {
 async function main(){
  assertLoopbackApi(base)
  await assertPersonalSqlite(db)
- const login=await fetch(base+'/api/auth/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({username:process.env.PERSONAL_USERNAME,password:process.env.PERSONAL_PASSWORD})})
- assert.equal(login.status,200);cookie=(login.headers.get('set-cookie')||'').split(';')[0];assert.ok(cookie)
- wid=String(obj(obj(await login.json()).workspace).id)
+ const session=await localSession(base)
+ cookie=session.cookie;wid=session.workspaceId
  assert.ok(await db.workspace.findUnique({where:{id:wid}}),'HTTP 会话必须属于验收数据库')
  const a=await add('accounts',{name:marker}),m=await add('materials',{text:'一段<不能当作HTML>的手写原文。',accountId:a.id}),n=await add('materials',{text:'第二份手写素材。'})
  const article=await studio('materials/'+m.id+'/article');assert.match(String(article.html),/&lt;不能当作HTML&gt;/)

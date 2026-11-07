@@ -1,9 +1,11 @@
+import { personalFetch } from './local-session'
+
 export class CreationRequestError extends Error {
   constructor(message: string, public status: number) { super(message); this.name = 'CreationRequestError' }
 }
 
 export async function creationRequest<T>(url: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(url, { cache: 'no-store', ...options })
+  const response = await personalFetch(url, { cache: 'no-store', ...options })
   let result: unknown
   try { result = await response.json() } catch { throw new CreationRequestError('服务器未返回有效数据，请稍后重试', response.status) }
   if (!response.ok) {

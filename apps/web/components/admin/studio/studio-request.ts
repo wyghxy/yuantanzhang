@@ -1,5 +1,6 @@
 import { assertPersonalAction } from './personal-actions'
 import { clearStudioQueries, studioAuthExpired } from './studio-query-cache'
+import { personalFetch } from '@/lib/local-session'
 /** Bounded UI requests. A timeout must never replay a write whose result is unknown. */
 export async function studioRequest<T>(
   url: string, init: RequestInit, read: (response: Response) => Promise<T>, timeoutMs = 30000,
@@ -10,7 +11,7 @@ export async function studioRequest<T>(
   try {
     signal.throwIfAborted()
     if(url.startsWith('/api/workspace/studio/')) assertPersonalAction(url.slice('/api/workspace/studio/'.length), init.method || 'GET')
-    const response = await fetch(url, { ...init, signal })
+    const response = await personalFetch(url, { ...init, signal })
     if (response.status === 401 && typeof window !== 'undefined') {
       clearStudioQueries(true)
       window.dispatchEvent(new Event(studioAuthExpired))

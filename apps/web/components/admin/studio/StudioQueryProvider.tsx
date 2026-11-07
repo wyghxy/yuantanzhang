@@ -1,25 +1,15 @@
 'use client'
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { QueryClientProvider, useQuery } from '@tanstack/react-query'
-import { useRouter } from 'next/navigation'
 import { useAdminShell } from '../AdminShell'
 import { apiRequest } from './studio-client'
-import { cancelStudioInactiveRead, studioAuthExpired, studioQueryKey, studioReadOnlyDetailKey, studioQueryScope, studioStaleTime } from './studio-query-cache'
+import { cancelStudioInactiveRead, studioQueryKey, studioReadOnlyDetailKey, studioQueryScope, studioStaleTime } from './studio-query-cache'
 import { studioResourceRefreshInterval, studioReadOnlyMaterialDetail, studioResourceStaleTime } from './studio-resource-refresh'
 import { studioListPlaceholder } from './studio-list-query'
 
 export default function StudioQueryProvider({ children }: { children: ReactNode }) {
   const { userId } = useAdminShell()
-  const router = useRouter()
   const scope = useMemo(() => studioQueryScope(String(userId)), [userId])
-  useEffect(() => {
-    const expired = () => {
-      const next = window.location.pathname + window.location.search
-      router.replace('/login?next=' + encodeURIComponent(next))
-    }
-    window.addEventListener(studioAuthExpired, expired)
-    return () => window.removeEventListener(studioAuthExpired, expired)
-  }, [router])
   return <QueryClientProvider client={scope.client}>{children}</QueryClientProvider>
 }
 export function useStudioResource(path: string, enabled = true, live = false) {

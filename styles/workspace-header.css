@@ -15,6 +15,9 @@
 :root body .admin-workspace .radar-integrated.islands-active :is(#workspace-header,#sidebar) {font-family:var(--sidebar-font);}
 :root body .admin-workspace #workspace-header .workspace-header-switch {display:flex;align-items:center;gap:10px;min-width:0;height:40px;padding:0 4px;border:0;border-radius:10px;background:transparent;color:inherit;font:inherit;font-weight:600;white-space:nowrap;}
 :root body .admin-workspace #workspace-header .workspace-header-switch img {width:28px;height:28px;flex:none;border-radius:8px;object-fit:cover;}
+:root body .admin-workspace #workspace-header .personal-edition-badge {font-size:10px;line-height:18px;font-weight:400;color:var(--ui-text-muted);border:1px solid var(--ui-border);border-radius:5px;padding:0 4px;}
+:root body .admin-workspace #workspace-header .official-edition-link {display:inline-flex;align-items:center;white-space:nowrap;font-size:12px;padding:4px 8px;color:var(--ui-accent);text-decoration:none;border-radius:6px;}
+:root body .admin-workspace #workspace-header .official-edition-link:hover {background:var(--ui-nav-hover);}
 :root body .admin-workspace #workspace-header .workspace-header-context {display:flex;align-items:center;gap:12px;flex:1;min-width:0;overflow:hidden;}
 :root body .admin-workspace #workspace-header .workspace-header-context .import-bar {flex:1;min-width:100px;margin:0;height:36px;}
 :root body .admin-workspace #workspace-header .workspace-header-actions {display:flex;align-items:center;justify-content:flex-end;gap:4px;flex:none;margin-left:auto;}
@@ -38,6 +41,7 @@
   :root body .admin-workspace #workspace-header .workspace-header-actions {gap:0;}
 }
 @media(max-width:359px) {
+  :root body .admin-workspace #workspace-header .personal-edition-badge {display:none;}
   :root body .admin-workspace #workspace-header .workspace-header-switch > svg {display:none;}
   :root body .admin-workspace #workspace-header .workspace-header-switch {gap:4px;padding:0;}
 }

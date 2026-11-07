@@ -6,6 +6,7 @@ import { StudioConnectionStatus } from './StudioConnectionStatus'
 import { studioDateTime } from '../studio-operations-utils'
 import { StudioDispatchRecords, type CollectionControlFeedback } from './StudioDispatchRecords'
 import { StudioDispatchIcon as Icon } from './StudioDispatchIcons'
+import { openStudioLocalCollector } from '../StudioLocalCollectorDialog'
 
 export const dispatchPlatforms = [
   ['douyin', '抖音', 'douyin'], ['bili', 'B站', 'bilibili'],
@@ -48,8 +49,10 @@ export function StudioDispatchPanel({ busy, schedule, perform, saveSchedule, col
   if (!initialized && schedule.version !== undefined) { setPlan(planValue(schedule)); setBaseVersion(schedule.version) }
   useEffect(() => {
     void refreshDispatch()
+    const configured=()=>void refreshDispatch()
+    window.addEventListener('ytz-local-collector-configured',configured)
     const timer = setInterval(() => { if (document.visibilityState === 'visible') void refreshDispatch() }, 15000)
-    return () => { clearInterval(timer); dispatchRequest.current?.abort(); dispatchRequest.current = null }
+    return () => { window.removeEventListener('ytz-local-collector-configured',configured);clearInterval(timer); dispatchRequest.current?.abort(); dispatchRequest.current = null }
   }, [refreshDispatch])
   useEffect(() => {
     const closeScope = (event: MouseEvent) => { if (scope.current && !scope.current.contains(event.target as Node)) scope.current.open = false }
@@ -63,14 +66,16 @@ export function StudioDispatchPanel({ busy, schedule, perform, saveSchedule, col
     if (!initialized) return
     if (scope.current) scope.current.open = false
     if (plan.enabled && rows.some(row => plan.platforms.some(platform => platform === row.platform) && row.mode === 'local')) {
-      throw new Error('本地采集尚未开放，请先在采集设置中确认自动计划使用的采集方式')
+      openStudioLocalCollector()
+      throw new Error('定时采集由你自己的本机程序安排；工作台可接收其采集结果。')
     }
     const saved=await saveSchedule({...plan,expectedVersion:baseVersion})
     setBaseVersion(saved.version); setPlan(planValue(saved))
   }
   async function runSelected() {
     if (rows.some(row => selected.includes(text(row.platform)) && Number(row.accountCount) > 0 && row.mode === 'local')) {
-      throw new Error('本地采集尚未开放，请先在采集设置中确认本次使用的采集方式')
+      openStudioLocalCollector()
+      return
     }
     await collect('all', selected.length === all.length ? undefined : selected)
   }
@@ -78,7 +83,7 @@ export function StudioDispatchPanel({ busy, schedule, perform, saveSchedule, col
     if (event.key === 'Escape' && scope.current?.open) { event.stopPropagation(); scope.current.open = false; scope.current.querySelector('summary')?.focus() }
   }}>
     <header className="cs-head"><div><h2>采集调度</h2><p className="cs-feedback" role={actionError ? 'alert' : 'status'} aria-live="polite">{[actionMessage, actionError].filter(Boolean).join('；') || '\u00a0'}</p></div><div className="cs-actions">
-      <button className="cs-button" onClick={() => void perform(async()=>{ throw new Error('当前版本未接入此项外部处理能力。') })}><Icon name="settings" />采集设置</button>
+      <button className="cs-button" onClick={() => openStudioLocalCollector()}><Icon name="settings" />采集设置</button>
       <button className="cs-button cs-primary" disabled={busy || !selected.length} onClick={() => void perform(runSelected)}><Icon name="play" />{busy ? '处理中…' : '立即采集'}</button>
     </div></header>
     <StudioConnectionStatus onDetails={() => onNavigate('capabilities')} />
@@ -117,10 +122,10 @@ export function StudioDispatchPanel({ busy, schedule, perform, saveSchedule, col
         return <article key={id} data-platform={id} className={'cs-platform-card' + (selected.includes(id) ? ' is-selected' : '')}>
           <header><label className="cs-platform-pick"><span className="cs-platform-logo" aria-hidden="true"><img src={'/radar-ui/platform-' + asset + (id === 'tiktok' ? '.svg' : '-brand.svg')} alt="" width={36} height={36} draggable={false} /></span><strong>{label}</strong><input type="checkbox" aria-label={'本次选择' + label} checked={selected.includes(id)} onChange={() => toggle(id)} /></label></header>
           <button className="cs-account-count" aria-label={'查看' + label + '跟踪账号'} onClick={() => onNavigate('accounts')}><strong>{count ?? '—'}</strong><span>跟踪账号</span></button>
-          <div className="cs-platform-config"><span>{row ? row.mode === 'local' ? '本地采集 · ' + text(device?.name, '我的电脑') : '算力采集' : '正在读取配置'}</span><button className="cs-icon-button" aria-label={'配置' + label + '采集方式'} onClick={() => void perform(async()=>{ throw new Error('当前版本未接入此项外部处理能力。') })}><Icon name="settings" /></button></div>
-          <div className={'cs-ready' + (ready ? ' is-ready' : '')}><i />{row?.mode === 'local' ? '本地采集尚未开放' : count === 0 ? '暂无跟踪账号' : text(row?.status, '读取服务状态…')}</div>
+          <div className="cs-platform-config"><span>{row ? row.mode === 'local' ? '本地采集 · ' + text(device?.name, '我的电脑') : '算力采集' : '正在读取配置'}</span><button className="cs-icon-button" aria-label={'配置' + label + '采集方式'} onClick={() => openStudioLocalCollector()}><Icon name="settings" /></button></div>
+          <div className={'cs-ready' + (ready ? ' is-ready' : '')}><i />{row?.mode === 'local' ? dispatch?.collectorConfigured?'已配置本机程序，支持范围由程序决定':'未配置本机采集程序' : count === 0 ? '暂无跟踪账号' : text(row?.status, '读取服务状态…')}</div>
           {pause && <p className="cs-caption">{pause.retryAt ? '自动采集可重试时间 · ' + studioDateTime(pause.retryAt) : '核实连接后可重新采集。'} <button className="cs-button cs-text" onClick={() => onTask(text(pause.taskId))}>查看原任务</button></p>}
-          <footer><button className={'cs-button' + (canCollect ? ' cs-soft' : '')} disabled={busy || !row} onClick={() => count === 0 ? onNavigate('accounts') : canCollect ? void perform(() => collect(id)) : void perform(async()=>{ throw new Error('当前版本未接入此项外部处理能力。') })}>{count === 0 ? '添加账号' : canCollect ? '立即采集' : role === 'admin' ? '去配置' : '待平台接通'}</button>{index < 3 && <button className="cs-button cs-text" disabled={busy || !count} onClick={() => onTranscribe(id)}>生成转写</button>}</footer>
+          <footer><button className={'cs-button' + (canCollect ? ' cs-soft' : '')} disabled={busy || !row} onClick={() => count === 0 ? onNavigate('accounts') : row?.mode==='local'?openStudioLocalCollector():canCollect ? void perform(() => collect(id)) : openStudioLocalCollector()}>{count === 0 ? '添加账号' : row?.mode==='local'?'本机采集':canCollect ? '立即采集' : role === 'admin' ? '去配置' : '待平台接通'}</button>{index < 3 && <button className="cs-button cs-text" disabled={busy || !count} onClick={() => onTranscribe(id)}>生成转写</button>}</footer>
         </article>
       })}</div>
     </section>

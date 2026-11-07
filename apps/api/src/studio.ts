@@ -8,6 +8,8 @@ import {handoff} from './projects'
 import {roster} from './roster'
 import {images} from './attachments'
 import {groups,profile} from './relationships'
+import {collectorSettings,runCollector} from './local-collector'
+import {recognizeLink} from './links'
 function sendExport(res:Response,data:Data,format:string){
   const md=String(data.body||data.text||obj(data.transcript).corrected||data.description||'')
   res.type(format==='json'?'application/json':'text/plain; charset=utf-8');res.setHeader('Content-Disposition',"attachment; filename*=UTF-8''"+encodeURIComponent(String(data.title||'导出文稿')+(format==='json'?'.json':'.md')))
@@ -19,6 +21,9 @@ export async function route(req:Request,res:Response,s:Scope){
   const [resource,id,action]=parts,method=req.method,body=obj(req.body)
   if('workspaceId' in body||'ownerId' in body||q.has('workspaceId')||q.has('ownerId'))fail(400,'invalid_scope','工作区由已登录账号决定')
   if(resource==='dashboard'&&method==='GET')return dashboard(s)
+  if(resource==='local-collector'&&parts.length===1&&['GET','PATCH'].includes(method))return collectorSettings(s,method==='PATCH'?body:undefined)
+  if(resource==='local-collector'&&parts.length===2&&id==='run'&&method==='POST')return runCollector(s,body)
+  if(resource==='links'&&method==='POST'&&!id)return recognizeLink(body)
   if(resource==='roster-imports')return roster(s,id,action,method,body,q)
   if(resource==='source-images'&&['POST','PATCH'].includes(method))return images(req,s,q)
   if(resource==='associations')return groups(s,id,action,method,body,q)
@@ -51,7 +56,7 @@ export async function route(req:Request,res:Response,s:Scope){
   if(k==='materials'&&action==='drafts'&&method==='GET'){await record(db,s,k,id);const rows=await db.studioRecord.findMany({where:{workspaceId:s.workspaceId,kind:'drafts',deletedAt:null},orderBy:{updatedAt:'desc'}});const items=rows.filter(r=>obj(r.data).materialId===id||(Array.isArray(obj(r.data).references)&&(obj(r.data).references as Data[]).some(ref=>ref.materialId===id))).map(show);return {items,drafts:items,total:items.length}}
   if(k==='materials'&&['article','comments','player'].includes(action)&&method==='GET'){
     const row=await record(db,s,k,id),data=obj(row.data)
-    if(action==='article'){const text=txt(obj(data.transcript).corrected,txt(obj(data.transcript).raw)),paragraphs=text.split(/\n\s*\n/).filter(Boolean),escape=(v:string)=>v.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');return {materialId:id,title:data.title,author:data.author||'',publishedAt:data.publishedAt||null,status:text?'ready':'unavailable',html:paragraphs.map(p=>'<p>'+escape(p).replace(/\n/g,'<br>')+'</p>').join(''),body:text,text,paragraphs,source:'manual'}}
+    if(action==='article'){const text=txt(obj(data.transcript).corrected,txt(obj(data.transcript).raw)),paragraphs=text.split(/\n\s*\n/).filter(Boolean),escape=(v:string)=>v.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');return {materialId:id,title:data.title,author:data.author||'',publishedAt:data.publishedAt||null,status:text?'ready':'unavailable',html:paragraphs.map(p=>'<p>'+escape(p).replace(/\n/g,'<br>')+'</p>').join(''),body:text,text,paragraphs,source:txt(obj(data.transcript).source,'manual')}}
     if(action==='comments'){const saved=Array.isArray(data.comments)?data.comments:[];return {materialId:id,status:saved.length?'ready':'not_collected',comments:saved,items:saved,total:saved.length}}
     const file=await db.studioFile.findFirst({where:{workspaceId:s.workspaceId,recordId:id,mediaType:{startsWith:'video/'}},orderBy:{createdAt:'desc'}})
     return {materialId:id,status:file?'ready':'unavailable',url:file?'/api/workspace/studio/assets/'+file.id+'/download':null}

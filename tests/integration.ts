@@ -2,6 +2,7 @@ import 'dotenv/config'
 import assert from 'node:assert/strict'
 import { personalDatabase } from '../prisma/sqlite-runtime.cjs'
 import { assertLoopbackApi, assertPersonalSqlite, deleteOwnFixtures } from './demo-cleanup.integration'
+import { localRequest, localSession, localWebOrigin } from './auth.integration'
 import { mkdir, writeFile } from 'node:fs/promises'
 
 const origin = process.env.API_ORIGIN || 'http://127.0.0.1:3311'
@@ -28,17 +29,46 @@ await assertPersonalSqlite(db)
 checks.push('Prisma opened the intended local SQLite file')
 assert.equal((await call('/api/workspace/studio/accounts', 'GET', undefined, false)).response.status, 401)
 checks.push('unauthenticated data request rejected')
-assert.equal((await call('/api/auth/login', 'POST', { username: process.env.PERSONAL_USERNAME, password: 'invalid-password' }, false)).response.status, 401)
-const login = await call('/api/auth/login', 'POST', { username: process.env.PERSONAL_USERNAME, password: process.env.PERSONAL_PASSWORD }, false)
-assert.equal(login.response.status, 200)
-workspaceId = String(object(login.data.workspace).id)
-assert.ok(await db.workspace.findUnique({ where: { id: workspaceId } }), 'HTTP 会话与测试必须连接相同的工作区')
-const setCookie = login.response.headers.get('set-cookie') || ''
-assert.match(setCookie, /HttpOnly/i)
-assert.match(setCookie, /SameSite=Strict/i)
-cookie = setCookie.split(';')[0]
-assert.ok(cookie)
-checks.push('personal login and protected session')
+const web=localWebOrigin()
+for(const bad of [
+  {name:'missing Origin',headers:{}},
+  {name:'foreign Origin',headers:{origin:'https://example.invalid'}},
+  {name:'foreign Host',headers:{origin:web,host:'untrusted.invalid'}},
+  {name:'cross-site Fetch Metadata',headers:{origin:web,'sec-fetch-site':'cross-site'}},
+  {name:'forged forwarding headers',headers:{origin:'https://example.invalid','x-forwarded-host':new URL(origin).host,'x-forwarded-for':'127.0.0.1'}}
+]) {
+  const denied=await localRequest(origin,bad.headers as Record<string,string>)
+  assert.equal(denied.status,403,bad.name);assert.equal(denied.setCookie,'',bad.name)
+}
+checks.push('local session rejected without a trusted Origin/Host/Fetch-Site; forwarded headers do not grant access')
+const session=await localSession(origin)
+cookie=session.cookie;workspaceId=session.workspaceId
+assert.equal((await call('/api/auth/me')).response.status,200)
+assert.ok(await db.workspace.findUnique({where:{id:workspaceId}}),'HTTP 会话与测试必须连接相同的工作区')
+assert.equal((await call('/api/auth/login','POST',{username:'unused',password:'unused'},false)).response.status,403)
+assert.equal((await call('/api/auth/register','POST',{},false)).response.status,404)
+checks.push('local session opens the initialized personal workspace without a password or registration')
+// Platform URLs below are text inputs for the local classifier; the API does not visit them.
+const taskCount=()=>db.localTask.count({where:{record:{workspaceId}}})
+const tasksBefore=await taskCount()
+for(const [input,platform,kind,id] of [
+  ['https://www.douyin.com/video/799999999999','douyin','materials','799999999999'],
+  ['分享：看看这个账号 https://space.bilibili.com/987654321。','bili','accounts','987654321'],
+  ['https://www.xiaohongshu.com/explore/fixture123','xiaohongshu','materials','fixture123'],
+  ['https://www.youtube.com/watch?v=fixture123abc','youtube','materials','fixture123abc']
+]){
+  const reply=await api('links','POST',{text:input});assert.equal(reply.response.status,200)
+  const link=object(reply.data.link)
+  assert.equal(link.platform,platform);assert.equal(link.detectedKind,kind)
+  assert.equal(link.nativeId,id);assert.equal(link.requiresResolution,false);assert.equal(link.source,'local_recognition')
+}
+const short=await api('links','POST',{text:'分享短链 https://v.douyin.com/fixture-example/。'})
+assert.equal(short.response.status,200)
+assert.equal(object(short.data.link).url,'https://v.douyin.com/fixture-example/')
+assert.equal(object(short.data.link).requiresResolution,true);assert.equal(object(short.data.link).detectedKind,'unknown')
+for(const invalid of ['javascript:alert(1)','file:///etc/hosts'])assert.equal((await api('links','POST',{text:invalid})).response.status,400)
+assert.equal(await taskCount(),tasksBefore)
+checks.push('full platform URLs and shared text classified locally; short links stay unresolved without jobs; unsafe schemes rejected')
 const accounts = await api('accounts?sample=all&limit=100')
 assert.equal(accounts.response.status, 200)
 assert.ok(Array.isArray(accounts.data.items))

@@ -10,5 +10,5 @@ import './personal.css'
 export const metadata = {title:'元探长',description:'个人创作、对标账号与素材收录'}
 export default async function RootLayout({children}:{children:ReactNode}) {
  const preference=initialPreference((await cookies()).get(themeKey)?.value,null)
- return <html lang="zh-CN" data-preference={preference} data-theme={preference==='dark'?'dark':'light'} suppressHydrationWarning><head><script dangerouslySetInnerHTML={{__html:themeBootstrap}}/></head><body><SiteThemeProvider initialTheme={preference}>{children}</SiteThemeProvider></body></html>
+ return <html lang="zh-CN" data-personal-auth-mode={process.env.PERSONAL_AUTH_MODE||'local'} data-preference={preference} data-theme={preference==='dark'?'dark':'light'} suppressHydrationWarning><head><script dangerouslySetInnerHTML={{__html:themeBootstrap}}/></head><body><SiteThemeProvider initialTheme={preference}>{children}</SiteThemeProvider></body></html>
 }

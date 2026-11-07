@@ -16,6 +16,7 @@ import StudioCollection from './StudioCollection'
 import { useStudioCollectionLocation } from './useStudioCollectionLocation'
 import StudioOperations from './StudioOperations'
 import StudioImport from './StudioImport'
+import StudioLocalCollectorDialog from './StudioLocalCollectorDialog'
 import StudioAssistantDrawer from './StudioAssistantDrawer'
 import { useStudioAssistantBridge } from './useStudioAssistantBridge'
 import StudioInspirationDrawer from './StudioInspirationDrawer'
@@ -96,6 +97,7 @@ function WorkbenchContent() {
   const {readerDirty,writingDirty,canLeave}=useStudioEditGuard()
   const initialTaskLoaded=useRef(!!query.get('task'))
   const notify=useCallback((value:string)=>setNotice(value),[]),changed=useCallback(()=>setRevision(value=>value+1),[])
+  useEffect(()=>{const imported=()=>changed();window.addEventListener('ytz-local-collection-imported',imported);return()=>window.removeEventListener('ytz-local-collection-imported',imported)},[changed])
   useEffect(()=>{if(!notice)return;const timer=setTimeout(()=>setNotice(''),6500);return()=>clearTimeout(timer)},[notice])
   useEffect(()=>{
     const importLink=(event:Event)=>setImportText(text((event as CustomEvent).detail))
@@ -138,7 +140,7 @@ function WorkbenchContent() {
   return <div className={`original-studio radar-integrated${sidebarClosed?' nav-collapsed':''}${mobileNav?' nav-open':''}`}><div id="appContainer" className={`radar-app${focus||readerFocus?' focus-creation-mode':''}`} data-mobile-nav={mobileNav} data-mobile-panel={mobilePanel}>
     <WorkspaceHeader title="探长雷达" expanded={expanded} onSwitch={switchWorkspace} onNavigation={toggleNav} navigationExpanded={navigationExpanded} actions={<WorkspaceToolButtons onIdeas={()=>setIdeasOpen(true)} onAssistant={openAssistant} ideasOpen={ideasOpen} assistantOpen={assistantOpen} />}>
       <><form className="import-bar" id="import-form" onSubmit={event=>{event.preventDefault();if(link.trim())setImportText(link)}}><Globe className="icon"/><input id="import-url" value={link} onChange={event=>setLink(event.target.value)} aria-label="收录新内容" placeholder="收录新内容：粘贴作品或博主链接…"/><button type="submit" hidden={!link.trim()}>添加 +</button></form>
-      <div className="connection-strip"><button className="schedule-button" onClick={()=>selectView('schedule')}>采集调度</button></div></>
+      <div className="connection-strip"><a className="official-edition-link" href="https://yuantanzhang.cn/workspace/viral" target="_blank" rel="noopener noreferrer">官方在线版 · 立即使用 ↗</a><button className="schedule-button" onClick={()=>selectView('schedule')}>采集调度</button></div></>
     </WorkspaceHeader>
     {mobileNav&&<button className="nav-scrim" aria-label="关闭创作导航" onClick={()=>setMobileNav(false)}/>}
     <StudioWorkbenchSidebar
@@ -155,6 +157,7 @@ function WorkbenchContent() {
     <StudioInspirationDrawer open={ideasOpen} close={()=>setIdeasOpen(false)} onTopic={id=>void openTopic(id)} onChanged={changed}/>
     {adopting&&<StudioAdoptDialog material={adopting} close={()=>setAdopting(null)} onSaved={()=>{setAdopting(null);changed();notify('已采纳到选题')}}/>}
     {importText!==null&&<StudioImport initial={importText} close={()=>setImportText(null)} notify={notify} onTask={showTask} onCreated={async(kind,id)=>{setImportText(null);setLink('');changed();if(kind==='materials'){if(!(await canLeave()))return;setAuthor('all');setPlatform('all');setLibraryMaterialId(id);setDraftId('');setView('works');setMobileNav(false);readerDirty.current=false;writingDirty.current=false;selectReadState('all');updateLocation('works',id,'','all')}else{if(!(await canLeave()))return;setView('accounts');setSelectedRecord(id);setDraftId('');updateLocation('accounts','','',platform,id)}}}/>}
+    <StudioLocalCollectorDialog/>
     {logOpen&&<StudioRunLogDrawer error={taskError} events={events} loaded={taskLog.logsLoaded} onClose={()=>setLogOpen(false)}/>}
     {(openingWriting||notice)&&<div className="original-notice" role="status">{openingWriting?'正在打开二创…':notice}</div>}
   </div>

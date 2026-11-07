@@ -10,13 +10,15 @@ const envPath = resolve(root, '.env')
 if (!existsSync(envPath)) {
   writeFileSync(envPath, [
     'DATABASE_URL="file:../data/yuantanzhang.db"',
-    'API_PORT=3311', 'WEB_PORT=3310', 'API_ORIGIN=http://127.0.0.1:3311',
+    'API_PORT=3311', 'WEB_PORT=3310', 'API_ORIGIN=http://127.0.0.1:3311', 'PERSONAL_AUTH_MODE=local',
     'PERSONAL_USERNAME=owner', `PERSONAL_PASSWORD=${randomBytes(24).toString('hex')}`,
     `SESSION_SECRET=${randomBytes(48).toString('hex')}`, 'UPLOAD_DIR=./data/uploads', ''
   ].join('\n'), { mode: 0o600, flag: 'wx' })
-  console.log('已生成本机专用 .env 配置和随机个人登录密码。')
+  console.log('已生成本机专用配置，默认直接打开个人工作台。')
 }
 config({ path: envPath, quiet: true })
+const authMode = process.env.PERSONAL_AUTH_MODE ?? 'local'
+if (!['local', 'password'].includes(authMode)) throw new Error('PERSONAL_AUTH_MODE 只能设置为 local 或 password。')
 const configured = process.env.DATABASE_URL || ''
 if (!configured.startsWith('file:') || configured.startsWith('file://')) {
   throw new Error('此版本使用本地 SQLite；已有数据库配置不会被覆盖。v0.2.0 PostgreSQL 用户请先阅读 docs/migrating-from-browser-edition.md。')
@@ -44,4 +46,5 @@ run(['db:migrate'])
 run(['personal:init'])
 run(['demo:seed'])
 console.log('元探长已初始化。运行 pnpm dev，然后打开 http://127.0.0.1:' + (process.env.WEB_PORT || '3310'))
-console.log('用户名和首次随机密码请在本机 .env 查看 PERSONAL_USERNAME / PERSONAL_PASSWORD。请勿上传或分享此文件。')
+if (authMode === 'password') console.log('密码保护已开启，登录信息请在本机 .env 查看 PERSONAL_USERNAME / PERSONAL_PASSWORD。')
+else console.log('本机使用直接进入工作台，无需登录或注册。')

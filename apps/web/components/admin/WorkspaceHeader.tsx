@@ -16,7 +16,7 @@ export default function WorkspaceHeader({ title, expanded, onSwitch, onNavigatio
   actions?: ReactNode
   className?: string
 }) {
-  const identity = <><Image src="/demo/brand-mark.svg" alt="" width={28} height={28} unoptimized priority /><span>{title}</span></>
+  const identity = <><Image src="/demo/brand-mark.svg" alt="" width={28} height={28} unoptimized priority /><span>{title}</span><small className="personal-edition-badge">个人版</small></>
   return <header id="workspace-header" className={className} data-workspace-header aria-label={title + '工作台'}>
     <div className="workspace-header-identity">
       {onNavigation && <button type="button" className="workspace-tool-button" aria-label="展开或收起当前导航" aria-expanded={navigationExpanded} onClick={onNavigation}><Menu size={20} aria-hidden="true" /></button>}

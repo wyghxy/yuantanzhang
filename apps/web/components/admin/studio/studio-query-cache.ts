@@ -91,6 +91,7 @@ export async function invalidateStudioQueries(path: string) {
   const scope = current
   if (!scope) return
   const related: Record<string, string[]> = {
+    'local-collector': ['dashboard', 'materials', 'works', 'accounts', 'topics'],
     schedule: ['dashboard', 'materials', 'accounts'],
     materials: ['dashboard', 'accounts', 'topics', 'drafts'],
     accounts: ['dashboard', 'materials'], topics: ['dashboard', 'drafts'],
