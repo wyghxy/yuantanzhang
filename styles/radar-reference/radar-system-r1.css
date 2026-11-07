@@ -1,0 +1,579 @@
+/* 元空间 · 星球雷达 r1
+   左侧奇点 + 向外扩散的声呐波 + 六颗沿弧漂移的平台星。
+   作用域全部锁在 .workspace-overview 与 .radar-figure.radar-system 内，不触及其他面板。 */
+
+.admin-workspace .original-studio.radar-integrated .dino-hero.workspace-overview {
+  --radar-cx: 2px;
+  --radar-cy: 50%;
+  /* 雷达栏向左扩出的距离 = 面板左内边距：奇点正好切在面板边框上，
+     环纹也从边框往外发，而不是从栏内缩进 28px 的地方发。 */
+  --radar-bleed: 28px;
+  overflow: hidden;
+}
+
+@media (min-width: 1800px) {
+  .admin-workspace .original-studio.radar-integrated .dino-hero.workspace-overview {
+    --radar-bleed: 36px;
+  }
+}
+
+/* 栏宽：左栏 210 → 250，间距 28 → 26，中栏 1.1fr → 1fr。
+   星群半径不动，左栏多出来的宽度全部变成「星群 ↔ 大数字」之间的留白 ——
+   这一段是线上最挤的地方：标签的边缘几乎顶到「素材资产总览」。
+   右栏仍是 1fr，两块地按 1:1 分剩下的宽，实际宽度只差几个像素，列表不受影响。
+   面板本身的高度、内边距、圆角一个都没动。
+
+   注意：线上 1200–1599 那一段另有一条 `#radar-main>.workspace-stage>.workspace-overview`
+   把左栏压到 160px —— 带 id 的选择器比这里任何类选择器都重，必须用同样的 id 结构才能盖住，
+   否则宽屏改完、笔记本上一看还是挤的。 */
+@media (min-width: 1200px) {
+  .admin-workspace .original-studio.radar-integrated :is(#radar-main, #accounts-workspace, #planning-workspace) > .workspace-stage > .dino-hero.workspace-overview {
+    --radar-bleed: 24px;
+    grid-template-columns: 200px minmax(320px, 1fr) minmax(290px, 1fr);
+    gap: 22px;
+  }
+}
+
+@media (min-width: 1800px) {
+  .admin-workspace .original-studio.radar-integrated :is(#radar-main, #accounts-workspace, #planning-workspace) > .workspace-stage > .dino-hero.workspace-overview {
+    --radar-bleed: 36px;
+    grid-template-columns: 230px minmax(0, 1fr) minmax(0, 1fr);
+    gap: 28px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .admin-workspace .original-studio.radar-integrated :is(#radar-main, #accounts-workspace, #planning-workspace) > .workspace-stage > .dino-hero.workspace-overview {
+    --radar-bleed: 22px;
+    grid-template-columns: 230px minmax(0, 1fr);
+    gap: 22px;
+  }
+}
+
+/* 深色主题下面板底是 #323234，比预览里的 #232325 亮一档，环纹和波会被冲淡。
+   只把这一块面板压回更沉的底，让线条和律动重新成为主角；其他面板不动。 */
+:root[data-theme="dark"] .admin-workspace .original-studio.radar-integrated .dino-hero.workspace-overview {
+  background: linear-gradient(148deg, var(--ui-radar-system-panel-start), var(--ui-radar-system-panel-end) 68%);
+}
+
+/* 面板背景：从奇点发散出去的同心环。过了 186 那块就衰减到几乎看不见。 */
+.admin-workspace .original-studio.radar-integrated .dino-hero.workspace-overview::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: repeating-radial-gradient(circle at var(--radar-cx) var(--radar-cy),
+      var(--ui-radar-system-rings) 0 1px,
+      transparent 1px 68px);
+  -webkit-mask-image: radial-gradient(circle 1160px at var(--radar-cx) var(--radar-cy),
+      transparent 0,
+      transparent 62px,
+      var(--ui-radar-system-mask-near) 170px,
+      var(--ui-media-13ea0f53) 420px,
+      var(--ui-radar-system-mask-wide) 720px,
+      var(--ui-radar-system-mask-edge) 960px,
+      transparent 1160px);
+  mask-image: radial-gradient(circle 1160px at var(--radar-cx) var(--radar-cy),
+      transparent 0,
+      transparent 62px,
+      var(--ui-radar-system-mask-near) 170px,
+      var(--ui-media-13ea0f53) 420px,
+      var(--ui-radar-system-mask-wide) 720px,
+      var(--ui-radar-system-mask-edge) 960px,
+      transparent 1160px);
+}
+
+/* 奇点附近那一点冷光，托住黑洞不让它像贴上去的 */
+.admin-workspace .original-studio.radar-integrated .dino-hero.workspace-overview::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(440px 440px at var(--radar-cx) var(--radar-cy), var(--ui-radar-system-glow-wide), transparent 66%),
+    radial-gradient(160px 160px at var(--radar-cx) var(--radar-cy), var(--ui-radar-system-glow-near), transparent 80%);
+}
+
+/* 三栏抬到背景层之上，环纹只在它们背后走 */
+.admin-workspace .original-studio.radar-integrated .workspace-overview > .radar-figure,
+.admin-workspace .original-studio.radar-integrated .workspace-overview > .dino-hero-body,
+.admin-workspace .original-studio.radar-integrated .workspace-overview > .platform-collection {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- 雷达栏 ---------- */
+.admin-workspace .original-studio.radar-integrated .workspace-overview .radar-figure.radar-system {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  align-self: stretch;
+  gap: 8px;
+}
+
+.admin-workspace .original-studio.radar-integrated .workspace-overview .radar-figure.radar-system .radar-system-stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 200px;
+  /* 向左吃掉面板内边距，让奇点贴住边框；底部那行「N 个来源平台」仍留在原位 */
+  width: calc(100% + var(--radar-bleed, 28px));
+  margin-left: calc(var(--radar-bleed, 28px) * -1);
+}
+
+.admin-workspace .original-studio.radar-integrated .workspace-overview .radar-figure.radar-system .radar-wave-canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.admin-workspace .original-studio.radar-integrated .workspace-overview .radar-figure.radar-system .radar-system-svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.admin-workspace .original-studio.radar-integrated .workspace-overview .radar-figure.radar-system .radar-blips {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* ---------- 平台星 ---------- */
+.admin-workspace .original-studio.radar-integrated .workspace-overview .radar-system .radar-blip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  pointer-events: auto;
+  backface-visibility: hidden;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+.admin-workspace .original-studio.radar-integrated .workspace-overview .radar-system .radar-blip > span {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.admin-workspace .original-studio.radar-integrated .workspace-overview .radar-system .blip-halo {
+  left: -8px;
+  top: -8px;
+  width: 16px;
+  height: 16px;
+  background: radial-gradient(circle, currentColor 0%, transparent 70%);
+  opacity: .02;
+}
+
+.admin-workspace .original-studio.radar-integrated .workspace-overview .radar-system .blip-ping {
+  left: -6px;
+  top: -6px;
+  width: 12px;
+  height: 12px;
+  border: 1px solid currentColor;
+  opacity: 0;
+}
+
+.admin-workspace .original-studio.radar-integrated .workspace-overview .radar-system .blip-dot {
+  left: -3.5px;
+  top: -3.5px;
+  width: 7px;
+  height: 7px;
+  background: currentColor;
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, currentColor 8%, transparent),
+    0 0 7px currentColor;
+}
+
+.admin-workspace .original-studio.radar-integrated .workspace-overview .radar-system .blip-spark {
+  left: -2px;
+  top: -2px;
+  width: 4px;
+  height: 4px;
+  background: var(--ui-on-image);
+  opacity: 0;
+  box-shadow: 0 0 5px var(--ui-radar-system-spark), 0 0 11px currentColor;
+}
+
+.admin-workspace .original-studio.radar-integrated .workspace-overview .radar-system .blip-label {
+  position: absolute;
+  left: 11px;
+  top: -7px;
+  font-size: 11.5px;
+  font-style: normal;
+  line-height: 14px;
+  letter-spacing: .06em;
+  white-space: nowrap;
+  color: var(--ui-radar-system-label);
+  text-shadow: 0 0 10px var(--ui-radar-system-label-shadow);
+  pointer-events: none;
+}
+
+.admin-workspace .original-studio.radar-integrated .workspace-overview .radar-system .radar-blip:hover .blip-dot,
+.admin-workspace .original-studio.radar-integrated .workspace-overview .radar-system .radar-blip:focus-visible .blip-dot {
+  box-shadow: 0 0 0 1.5px var(--radar-reference-color-81123f39c0), 0 0 11px currentColor;
+}
+
+.admin-workspace .original-studio.radar-integrated .workspace-overview .radar-system .radar-blip:hover .blip-label,
+.admin-workspace .original-studio.radar-integrated .workspace-overview .radar-system .radar-blip:focus-visible .blip-label {
+  opacity: 1 !important;
+}
+
+.admin-workspace .original-studio.radar-integrated .workspace-overview .radar-system .radar-blip:focus-visible {
+  outline: 1px solid var(--ui-radar-system-focus);
+  outline-offset: 4px;
+  border-radius: 50%;
+}
+
+/* ---------- 底部「已激活 N 个来源平台」 ----------
+   压在左栏底部，不挂顶：它的任务是把左栏收口，和中间那组
+   「ASR / 正文 / Token」三格落在同一条底线上，形成整块面板的页脚行。
+   margin-bottom 16px = 三格指标带的内边距，扣掉之后这行文字的底边
+   正好贴住「小时 / 万字 / 万」那一行，而不是贴住指标带的外框。 */
+.admin-workspace .original-studio.radar-integrated .workspace-overview .radar-figure.radar-system .radar-total {
+  display: flex;
+  align-items: center;
+  /* 上游把这一行做成了居中排布；贴到栏底之后仍要跟上面的图表左对齐 */
+  justify-content: flex-start;
+  gap: 6px;
+  flex: 0 0 auto;
+  margin: auto 0 16px;
+  padding: 0;
+  min-height: 18px;
+}
+
+/* 状态点：一颗常亮的绿点，告诉人这份数据是「活的」 */
+.admin-workspace .original-studio.radar-integrated .workspace-overview .radar-figure.radar-system .radar-total::before {
+  content: "";
+  flex: 0 0 5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ui-radar-signal);
+  box-shadow: 0 0 0 3px var(--ui-radar-system-live-halo), 0 0 8px var(--ui-radar-system-live-glow);
+}
+
+.admin-workspace .original-studio.radar-integrated .workspace-overview .radar-figure.radar-system .radar-total .radar-total-label {
+  font-size: 11.5px;
+  line-height: 1;
+  letter-spacing: .05em;
+  color: var(--overview-secondary);
+  white-space: nowrap;
+}
+
+.admin-workspace .original-studio.radar-integrated .workspace-overview .radar-figure.radar-system .radar-total strong {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: .01em;
+  color: var(--ui-radar-signal);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 16px var(--ui-radar-system-total-glow);
+}
+
+/* 关掉动效时保留完整的静态构图：黑洞、平台星、背景环都在，只是不跑 */
+@media (prefers-reduced-motion: reduce) {
+  .admin-workspace .original-studio.radar-integrated .workspace-overview .radar-system .radar-blip {
+    will-change: auto;
+  }
+}
+
+/* ---------- 标题行 ----------
+   线上这一段三个圆按钮都停在 44px：21px 的标题夹在它们中间没有分量，
+   一行里最先被看见的是两个空圈。收回到 34px，让标题重新成为这一行的主角；
+   ⓘ 仍钉在最右，只跟着同一中线，不改变这一段的高度。中栏和右栏的标题
+   行用同一个 34px 行高，两个标题才会落在同一条基线上。 */
+.admin-workspace .original-studio.radar-integrated .dino-hero.workspace-overview .hero-topline,
+.admin-workspace .original-studio.radar-integrated .dino-hero.workspace-overview .platform-collection .section-top {
+  min-height: 34px;
+}
+
+.admin-workspace .original-studio.radar-integrated .dino-hero.workspace-overview .hero-topline {
+  gap: 8px;
+}
+
+.admin-workspace .original-studio.radar-integrated .dino-hero.workspace-overview .hero-topline h2 {
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -.1px;
+}
+
+/* 右栏的「今日 / 3 天 / 7 天」被全局按钮的 44px 最小高度撑成 52px，
+   把「数据来源分布」整行往下拽了 7px，和中栏标题错开。
+   胶囊收回 26px，两个标题才落在同一条线上。 */
+.admin-workspace .original-studio.radar-integrated .dino-hero.workspace-overview .platform-collection .section-top h2 {
+  line-height: 1.2;
+}
+
+.admin-workspace .original-studio.radar-integrated .dino-hero.workspace-overview .platform-collection .section-top .segment > button {
+  min-height: 0;
+  height: 26px;
+  padding: 0 10px;
+  line-height: 1;
+}
+
+.admin-workspace .original-studio.radar-integrated .dino-hero.workspace-overview .hero-topline .icon-button,
+.admin-workspace .original-studio.radar-integrated .dino-hero.workspace-overview .hero-topline .icon-button[aria-pressed],
+.admin-workspace .original-studio.radar-integrated .dino-hero.workspace-overview .dashboard-scope-help {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  min-height: 34px;
+}
+
+/* 刷新按钮在线上被 `flex: 0 0 44px` 钉住，只写 width 会被 flex-basis 顶回 44 —— 
+   宽度、高度都改了还是会看起来一样宽。这里连同 flex 一起收。 */
+.admin-workspace .original-studio.radar-integrated .dino-hero.workspace-overview .hero-topline > .refresh {
+  flex: 0 0 34px;
+}
+
+.admin-workspace .original-studio.radar-integrated .dino-hero.workspace-overview .hero-topline .icon-button .icon,
+.admin-workspace .original-studio.radar-integrated .dino-hero.workspace-overview .dashboard-scope-help .icon {
+  width: 15px;
+  height: 15px;
+}
+
+/* 中栏原本在整行里垂直居中：面板被右栏的六行来源撑高之后，
+   「素材资产总览」就比「数据来源分布」低 18px，两栏标题不在一条线上。
+   这里把中栏贴顶，再让进度条和底部三格吃掉剩下的高度 ——
+   标题齐平，底边也齐平，中间不再是一整块悬空的留白。 */
+.admin-workspace .original-studio.radar-integrated :is(#radar-main, #accounts-workspace, #planning-workspace) > .workspace-stage > .dino-hero.workspace-overview > .dino-hero-body {
+  align-self: stretch;
+  /* 线上这一栏是 block，margin-top:auto 不起作用，底部会空出 30 多像素。
+     改成纵向 flex，进度条才能吃走余量、把底部三格压到卡片底边上。 */
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-workspace .original-studio.radar-integrated :is(#radar-main, #accounts-workspace, #planning-workspace) > .workspace-stage > .dino-hero.workspace-overview > .dino-hero-body > .hero-progress {
+  margin-top: auto;
+}
+
+/* 同一段规则再写一份不带 id 的：样例工作台（main.radar-main，没有 #radar-main）
+   走的是另一套根节点，少了这份，中栏就会退回垂直居中，标题差 18px。 */
+:root .admin-workspace .original-studio.radar-integrated .dino-hero.workspace-overview > .dino-hero-body {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+}
+
+:root .admin-workspace .original-studio.radar-integrated .dino-hero.workspace-overview > .dino-hero-body > .hero-progress {
+  margin-top: auto;
+}
+
+/* ---------- 四张统计卡：图标 ----------
+   只留线，不留块。彩色圆点、四色浅底贴片、单色墨块都试过：缩小到 20–36px 之后
+   它们都会变成一块「色斑」，四张并排就是四个徽章，比数字本身还抢眼。
+   线条才和这块面板是一套语言 —— 雷达的轨道、指标带的刻度都是 1px 的线。
+   所以图标回到最朴素的样子：20px 细线，不铺底、不描框、不投影；
+   右上角的箭头同规格收到 14px，两个角标用同一种笔触。
+   颜色单独给（见下面那组 nth-child）：线条带色不会变成色斑，四张卡也有区分度。
+   选择器带 :root[data-theme]（8 个类），压过 dark 主题里
+   `:root[data-theme="dark"] … :nth-child(n) .stat-icon` 那组 8 类的着色规则，
+   否则深色下图标会被染回上游那四个高饱和色相。 */
+:root[data-theme] .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card .stat-icon {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  color: var(--text, var(--radar-reference-color-36dd7908bf));
+}
+
+:root[data-theme] .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card .stat-icon .icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.3;
+}
+
+/* 图标壳上可能还挂着旧版球体的伪元素，一并关掉 */
+:root[data-theme] .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card .stat-icon::before,
+:root[data-theme] .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card .stat-icon::after {
+  content: none;
+  background: none;
+  border: 0;
+  box-shadow: none;
+}
+
+:root[data-theme] .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card .stat-arrow {
+  color: color-mix(in srgb, var(--text) 38%, transparent);
+}
+
+:root[data-theme] .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card .stat-arrow .icon {
+  width: 14px;
+  height: 14px;
+  stroke-width: 1.3;
+}
+
+/* 四张卡各自一支有颜色的笔。
+   线上四张全黑细线并排时被评价「太素」—— 缺的不是彩度，是四张卡之间的区分。
+   这里只给图标上色，数字、标签、分隔线全部保持中性：整排仍是黑白灰的骨架，
+   四个色相只是左上角的一个小锚点。色值比上游 --accent-* 低一档饱和度，
+   1.3px 的线在 #595959 灰旁边不会跳出来抢数字。 */
+:root[data-theme] .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card:nth-child(1) .stat-icon {
+  color: var(--ui-radar-stat-teal-light);
+}
+
+:root[data-theme] .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card:nth-child(2) .stat-icon {
+  color: var(--ui-radar-stat-blue-light);
+}
+
+:root[data-theme] .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card:nth-child(3) .stat-icon {
+  color: var(--ui-radar-stat-purple-light);
+}
+
+:root[data-theme] .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card:nth-child(4) .stat-icon {
+  color: var(--ui-radar-stat-amber-light);
+}
+
+/* 深色底上同一组色相提亮：原色在 #262626 上会发闷，看起来像脏掉的灰。
+   写在这组后面，同特异性靠顺序覆盖。 */
+:root[data-theme="dark"] .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card:nth-child(1) .stat-icon {
+  color: var(--ui-radar-stat-teal-dark);
+}
+
+:root[data-theme="dark"] .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card:nth-child(2) .stat-icon {
+  color: var(--ui-radar-stat-blue-dark);
+}
+
+:root[data-theme="dark"] .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card:nth-child(3) .stat-icon {
+  color: var(--ui-radar-stat-purple-dark);
+}
+
+:root[data-theme="dark"] .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card:nth-child(4) .stat-icon {
+  color: var(--ui-radar-stat-amber-dark);
+}
+
+/* ---------- 四张统计卡：居中版式 ----------
+   上游把卡片做成「图标在左、数字和标签贴着右排」的横条，四张并排时像四条列表，
+   和右边三格指标带的节奏撞在一起，星球也被挤在左边一小块。
+   改成方块卡：图标钉在左上角、跳转箭头留在右上角，大数字与标签居中，
+   底部一条极淡的分隔线压住说明文字 —— 视觉重心回到数字本身。
+   DOM 不动，只重排位置，所以点击、权限、无障碍属性都不受影响。 */
+:root .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 1fr auto;
+  align-items: center;
+  justify-items: center;
+  padding: 0 16px;
+  min-height: 148px;
+  text-align: center;
+}
+
+:root .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card .stat-icon {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+}
+
+:root .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card .stat-arrow {
+  position: absolute;
+  right: 16px;
+  top: 17px;
+}
+
+:root .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card .stat-content {
+  grid-row: 1;
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding-top: 8px;
+}
+
+:root .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card .stat-content > strong {
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+:root .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card .stat-content > span {
+  font-size: 13px;
+  letter-spacing: .02em;
+  color: var(--muted);
+}
+
+:root .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card .stat-note {
+  grid-row: 2;
+  grid-column: 1;
+  width: 100%;
+  margin: 0;
+  padding: 10px 0 14px;
+  /* --overview-border 在亮色主题下是白色（#ffffff24），白底上等于没有线；
+     --line 才是跟随主题的描边色（亮色 #0000001a / 深色 #ffffff1a）。 */
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  line-height: 1.35;
+  text-align: center;
+  /* 说明文字是三级信息，回到上游 style-dino 的 --weak：
+     亮色 #6b6b6b / 深色 #adadad，比标签的 --muted 再退一层，
+     不会被读成和标签同重的正文。 */
+  color: var(--weak);
+}
+
+@media (max-width: 900px) {
+  .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card {
+    padding: 0 14px;
+    min-height: 132px;
+  }
+
+  .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card .stat-icon {
+    left: 14px;
+    top: 14px;
+  }
+
+  .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card .stat-content > strong {
+    font-size: 28px;
+  }
+
+  .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card .stat-note {
+    padding: 8px 0 12px;
+    font-size: 11px;
+  }
+
+  .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card .stat-icon::before {
+    width: 15px;
+    height: 15px;
+  }
+
+  .admin-workspace .original-studio.radar-integrated .dino-stats .stat-card .stat-icon::after {
+    width: 29px;
+    height: 29px;
+    margin: -14.5px 0 0 -14.5px;
+  }
+}

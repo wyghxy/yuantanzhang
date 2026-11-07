@@ -1,0 +1,4 @@
+/* Reset legacy inherited UI before the original source and functional components. */
+@layer radar-reset {
+  .admin-workspace .original-studio.radar-integrated :is(.radar-source-page,.radar-source-page *):not(:where(svg,svg *)) { all: revert; }
+}

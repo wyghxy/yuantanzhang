@@ -1,0 +1,290 @@
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-heading) {
+  min-height: 64px;
+  padding: 10px 20px;
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-heading h2) {
+  font-size: 18px;
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-heading-title) {
+  gap: 8px;
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-heading-actions button) {
+  min-height: 44px;
+  width: 44px;
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-context) {
+  padding: 0 0 12px;
+  border: 0;
+  border-bottom: 1px solid var(--ui-border);
+  border-radius: 0;
+  background: transparent;
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-context h3) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 400;
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-sources fieldset) {
+  padding: 12px 0;
+  border: 0;
+  border-bottom: 1px solid var(--ui-border);
+  border-radius: 0;
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-creation-actions) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 16px 0 0;
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-creation-actions button) {
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid var(--ui-border);
+  border-radius: 6px;
+  color: var(--ui-text);
+  background: var(--ui-surface);
+  font-size: 14px;
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-creation-actions button[aria-pressed='true']) {
+  border-color: var(--ui-border-control);
+  background: var(--ui-selection);
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-answer-heading) {
+  color: var(--ui-text);
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-question) {
+  margin: 8px 0;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-progress) {
+  margin: 12px 0;
+  padding: 8px 0;
+  border: 0;
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-result-actions) {
+  align-items: flex-start;
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-result-actions button),
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-more-actions > summary) {
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid var(--ui-border);
+  border-radius: 6px;
+  color: var(--ui-text);
+  background: var(--ui-surface);
+  font: 400 14px/1.5 var(--sidebar-font);
+  cursor: pointer;
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-result-actions button.primary) {
+  color: var(--ui-on-accent);
+  background: var(--ui-accent);
+  border-color: transparent;
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-more-actions[open] > button) {
+  display: flex;
+  margin-top: 6px;
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-suggestions) {
+  margin: 14px 0;
+  gap: 6px;
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-suggestions button) {
+  padding: 6px 10px;
+  min-height: 36px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-options) {
+  margin-bottom: 8px;
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-options > summary) {
+  display: list-item;
+  min-height: 36px;
+  color: var(--ui-text-muted);
+  font-size: 13px;
+  cursor: pointer;
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-composer > label) {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-input-shell) {
+  border: 1px solid var(--ui-border-control);
+  border-radius: 8px;
+  background: var(--ui-surface);
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(#ai-prompt) {
+  min-height: 96px;
+  padding: 12px;
+  border-radius: 8px;
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-composer-actions) {
+  justify-content: flex-end;
+  padding: 0 8px 8px 12px;
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(#ai-mode-note) {
+  margin-right: auto;
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(#ai-send) {
+  border-radius: 6px;
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-more-actions > summary) {
+  list-style: none;
+}
+:global(
+    .admin-workspace
+      :is(.original-studio.radar-integrated, .workspace-shared-tools)
+  )
+  .drawer:global(#ai-drawer)
+  :global(.ai-more-actions > summary::-webkit-details-marker) {
+  display: none;
+}

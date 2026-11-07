@@ -1,0 +1,12 @@
+.target {
+  outline: 2px solid var(--ui-accent);
+  outline-offset: 4px;
+  border-radius: 3px;
+  background: var(--bg-hover);
+  scroll-margin-block: 24px;
+}
+.target::highlight(studio-breakdown-source) {
+  background: var(--ui-selection);
+  color: var(--text-main);
+  text-decoration: underline var(--ui-accent);
+}

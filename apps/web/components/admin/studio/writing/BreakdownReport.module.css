@@ -1,0 +1,241 @@
+.report {
+  color: var(--ui-text);
+  font: 400 16px/1.8 var(--font-radar);
+  overflow-wrap: anywhere;
+  container-type: inline-size;
+}
+.report :is(h2, h3, h4, p, blockquote) {
+  margin: 0;
+  color: inherit;
+  font-family: inherit;
+}
+.report :is(h2, h3) {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+.report h4 {
+  color: var(--ui-text-muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+.tabs,
+.panel {
+  min-width: 0;
+}
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--ui-border);
+  background: var(--ui-content);
+}
+.tabList {
+  display: flex;
+  min-width: 0;
+}
+.tab {
+  min-height: 44px;
+  padding: 8px 16px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--ui-text-muted);
+  font: 400 14px/1.5 var(--font-radar);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.tab[data-state='active'] {
+  color: var(--ui-text);
+  border-bottom-color: var(--ui-text);
+  font-weight: 600;
+}
+.scope {
+  position: relative;
+  flex: none;
+}
+.scope > summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  min-height: 44px;
+  color: var(--ui-text-muted);
+  cursor: pointer;
+}
+.scope > div {
+  position: absolute;
+  right: 0;
+  top: 44px;
+  width: min(360px, 85cqw);
+  padding: 16px;
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+  background: var(--ui-surface);
+  font-size: 13px;
+}
+.scope > div p + p {
+  margin-top: 8px;
+}
+.report .summary {
+  margin: 20px 0;
+}
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 20px 0 0;
+}
+.sectionTitle select {
+  max-width: 48%;
+  min-height: 36px;
+  padding: 5px 8px;
+  border: 1px solid var(--ui-border);
+  border-radius: 6px;
+  color: var(--ui-text-muted);
+  background: var(--ui-surface);
+  font: 400 13px/1.5 var(--font-radar);
+}
+.stage {
+  padding: 22px 0;
+  border-bottom: 1px solid var(--ui-border);
+}
+.stageHeader {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.stageHeader h3 {
+  min-width: 0;
+}
+.number {
+  min-width: 22px;
+  color: var(--ui-text-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.original {
+  padding: 12px 0 6px;
+}
+.originalHeading {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  color: var(--ui-text-muted);
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+.originalHeading > button {
+  margin-left: auto;
+}
+.originalHeading > [role='status'] {
+  flex-basis: 100%;
+}
+.original blockquote {
+  margin-top: 8px;
+  padding: 4px 12px;
+  border-left: 2px solid var(--ui-border);
+  font-size: 16px;
+  line-height: 1.85;
+  white-space: pre-line;
+}
+.original button {
+  min-height: 44px;
+  padding: 6px 0;
+  border: 0;
+  background: transparent;
+  color: var(--ui-link);
+  font: 400 13px/1.5 var(--font-radar);
+  cursor: pointer;
+}
+.original [role='status'] {
+  color: var(--ui-text-muted);
+  font-size: 12px;
+}
+.explanation > p + p {
+  margin-top: 6px;
+}
+.report .takeaway {
+  margin-top: 10px;
+  color: var(--ui-text-secondary);
+  font-size: 14px;
+}
+.moreOriginal summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  color: var(--ui-text-muted);
+  font-size: 13px;
+  cursor: pointer;
+}
+.textList {
+  margin: 8px 0 0;
+  padding-left: 20px;
+}
+.textList li {
+  margin-bottom: 6px;
+}
+.writingSection {
+  padding: 22px 0 0;
+}
+.writeButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  margin-top: 20px;
+  padding: 8px 12px;
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+  color: var(--ui-text);
+  background: var(--ui-surface);
+  font: 400 14px/1.5 var(--font-radar);
+  cursor: pointer;
+}
+.writeButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.empty {
+  color: var(--ui-text-muted) !important;
+  font-size: 13px;
+}
+.appendix {
+  margin-top: 20px;
+}
+.appendix > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: var(--ui-text-muted);
+  font-size: 13px;
+  cursor: pointer;
+}
+.appendix > section {
+  padding: 16px 0;
+}
+.report summary {
+  list-style: none;
+}
+.report summary::-webkit-details-marker {
+  display: none;
+}
+.report :is(button, select, summary, h3):focus-visible {
+  outline: 2px solid var(--ui-focus);
+  outline-offset: 3px;
+}
+@container (max-width: 380px) {
+  .toolbar {
+    gap: 0;
+  }
+  .tab {
+    padding: 8px 11px;
+  }
+}

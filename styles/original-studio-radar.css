@@ -1,0 +1,126 @@
+/* Fill the existing 250px / 210px slot; only real platform totals create dots. */
+.original-studio .dash-hero {
+  color: var(--ui-radar-text);
+  background: var(--ui-radar-bg);
+  border-color: var(--ui-radar-border);
+}
+.original-studio .dash-hero :is(.radar-total strong, .hero-unit, .hero-progress-head strong, .compute-text strong) {
+  color: var(--ui-radar-text);
+}
+.original-studio .dash-hero :is(.radar-total em, .hero-caption, .hero-unit span, .hero-progress-head, .compute-text span) {
+  color: var(--ui-radar-muted);
+}
+.original-studio .hero-value {
+  color: var(--ui-radar-amber);
+  background: none;
+  -webkit-text-fill-color: var(--ui-radar-amber);
+}
+.original-studio .hero-live {
+  color: var(--ui-radar-signal);
+  border-color: color-mix(in srgb, var(--ui-radar-signal) 40%, transparent);
+  background: var(--ui-radar-surface);
+}
+.original-studio .hero-live i { background: var(--ui-radar-signal); }
+.original-studio .hero-progress-track { background: var(--ui-radar-surface); }
+.original-studio .hero-progress-track i { background: var(--ui-radar-signal); box-shadow: none; }
+.original-studio :is(.hero-compute-band, .hero-chip) {
+  color: var(--ui-radar-text);
+  background: var(--ui-radar-surface);
+  border-color: var(--ui-radar-border);
+  box-shadow: none;
+}
+.original-studio .compute-divider { background: var(--ui-radar-border); }
+.original-studio .hero-chip.amber {
+  color: var(--ui-radar-amber);
+  background: var(--ui-radar-surface);
+  border-color: color-mix(in srgb, var(--ui-radar-amber) 35%, transparent);
+}
+.original-studio .radar-stage {
+  background: none;
+}
+.original-studio .radar-ring {
+  border-color: color-mix(in srgb, var(--ui-radar-signal) 24%, transparent);
+}
+.original-studio .rr1 { inset: 32%; }
+.original-studio .rr2 { inset: 17%; }
+.original-studio .rr3 { inset: 2%; }
+.original-studio .radar-axis {
+  background: color-mix(in srgb, var(--ui-radar-signal) 6%, transparent);
+}
+.original-studio .ax-h { left: 2%; right: 2%; }
+.original-studio .ax-v { top: 2%; bottom: 2%; }
+.original-studio .radar-sweep {
+  inset: 2%;
+  background: conic-gradient(from 0deg,
+    transparent 0deg 275deg,
+    color-mix(in srgb, var(--ui-radar-signal) 5%, transparent) 300deg,
+    color-mix(in srgb, var(--ui-radar-signal) 18%, transparent) 350deg,
+    color-mix(in srgb, var(--ui-radar-signal) 42%, transparent) 359deg,
+    transparent 360deg);
+  mix-blend-mode: normal;
+  animation: radar-spin 8s linear infinite;
+}
+.original-studio .radar-core {
+  background: var(--ui-radar-signal);
+  border: 2px solid var(--ui-radar-bg);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--ui-radar-signal) 8%, transparent);
+  animation: radar-breathe 4s ease-in-out infinite;
+}
+.original-studio .radar-core::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border: 1px solid var(--ui-radar-signal);
+  border-radius: inherit;
+  animation: radar-echo 4s ease-out infinite;
+}
+.original-studio .radar-dot { --signal-color: var(--ui-radar-signal); }
+.original-studio .radar-dot:nth-of-type(3n) { --signal-color: var(--ui-radar-purple); }
+.original-studio .radar-dot:nth-of-type(3n + 1) { --signal-color: var(--ui-radar-amber); }
+.original-studio .radar-dot i {
+  background: var(--signal-color);
+  border-color: var(--ui-radar-bg);
+  animation: radar-signal 4s ease-in-out infinite;
+  animation-delay: var(--flare-delay, 0s);
+}
+.original-studio :is(.dash-stat, .dash-panel) { box-shadow: none; }
+.original-studio .dash-stat {
+  --stat-color: var(--ui-decor-purple);
+  --stat-bg: var(--ui-decor-purple-bg);
+}
+.original-studio .dash-stat:nth-child(2) {
+  --stat-color: var(--ui-decor-teal);
+  --stat-bg: var(--ui-decor-teal-bg);
+}
+.original-studio .dash-stat:nth-child(3) {
+  --stat-color: var(--ui-decor-amber);
+  --stat-bg: var(--ui-decor-amber-bg);
+}
+.original-studio .dash-stat:nth-child(4) {
+  --stat-color: var(--ui-decor-teal);
+  --stat-bg: var(--ui-decor-teal-bg);
+}
+.original-studio .dash-stat-icon {
+  color: var(--stat-color);
+  background: var(--stat-bg);
+  border-color: transparent;
+}
+.original-studio .dash-stat .spark-line { stroke: var(--stat-color); }
+.original-studio .dash-stat .spark-area { fill: var(--stat-bg); }
+@keyframes radar-breathe {
+  0%, 100% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--ui-radar-signal) 8%, transparent); }
+  50% { box-shadow: 0 0 0 9px color-mix(in srgb, var(--ui-radar-signal) 8%, transparent); }
+}
+@keyframes radar-echo {
+  0% { transform: scale(.65); opacity: .45; }
+  85%, 100% { transform: scale(3.5); opacity: 0; }
+}
+@keyframes radar-signal {
+  0%, 100% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--signal-color) 12%, transparent); }
+  50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--signal-color) 5%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .original-studio :is(.radar-sweep, .radar-core, .radar-dot i),
+  .original-studio .radar-core::after { animation: none; }
+  .original-studio .radar-core::after { content: none; }
+}

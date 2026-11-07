@@ -1,0 +1,57 @@
+/* AI creation uses the workbench's shared typography and semantic colors. */
+.admin-workspace .original-studio.radar-integrated #ai-drawer.ai-creation-drawer { --ui-font: var(--sidebar-font); --sans: var(--sidebar-font); font-family: var(--sidebar-font); --type-caption: 14px; --type-micro: 12px; box-shadow: var(--ui-shadow); z-index: 1000; }
+.admin-workspace .original-studio.radar-integrated #ai-drawer.ai-creation-drawer::backdrop { background: var(--ui-backdrop); }
+.admin-workspace .original-studio.radar-integrated .ai-heading-actions { display: flex; gap: 4px; }
+.admin-workspace .original-studio.radar-integrated .ai-heading-actions button { width: 36px; height: 36px; border: 0; }
+.admin-workspace .original-studio.radar-integrated .ai-creation-drawer .ai-heading { padding: 18px 20px; }
+.admin-workspace .original-studio.radar-integrated .ai-creation-drawer .ai-heading h2 { font-size: 21px; }
+.admin-workspace .original-studio.radar-integrated .ai-creation-drawer .ai-scroll { padding: 20px; }
+.admin-workspace .original-studio.radar-integrated .ai-creation-drawer .ai-context { padding: 14px 16px; }
+.admin-workspace .original-studio.radar-integrated .ai-creation-drawer .ai-context h3 { margin: 6px 0 0; font-size: 16px; }
+.admin-workspace .original-studio.radar-integrated .ai-sources { border-bottom: 1px solid var(--line); margin: 8px 0 0; font-size: 14px; }
+.admin-workspace .original-studio.radar-integrated .ai-sources summary { display: flex; align-items: center; gap: 8px; min-height: 48px; cursor: pointer; list-style: none; }
+.admin-workspace .original-studio.radar-integrated .ai-sources summary::-webkit-details-marker { display: none; }
+.admin-workspace .original-studio.radar-integrated .ai-source-summary { color: var(--muted); margin-left: auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 64%; font-size: 12px; }
+.admin-workspace .original-studio.radar-integrated .ai-sources[open] summary > svg { transform: rotate(180deg); }
+.admin-workspace .original-studio.radar-integrated .ai-sources fieldset { margin: 8px 0 16px; padding: 12px; border: 1px solid var(--line); border-radius: var(--radius-inset); min-width: 0; }
+.admin-workspace .original-studio.radar-integrated .ai-sources legend { display: flex; align-items: center; gap: 6px; padding: 0 6px; color: var(--text); font-weight: 600; }
+.admin-workspace .original-studio.radar-integrated .ai-sources label:not(.ai-check) { display: block; margin: 6px 0; color: var(--muted); font-size: 12px; }
+.admin-workspace .original-studio.radar-integrated .ai-sources input:not([type=checkbox]), .admin-workspace .original-studio.radar-integrated .ai-sources select { width: 100%; min-height: 40px; padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--radius-control); background: var(--field); color: var(--text); font: inherit; box-sizing: border-box; }
+.admin-workspace .original-studio.radar-integrated .ai-selected-source { margin: 0 0 10px; color: var(--blue); overflow-wrap: anywhere; line-height: 1.6; }
+.admin-workspace .original-studio.radar-integrated .ai-source-hint { font-size: 12px; line-height: 1.7; color: var(--muted); margin: 10px 0 0; }
+.admin-workspace .original-studio.radar-integrated .ai-creation-drawer .ai-welcome { padding: 24px 0 0; }
+.admin-workspace .original-studio.radar-integrated .ai-creation-drawer .ai-welcome h3 { font-size: 22px; margin-bottom: 8px; }
+.admin-workspace .original-studio.radar-integrated .ai-creation-actions { display: grid; gap: 8px; margin: 18px 0; }
+.admin-workspace .original-studio.radar-integrated #ai-drawer .ai-creation-actions button { display: flex; align-items: center; gap: 12px; text-align: left; padding: 14px; min-height: 72px; border: 1px solid var(--line); border-radius: var(--radius-inset); background: var(--surface); color: var(--text); font: inherit; cursor: pointer; }
+.admin-workspace .original-studio.radar-integrated #ai-drawer .ai-creation-actions button > svg:first-child { color: var(--blue); flex: none; }
+.admin-workspace .original-studio.radar-integrated #ai-drawer .ai-creation-actions button > svg:last-child { color: var(--muted); margin-left: auto; flex: none; }
+.admin-workspace .original-studio.radar-integrated .ai-creation-actions strong { display: block; font-size: 16px; font-weight: 600; }
+.admin-workspace .original-studio.radar-integrated .ai-creation-actions small { display: block; margin-top: 4px; font-size: 12px; color: var(--muted); line-height: 1.5; }
+.admin-workspace .original-studio.radar-integrated #ai-drawer .ai-creation-actions button:hover { background: var(--hover); }
+.admin-workspace .original-studio.radar-integrated #ai-drawer .ai-creation-actions button[aria-pressed=true] { border-color: var(--blue); background: var(--selected); }
+.admin-workspace .original-studio.radar-integrated .ai-creation-drawer .ai-result { font-size: 17px; line-height: 1.85; }
+.admin-workspace .original-studio.radar-integrated .ai-history { margin: 16px 0; }
+.admin-workspace .original-studio.radar-integrated .ai-history > summary { cursor: pointer; color: var(--muted); min-height: 36px; font-size: 14px; }
+.admin-workspace .original-studio.radar-integrated .ai-history section { padding: 12px 0; border-bottom: 1px solid var(--line); }
+.admin-workspace .original-studio.radar-integrated .ai-progress { display: flex; align-items: center; gap: 10px; margin: 18px 0; border: 1px solid var(--line); border-radius: var(--radius-inset); padding: 16px 12px; }
+.admin-workspace .original-studio.radar-integrated .ai-progress > div { flex: 1; min-width: 0; }
+.admin-workspace .original-studio.radar-integrated .ai-progress strong { display: block; font-size: 14px; font-weight: 500; }
+.admin-workspace .original-studio.radar-integrated .ai-progress span { display: block; font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.6; }
+.admin-workspace .original-studio.radar-integrated .ai-spinner { flex: none; color: var(--blue); animation: ai-creation-spin 1s linear infinite; }
+.admin-workspace .original-studio.radar-integrated .ai-confirm { background: var(--field); padding: 12px; border: 1px solid var(--line); border-radius: var(--radius-inset); margin: 12px 0; font-size: 14px; }
+.admin-workspace .original-studio.radar-integrated .ai-confirm p { margin: 0 0 10px; line-height: 1.6; }
+.admin-workspace .original-studio.radar-integrated .ai-confirm button { padding: 8px 12px; margin-right: 8px; border-radius: var(--radius-control); }
+.admin-workspace .original-studio.radar-integrated .ai-error { color: var(--text); border-left: 3px solid var(--blue); padding: 10px 12px; background: var(--field); font-size: 14px; line-height: 1.7; }
+.admin-workspace .original-studio.radar-integrated .ai-creation-drawer .ai-composer { padding: 14px 20px max(18px, env(safe-area-inset-bottom)); }
+.admin-workspace .original-studio.radar-integrated .ai-breakdown-bridge { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding: 12px 0 16px; font-size: 14px; }
+.admin-workspace .original-studio.radar-integrated .ai-breakdown-bridge > span { color: var(--muted); }
+.admin-workspace .original-studio.radar-integrated .ai-breakdown-bridge button { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 8px 12px; color: var(--blue); background: var(--selected); border: 1px solid var(--line); border-radius: var(--radius-control); font: inherit; }
+.admin-workspace .original-studio.radar-integrated #ai-drawer button:disabled { opacity: .55; cursor: default; }
+.admin-workspace .original-studio.radar-integrated #ai-drawer select:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+@keyframes ai-creation-spin { to { transform: rotate(360deg); } }
+@media (max-width: 440px) {
+  .admin-workspace .original-studio.radar-integrated .ai-creation-drawer .ai-scroll { padding: 16px; }
+  .admin-workspace .original-studio.radar-integrated .ai-creation-drawer .ai-composer { padding-inline: 16px; }
+  .admin-workspace .original-studio.radar-integrated #ai-mode-note { max-width: 56%; font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) { .admin-workspace .original-studio.radar-integrated .ai-spinner { animation: none; } }

@@ -1,0 +1,237 @@
+/* 创作首页（.original-studio.radar-integrated）补充样式
+ *
+ * styles/radar-reference/** 是由 scripts/radar-reference-css.mjs 生成的快照，
+ * 不宜手改。这里只补快照未覆盖的局部，沿用同一套设计变量。
+ * 引入位置：StudioWorkbench.tsx，位于 radar-reference.css 之后。
+ */
+
+/* 收件箱标题栏：左侧标题+条数，右侧搜索与「查看全部」并排 */
+.recent .panel-heading {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+
+/* 标题吃掉剩余宽度，「搜索 + 查看全部」才会被推到内容区右边界 */
+.recent .panel-heading > div:first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* 触底预加载的观察点，不占视觉空间 */
+.load-more-sentinel {
+  height: 1px;
+}
+
+.recent-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* 搜索框：快照给的是 45%/340px，放进标题行后固定窄宽，
+   并用浅填充+实边框，避免在白色面板上"看不见" */
+.recent .panel-heading .reading-search {
+  /* flex-basis 固定且不收缩：标题再长也不会把输入框压扁导致文字被截断 */
+  flex: 0 0 220px;
+  width: 220px;
+  min-width: 220px;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--field);
+  color: var(--muted);
+}
+
+.recent .panel-heading .reading-search:focus-within {
+  border-color: var(--blue);
+  background: var(--surface);
+}
+
+.recent .panel-heading .reading-search .icon {
+  width: 15px;
+  height: 15px;
+  color: var(--muted);
+}
+
+.reading-search input {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+}
+
+.reading-search input::placeholder {
+  color: var(--muted);
+}
+
+/* 「查看全部」：标题行里只做轻量文字链接，不再被可读性规则放大 */
+.recent-actions .text-link {
+  font-size: 12px;
+  font-weight: 400;
+  min-height: 34px;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.recent-actions .text-link .icon {
+  width: 13px;
+  height: 13px;
+}
+
+@media (max-width: 700px) {
+  .recent-actions {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .recent .panel-heading .reading-search {
+    width: 100%;
+    flex: 1 1 auto;
+  }
+}
+
+/* ── 对标账号筛选栏 ────────────────────────────────────────────────
+ * 快照里 #creatorCollectionActivity 没有任何规则，只靠 .creator-identity-chip
+ * 的标签样式兜着：12px/500 的深色文字直接贴在平台标签后面，左边一串筛选条件、
+ * 中间一句黑字、右边搜索框，把筛选区切成了三段。
+ *
+ * 改法沿用同一套变量：状态与搜索收进右侧尾组（标签行保持连续），
+ * 状态只在真有采集任务时以带脉冲点的 chip 出现；空闲时收成可视隐藏的
+ * live region —— 保留读屏播报能力，但不占位、不制造噪声。
+ */
+.admin-workspace .original-studio.radar-integrated .radar-source-page #view-creators .creator-filter-tail {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+  min-width: 0;
+}
+
+/* 搜索框自带 margin-left:auto，放进尾组后由 gap 控制间距 */
+.admin-workspace .original-studio.radar-integrated .radar-source-page #view-creators .creator-filter-tail .creator-search-inline {
+  margin-left: 0;
+}
+
+.admin-workspace .original-studio.radar-integrated .radar-source-page #view-creators .creator-collection-activity {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* 空闲：不占位，但保留在无障碍树里（role=status 需要真实存在的节点） */
+.admin-workspace .original-studio.radar-integrated .radar-source-page #view-creators .creator-collection-activity.is-idle {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+/* 有任务：淡底 chip + 主色，与平台标签明确分层 */
+.admin-workspace .original-studio.radar-integrated .radar-source-page #view-creators .creator-collection-activity.is-active {
+  padding: 4px 10px 4px 9px;
+  border-radius: 999px;
+  background: var(--bg-subtle);
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.admin-workspace .original-studio.radar-integrated .radar-source-page #view-creators .creator-activity-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: creator-activity-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes creator-activity-pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+@media (max-width: 650px) {
+  .admin-workspace .original-studio.radar-integrated .radar-source-page #view-creators .creator-filter-tail {
+    width: 100%;
+    margin-left: 0;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-workspace .original-studio.radar-integrated .radar-source-page #view-creators .creator-activity-dot {
+    animation: none;
+  }
+}
+
+/* ── 采集库头部：采集状态本身就是任务队列入口 ────────────────────
+ * 原来是一行不可点的文字，用户看得到"采集中 1 项"却没有任何地方能点进去，
+ * 也看不到那几项到底是什么、该怎么处理。改成可点的状态胶囊，直达任务队列。
+ */
+.admin-workspace .original-studio.radar-integrated .radar-source-page .library-heading-status .collection-activity-slot {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.admin-workspace .original-studio.radar-integrated .radar-source-page .library-heading-status .collection-activity {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+  font: 500 12px/1.5 var(--sans, inherit);
+  white-space: nowrap;
+}
+
+.admin-workspace .original-studio.radar-integrated .radar-source-page .library-heading-status .collection-activity.is-active {
+  color: var(--primary);
+}
+
+.admin-workspace .original-studio.radar-integrated .radar-source-page .library-heading-status button.collection-activity {
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.admin-workspace .original-studio.radar-integrated .radar-source-page .library-heading-status button.collection-activity:hover {
+  border-color: var(--primary);
+}
+
+.admin-workspace .original-studio.radar-integrated .radar-source-page .library-heading-status button.collection-activity:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.admin-workspace .original-studio.radar-integrated .radar-source-page .library-heading-status .collection-activity-go {
+  font-size: 11px;
+  opacity: 0.72;
+}
+
+.admin-workspace .original-studio.radar-integrated .radar-source-page .library-heading-status .collection-activity.is-error {
+  background: transparent;
+  color: var(--text-muted);
+}

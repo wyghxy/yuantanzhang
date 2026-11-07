@@ -1,0 +1,8 @@
+:global(.admin-workspace .original-studio.radar-integrated .radar-app.focus-creation-mode):has(.editor) { display:flow-root; }
+.editor { --manuscript-inset:28px; --manuscript-left:var(--manuscript-inset); position:relative; flex:1; min-width:0; min-height:120px; overflow:hidden; }
+.editor[hidden] { display:none; }
+.editor[data-timed="true"] { --manuscript-left:108px; }
+:global(.admin-workspace .original-studio.radar-integrated .radar-source-page) .editor :global(#cw-manuscript) { position:relative; box-sizing:border-box; min-height:100%; padding:var(--manuscript-inset) var(--manuscript-inset) var(--manuscript-inset) var(--manuscript-left); font:400 18px/1.8 Inter,'Radar Sans SC',sans-serif; letter-spacing:0; word-spacing:0; white-space:pre-wrap; overflow-wrap:anywhere; }
+.editor :global([data-manuscript-time])::before { content:attr(data-manuscript-time); position:absolute; left:var(--manuscript-inset); color:var(--ui-text-secondary); font:500 14px/32.4px Inter,'Radar Sans SC',sans-serif; font-variant-numeric:tabular-nums; pointer-events:none; user-select:none; }
+@media(max-width:900px) { .editor { --manuscript-inset:20px; } .editor[data-timed="true"] { --manuscript-left:96px; } :global(.admin-workspace .original-studio.radar-integrated .radar-source-page) .editor :global(#cw-manuscript) { font-size:17px!important; } .editor :global([data-manuscript-time])::before { line-height:30.6px; } }
+@media(max-width:650px) { .editor { --manuscript-inset:16px; } .editor[data-timed="true"] { --manuscript-left:84px; } }

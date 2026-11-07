@@ -1,0 +1,194 @@
+.dialog::backdrop {
+  background: var(--ui-backdrop);
+  backdrop-filter: blur(3px);
+}
+.dialog {
+  padding: 0;
+  margin: auto;
+  max-width: calc(100vw - 56px);
+  background: var(--ui-popover);
+  border: 1px solid var(--ws-border);
+  color: var(--ws-text);
+  border-radius: 12px;
+  width: min(100%, 650px);
+  max-height: calc(100dvh - 56px);
+  overflow: auto;
+  box-shadow: var(--ui-shadow);
+}
+.wide {
+  width: min(100%, 1160px);
+}
+.dialog > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 25px;
+  border-bottom: 1px solid var(--ws-border);
+  position: sticky;
+  top: 0;
+  background: var(--ui-popover);
+  z-index: 1;
+}
+.dialog > header h2 {
+  font-size: 18px;
+  font-weight: 550;
+}
+.dialog > header button {
+  border: 0;
+  background: transparent;
+  padding: 5px;
+}
+.dialog > footer {
+  position: sticky;
+  bottom: 0;
+  background: var(--ui-popover);
+  border-top: 1px solid var(--ws-border);
+  padding: 17px 25px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-end;
+}
+.dialog > footer > p {
+  margin-right: auto;
+  color: var(--ws-muted);
+  font-size: 12px;
+}
+.dialogIntro {
+  padding: 20px 25px;
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--ws-muted);
+}
+.dialogIntro .field {
+  margin-top: 20px;
+  color: var(--ws-text);
+}
+.compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 0 25px 23px;
+  gap: 20px;
+}
+.compare > section {
+  min-width: 0;
+  border: 1px solid var(--ws-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.compare h3 {
+  font-size: 12px;
+  padding: 12px 15px;
+  background: var(--ws-subtle);
+  font-weight: 500;
+  border-bottom: 1px solid var(--ws-border);
+}
+.compare pre {
+  padding: 18px;
+  font-size: 15px;
+  line-height: 1.95;
+  max-height: 440px;
+  overflow: auto;
+}
+.checkField {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 12px;
+  padding: 14px 0;
+  color: var(--ws-warning);
+}
+.checkField input {
+  accent-color: var(--writing-green);
+  margin-top: 5px;
+}
+.candidateIdeas {
+  margin: 0 25px 20px;
+  font-size: 12px;
+}
+.candidateIdeas summary {
+  cursor: pointer;
+  padding: 10px 0;
+  color: var(--writing-green);
+}
+.candidateIdeas > div {
+  padding: 10px 0;
+}
+.candidateIdeas ul {
+  padding-left: 20px;
+  line-height: 1.9;
+  margin: 5px 0;
+}
+.historyPicker {
+  padding: 20px 25px;
+  font-size: 13px;
+}
+.historyPicker label {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.historyPicker select {
+  max-width: 80%;
+  font-size: 12px !important;
+}
+.cardEditor {
+  padding: 22px 25px;
+}
+.cardEditor section {
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--ws-border);
+}
+.cardEditor section > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  color: var(--writing-green);
+  font-size: 13px;
+}
+.cardEditor section > div button {
+  border: 0;
+  background: transparent;
+}
+.handoffPreview {
+  margin-top: 20px;
+  color: var(--ws-text);
+}
+.handoffPreview h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+.handoffPreview pre {
+  padding: 15px;
+  background: var(--ws-subtle);
+  max-height: 300px;
+  overflow: auto;
+  font-size: 14px;
+  line-height: 1.9;
+}
+.handoffPreview > p {
+  font-size: 12px;
+  color: var(--ws-muted);
+  margin-top: 12px;
+}
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.spin {
+  animation: writing-spin 1s linear infinite;
+}
+@keyframes writing-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

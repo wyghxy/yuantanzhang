@@ -1,0 +1,7 @@
+/* Match the original radar figure's stacking level. Raising only the animated
+   figure above its text siblings changed Chromium's text rasterisation in the
+   integrated shell. Preserve source paint order without changing typography,
+   geometry, colours, opacity, or adding another compositing surface. */
+.admin-workspace .original-studio.radar-integrated .workspace-overview .radar-figure {
+  z-index: 1;
+}

@@ -1,0 +1,53 @@
+.original-studio .studio-privacy-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  gap: 5px;
+  padding: 6px 8px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 7px;
+  background: var(--ui-surface);
+  color: var(--text-main);
+  font-size: 11px;
+  white-space: nowrap;
+}
+.original-studio .studio-privacy-toggle[aria-pressed="true"] {
+  background: var(--ui-hover);
+  border-color: var(--border-strong);
+}
+.original-studio .studio-privacy-state {
+  border: 1px solid var(--border-subtle);
+  padding: 1px 3px;
+  border-radius: 3px;
+  font-size: 10px;
+}
+.original-studio .studio-mosaic {
+  position: relative;
+  overflow: hidden;
+  /* This replaces the image entirely; transparency only blends with the page surface. */
+  background: color-mix(in srgb, var(--studio-mosaic-surface, var(--ui-surface)) 52%, transparent) !important;
+  border-color: color-mix(in srgb, var(--text-muted) 8%, transparent);
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.original-studio #dashHero { --studio-mosaic-surface: var(--ui-overview-text); }
+.original-studio .studio-mosaic-pixels {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+}
+.original-studio .studio-mosaic-pixels i { background: color-mix(in srgb, var(--text-muted) 4%, transparent); }
+.original-studio .studio-mosaic-pixels i:nth-child(3n) { background: color-mix(in srgb, var(--text-muted) 12%, transparent); }
+.original-studio .studio-mosaic-pixels i:nth-child(3n + 1) { background: color-mix(in srgb, var(--text-muted) 8%, transparent); }
+.original-studio .studio-mosaic-pixels i:nth-child(5n) { background: color-mix(in srgb, var(--text-muted) 2%, transparent); }
+@media (max-width: 700px) {
+  .admin-workspace .original-studio .studio-privacy-toggle {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 6px;
+  }
+  .original-studio .studio-privacy-toggle > span:not(.studio-privacy-state) { display: none; }
+}

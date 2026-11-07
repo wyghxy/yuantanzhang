@@ -1,0 +1,326 @@
+/* Host containment only. All visual geometry comes from the captured local UI. */
+.admin-workspace .original-studio.radar-integrated { overflow: hidden; }
+.admin-workspace .original-studio.radar-integrated .radar-app { width: 100%; height: 100dvh; }
+.admin-workspace .original-studio.radar-integrated #radar-main {
+  height: calc(100dvh - var(--bar-height) - 28px);
+  min-height: 0;
+  overflow: auto;
+  min-width: 0;
+}
+/* Match the source page's native scrollbar; the host's 6px scrollbar widened every column. */
+.admin-workspace .original-studio.radar-integrated #radar-main::-webkit-scrollbar {
+  width: auto;
+  height: auto;
+}
+.admin-workspace .original-studio.radar-integrated #radar-main.radar-islands-active {
+  padding: 0;
+  overflow: hidden;
+}
+.admin-workspace .original-studio.radar-integrated :is(button,input,select,textarea) {
+  font-family: inherit;
+
+}
+.admin-workspace .original-studio.radar-integrated figure { margin: 0; }
+/* Approved alignment with the sidebar's bundled Inter + Noto Sans SC.
+   Only change the family: retain source sizes, weights, colours and layout. */
+.admin-workspace .original-studio.radar-integrated .dino-hero.workspace-overview,
+.admin-workspace .original-studio.radar-integrated .dino-hero.workspace-overview * {
+  font-family: var(--sidebar-font);
+}
+/* Paint the animated radar after its static siblings. Otherwise Chromium can
+   composite those later siblings above the animation and lose subpixel text
+   antialiasing. Keep the source geometry and the labels' unclipped paint area. */
+.admin-workspace .original-studio.radar-integrated .workspace-overview .radar-figure {
+  z-index: 2;
+}
+/* Source dots are decorative spans; native dots are platform navigation buttons. */
+.admin-workspace .original-studio.radar-integrated .radar-stage button.radar-dot {
+  pointer-events: auto;
+}
+/* Paint only the small radar surface. Transform/filter animations inside this
+   figure also rasterized its platform labels in the integrated Chromium view.
+   Keep the source period, hit delays and colours without compositing the text. */
+@property --radar-native-scan-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+.admin-workspace .original-studio.radar-integrated .workspace-overview .radar-stage[data-scan-ready] .radar-sweep {
+  transform: none;
+  animation-name: radar-native-scan;
+  background: conic-gradient(from var(--radar-native-scan-angle),
+    transparent 0deg 294deg,
+    var(--radar-reference-color-84c066cc5d) 322deg,
+    var(--radar-reference-color-20c8130f9e) 358deg,
+    var(--radar-reference-color-4fdcbe389e) 360deg);
+}
+.admin-workspace .original-studio.radar-integrated .workspace-overview .radar-stage[data-scan-ready] .radar-dot i {
+  transform: none;
+  filter: none;
+  animation-name: radar-native-hit;
+}
+@keyframes radar-native-scan {
+  from { --radar-native-scan-angle: 0deg; }
+  to { --radar-native-scan-angle: 360deg; }
+}
+@keyframes radar-native-hit {
+  0%, 8%, 100% {
+    box-shadow: 0 0 0 4px color-mix(in srgb, currentColor 8%, transparent);
+  }
+  1% {
+    box-shadow: 0 0 0 1.75px currentColor,
+      0 0 0 7.75px color-mix(in srgb, currentColor 18%, transparent),
+      0 0 15px color-mix(in srgb, currentColor 32%, transparent);
+  }
+  3% {
+    box-shadow: 0 0 0 .875px currentColor,
+      0 0 0 7.125px color-mix(in srgb, currentColor 10%, transparent),
+      0 0 10px color-mix(in srgb, currentColor 12%, transparent);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .admin-workspace .original-studio.radar-integrated .workspace-overview .radar-stage[data-scan-ready] .radar-sweep {
+    --radar-native-scan-angle: 25deg;
+  }
+}
+/* This stationary surface needs no backdrop sampling. The source's blurred
+   pseudo-element changes Chromium text compositing even behind the content.
+   Keep its gradients and geometry, but let the title/quote render normally. */
+.admin-workspace .original-studio.radar-integrated .workspace-intro::before {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.admin-workspace .original-studio.radar-integrated [hidden] { display: none !important; }
+.admin-workspace .original-studio.radar-integrated .statusbar .stop-task { color: var(--danger); }
+.admin-workspace .original-studio.radar-integrated .radar-writing-active {
+  display: grid;
+  /* The writing component owns the two panes; its host fills the workspace. */
+  grid-template-columns: minmax(0, 1fr);
+}
+/* The original inner app is rendered inline; the native shell owns the viewport. */
+.admin-workspace .original-studio.radar-integrated #radar-main:is(.radar-creation-active, .radar-writing-active) { padding: 0; overflow: hidden; }
+.admin-workspace .original-studio.radar-integrated .radar-source-page { height: 100%; min-width: 0; min-height: 0; overflow: hidden; }
+/* An inline page fills the pane, not a second viewport beside the sidebar. */
+.admin-workspace .original-studio.radar-integrated .radar-source-page { width:100%; max-width:100%; }
+.admin-workspace .original-studio.radar-integrated .radar-source-page.radar-source-dialog { display: contents; }
+/* Existing production-only filters use the source controls and semantic tokens. */
+.admin-workspace .original-studio.radar-integrated .radar-source-page .feed-pagination {
+  flex-shrink: 0;
+  justify-content: flex-start;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page .feed-filter-menu { position: relative; margin-left: auto; }
+.admin-workspace .original-studio.radar-integrated .radar-source-page .feed-filter-menu > summary {
+  cursor: pointer;
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page .feed-filter-menu > div {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 8px);
+  z-index: 10;
+  width: 240px;
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page .feed-filter-menu label { display: grid; gap: 6px; }
+.admin-workspace .original-studio.radar-integrated .radar-source-page .feed-filter-menu select {
+  padding: 8px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--bg-subtle);
+  color: var(--text-main);
+}
+
+/* Inline native dialogs are siblings of the source schedule workspace. */
+.admin-workspace .original-studio.radar-integrated .radar-source-page .cs-page > dialog[open] { display: block !important; }
+
+/* Native writing controls share the source .btn geometry and AI action tone.
+   Keep the captured source styles unchanged; do not introduce a second button system. */
+.admin-workspace .original-studio.radar-integrated .radar-source-page #creation-workspace .btn:is(.cw-ai-button, .cw-mode-button[aria-pressed="true"]) {
+  color: var(--primary);
+  background: var(--primary-light);
+  border: 1px solid var(--border-subtle);
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page #creation-workspace .btn:is(.cw-ai-button, .cw-mode-button):hover {
+  background: var(--bg-hover);
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page #creation-workspace .cw-mode-button {
+  white-space: nowrap;
+}
+
+/* Keep reading/editing and optional topic actions inside narrow writing panels.
+   Both modes reserve the same two rows, aligned with the reference toolbar. */
+@container creation (max-width: 1000px) {
+  .admin-workspace .original-studio.radar-integrated .radar-source-page .cw-grid:has(.cw-mode-button) {
+    --cw-tools-height: 112px;
+  }
+  .admin-workspace .original-studio.radar-integrated .radar-source-page .cw-draft-toolbar:has(.cw-mode-button) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-rows: 44px 44px;
+    gap: 8px;
+    padding-block: 8px;
+  }
+  .admin-workspace .original-studio.radar-integrated .radar-source-page .cw-draft-toolbar > [role="group"]:has(.cw-mode-button) {
+    grid-area: 1 / 1 / 2 / -1;
+  }
+  .admin-workspace .original-studio.radar-integrated .radar-source-page .cw-draft-toolbar:has(.cw-mode-button) #cw-draft-state {
+    grid-area: 2 / 1;
+  }
+  .admin-workspace .original-studio.radar-integrated .radar-source-page .cw-draft-toolbar:has(.cw-mode-button) #cw-organize {
+    grid-area: 2 / 2;
+  }
+  .admin-workspace .original-studio.radar-integrated .radar-source-page .cw-draft-toolbar:has(.cw-mode-button) #cw-ai-write {
+    grid-area: 2 / 3;
+  }
+  .admin-workspace .original-studio.radar-integrated .radar-source-page #creation-workspace .cw-draft-toolbar:has(.cw-mode-button) .btn {
+    min-height: 44px;
+    white-space: nowrap;
+  }
+}
+
+/* Six supported platforms retain the source card geometry and responsive rows. */
+@media (min-width: 1600px) {
+  .admin-workspace .original-studio.radar-integrated .radar-source-page .cs-platform-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+@media (min-width: 768px) and (max-width: 1199px) {
+  .admin-workspace .original-studio.radar-integrated #radar-main .workspace-overview .collection-rows {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-rows: minmax(0, 1fr);
+    block-size: 54px;
+  }
+}
+@media (max-width: 767px) {
+  .admin-workspace .original-studio.radar-integrated #radar-main .workspace-overview .collection-rows {
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    block-size: 117px;
+  }
+}
+@media (max-width: 1199px) {
+  .admin-workspace .original-studio.radar-integrated #radar-main .workspace-overview .collection-row {
+    padding-block: 6px;
+  }
+}
+@media (min-width: 768px) and (max-width: 999px) {
+  .admin-workspace .original-studio.radar-integrated #radar-main .workspace-overview .hero-topline {
+    gap: 4px;
+  }
+  .admin-workspace .original-studio.radar-integrated #radar-main .workspace-overview .compute-band {
+    padding-inline: 8px;
+  }
+}
+
+/* The existing TikTok asset is monochrome; keep it legible on the dark card. */
+:root[data-theme='dark'] .admin-workspace .original-studio.radar-integrated .cs-platform-card[data-platform='tiktok'] .cs-platform-logo img {
+  filter: invert(1);
+}
+
+/* Native radar keeps the approved five-row reference footprint with six sources.
+   Desktop rows share that budget; touch input keeps 44px targets inside it. */
+@media (min-width: 1200px) {
+  .admin-workspace .original-studio.radar-integrated #radar-main .workspace-overview .collection-rows {
+    block-size: 208px;
+    grid-template-rows: repeat(6, minmax(0, 1fr));
+  }
+  .admin-workspace .original-studio.radar-integrated #radar-main .workspace-overview .collection-row {
+    min-height: 0;
+    padding-block: 0;
+  }
+}
+@media (min-width: 1800px) {
+  .admin-workspace .original-studio.radar-integrated #radar-main .workspace-overview .collection-rows {
+    block-size: 228px;
+  }
+}
+@media (min-width: 1200px) and (pointer: coarse) {
+  .admin-workspace .original-studio.radar-integrated #radar-main .workspace-overview .collection-rows {
+    grid-template-rows: repeat(6, 44px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
+
+/* Paint the fog directly into the card background. No blur, opacity or
+   transformed overlay can soften text or interfere with radar interactions. */
+.admin-workspace .original-studio.radar-integrated .dino-hero.workspace-overview {
+  background:
+    radial-gradient(ellipse at 34% 0%, var(--ui-radar-fog-light), transparent 64%),
+    radial-gradient(ellipse at 0% 100%, var(--ui-radar-fog-signal), transparent 46%),
+    linear-gradient(115deg, var(--ui-radar-fog-edge), transparent 56%),
+    linear-gradient(145deg, var(--overview-top), var(--overview-bottom) 70%);
+}
+
+/* Both source layouts query this host by name; preserve both containers. */
+.admin-workspace .original-studio.radar-integrated .radar-source-page #creation-workspace {
+  container: creation-overview creation / inline-size;
+}
+
+/* A neutral writing surface for notes; preserve the captured source stylesheet. */
+.admin-workspace .original-studio.radar-integrated .radar-source-page .cw-right .preview-note-pane textarea {
+  padding: 20px 22px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  background: var(--bg-card);
+  color: var(--text-main);
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page .cw-right .preview-note-pane textarea:focus-visible {
+  border-color: var(--primary);
+  outline: 2px solid var(--primary-light);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+/* Captured prototype hid placeholder paragraphs; real saved annotations must remain readable. */
+.admin-workspace .original-studio.radar-integrated .radar-source-page .cw-right .preview-note-pane p {
+  display: block;
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page .cw-right .preview-note-pane p[role=status] {
+  display: block;
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: var(--text-muted);
+  flex: 0 0 auto;
+}
+
+/* Keep failed-save recovery reachable in the fixed reference panel, including narrow screens. */
+.admin-workspace .original-studio.radar-integrated .radar-source-page .cw-right .preview-note-pane {
+  overflow-y: auto;
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page .cw-right .preview-note-pane > :not(textarea) {
+  flex: 0 0 auto;
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page .cw-right .preview-note-pane textarea {
+  min-height: 108px;
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page .cw-right .preview-note-pane [data-material-notes] textarea {
+  flex: none;
+  height: 128px;
+  min-height: 112px;
+  max-height: 220px;
+  padding: 12px 14px;
+  font-size: 16px;
+  line-height: 1.8;
+  resize: vertical;
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page .cw-right .preview-note-pane [role=group] p {
+  display: block;
+  margin: 12px 0;
+  color: var(--text-main);
+}
+/* Account actions remain reachable when the detail panel is narrow. */
+.admin-workspace .original-studio.radar-integrated .radar-source-page .creator-profile-actions {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Loading feedback belongs to the application adapter. */
+.admin-workspace .original-studio.radar-integrated .radar-source-page #view-videos .library-read-notice{display:flex;flex:none;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;color:var(--text-muted);font-size:14px;line-height:1.6}

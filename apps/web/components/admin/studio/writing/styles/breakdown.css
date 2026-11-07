@@ -1,0 +1,9 @@
+/* The analysis component owns its single padding layer. */
+:global(.admin-workspace .original-studio.radar-integrated) .breakdownContent {
+  color: var(--ui-text);
+  font: 400 17px/1.8 Inter, 'Radar Sans SC', sans-serif;
+  max-width: none;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  container-type: inline-size;
+}

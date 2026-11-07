@@ -1,0 +1,93 @@
+/* Navigation state is on the host root, rather than a descendant. */
+.admin-workspace .original-studio.radar-integrated #sidebar {
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+.admin-workspace .original-studio.radar-integrated.nav-collapsed #sidebar {
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(-100%);
+}
+
+.admin-workspace .original-studio.radar-integrated.nav-collapsed #radar-main {
+  margin-left: 0;
+}
+
+.admin-workspace .original-studio.radar-integrated .nav-scrim {
+  display: none;
+}
+
+/* The community retains its own top navigation and content canvas. */
+.admin-workspace .original-studio.radar-integrated.islands-active {
+  /* Clip the shell without allowing focused descendants to scroll it. */
+  display: flow-root;
+  overflow: clip;
+}
+
+.admin-workspace .original-studio.radar-integrated.islands-active #radar-main {
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
+  width: auto;
+  height: calc(100dvh - var(--bar-height));
+  min-height: 0;
+  min-width: 0;
+  margin-left: var(--nav-width);
+  margin-top: var(--bar-height);
+  padding: 0;
+  overflow: clip;
+  transition: none;
+}
+
+.admin-workspace .original-studio.radar-integrated.islands-active #radar-main > * {
+  max-width: none;
+}
+
+.admin-workspace .original-studio.radar-integrated.islands-active #sidebar {
+  top: var(--bar-height);
+  bottom: 0;
+}
+
+.admin-workspace .original-studio.radar-integrated.islands-active.nav-collapsed #radar-main {
+  margin-left: 0;
+}
+
+@media (max-width: 767px) {
+  .admin-workspace .original-studio.radar-integrated #sidebar {
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateX(-100%);
+  }
+
+  .admin-workspace .original-studio.radar-integrated.nav-open #sidebar {
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(0);
+  }
+
+  .admin-workspace .original-studio.radar-integrated.islands-active #radar-main {
+    margin-left: 0;
+  }
+
+  .admin-workspace .original-studio.radar-integrated.nav-open .nav-scrim {
+    display: block;
+    position: fixed;
+    z-index: 35;
+    inset: var(--bar-height) 0 28px;
+    padding: 0;
+    border: 0;
+    background: var(--ui-backdrop);
+  }
+
+  .admin-workspace .original-studio.radar-integrated.islands-active .nav-scrim {
+    bottom: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-workspace .original-studio.radar-integrated #sidebar {
+    transition: none;
+  }
+}

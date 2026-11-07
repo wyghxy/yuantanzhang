@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">读书会三行笔记 · 演示案例</title>
+  <desc id="desc">原创几何插画，表现桌面上的书、三行笔记和一杯水，并非真实活动照片。</desc>
+  <path fill="#e8e4dc" d="M0 0h960v540H0z"/>
+  <path d="M0 145h960M0 365h960" stroke="#d7d2c9" stroke-width="3"/>
+  <g transform="rotate(-8 320 280)"><rect x="145" y="110" width="325" height="340" rx="11" fill="#afbec4"/><path d="M164 110h286v340H164z" fill="#668590"/><path d="M185 140h238v4H185zM185 412h238v4H185z" fill="#91a8b1"/><rect x="212" y="196" width="185" height="110" rx="2" fill="#dfe6e4"/><path d="M243 230h121M243 252h91M243 274h111" stroke="#69818a" stroke-width="5"/></g>
+  <g transform="rotate(5 595 288)"><rect x="475" y="170" width="244" height="278" rx="5" fill="#cfc9be"/><rect x="465" y="158" width="244" height="278" rx="5" fill="#fbfaf5"/><path d="M498 213h177M498 246h177M498 279h177M498 312h177M498 345h177M498 378h177" stroke="#e0e4df" stroke-width="2"/><path d="M502 208h129M502 241h153M502 274h109" stroke="#637f8a" stroke-width="5" stroke-linecap="round"/><path d="m489 202 5 5 10-12m-15 40 5 5 10-12m-15 41 5 5 10-12" stroke="#84a18c" stroke-width="4" fill="none"/></g>
+  <circle cx="802" cy="153" r="65" fill="#b9c7c8"/><circle cx="802" cy="149" r="53" fill="#f6f5ee"/><circle cx="802" cy="149" r="42" fill="#c3d1cc"/>
+  <path d="m752 415 100-112" stroke="#7b8f94" stroke-width="13" stroke-linecap="round"/><path d="m746 422 12-5-7-7z" fill="#4b626b"/>
+  <rect x="36" y="34" width="86" height="32" rx="16" fill="#fff" opacity=".88"/><text x="79" y="56" text-anchor="middle" font-family="sans-serif" font-size="17" fill="#52616c">演示</text>
+</svg>

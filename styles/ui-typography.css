@@ -1,0 +1,118 @@
+@import './ui-auth-font.css';
+@import './ui-context-font.css';
+/* Shared UI typography. Keep native glyph rasterization and real variable weights. */
+:root {
+  /* Workspace scale recorded by ui-system-20260927-r2; opt in per module. */
+  --font-workspace: 'Radar Inter', 'Radar Sans SC', -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+  --font-size-workspace-body: 17px;
+  --font-size-workspace-section: 21px;
+  --font-size-workspace-caption: 14px;
+  --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+    'WenQuanYi Micro Hei', sans-serif;
+  --font-size-caption: 12px;
+}
+body,
+.admin-workspace,
+.admin-workspace .original-studio {
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+  text-rendering: auto;
+  font-optical-sizing: auto;
+}
+.admin-workspace .original-studio {
+  --sans: var(--font-ui);
+}
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+/* Solid reading surfaces avoid moving contrast under small text. */
+.admin-workspace .original-studio .liquid-glass {
+  background: var(--ui-card);
+}
+/* Surface roles outrank the upstream glass adapter without changing geometry. */
+.admin-workspace .original-studio .side-nav {
+  background: var(--ui-sidebar);
+}
+.admin-workspace .original-studio:not(.radar-integrated) :is(.studio-column, .pane-transcript, .pane-insight, .draft-ref-panel, .draft-editor-panel) {
+  background: var(--ui-content);
+}
+.admin-workspace .original-studio:not(.radar-integrated) :is(.top-header, .taskbar) {
+  background: var(--ui-page);
+}
+.admin-workspace .original-studio:not(.radar-integrated) :is(.modal-card, .drawer, .original-modal, .original-notice, .selection-tooltip) {
+  background: var(--ui-popover);
+}
+.admin-workspace .original-studio:not(.radar-integrated) :is(.omni-bar, .feed-tools input, .feed-tools select, .creator-search-inline, .video-search-wrap input) {
+  background: var(--ui-input-bg);
+}
+.admin-workspace .original-studio .liquid-glass::before,
+.admin-workspace .original-studio .liquid-glass::after {
+  content: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  animation: none;
+}
+.admin-workspace .original-studio:not(.radar-integrated) :is(
+  .omni-detected, .tele-pill, .tele-lat, .tele-asr, .nav-label, .nav-count,
+  .plat-badge, .view-mode-btn, .segmented-btn, .feed-tools select,
+  .feed-card-meta, .feed-card-time, .feed-card-foot, .t-status-tag,
+  .transcript-time, .template-chip, .selection-tooltip, .selection-tooltip button,
+  .creator-stat-label, .creator-stat-sub, .seg-badge, th,
+  .creator-filter-bar .video-plat-tab, .rail-count, .creator-pending-badge,
+  .creator-identity-chip, .btn-creator-backfill, .btn-creator-link,
+  .badge, .dispatch-hero-badge, .btn-exit-zen, .video-hero-tag,
+  .creator-pill-count, .rail-label, .ctx-section-label, .ctx-video-item-meta,
+  .topics-row-meta, .status-tag, .radar-dot em,
+  .hero-caption, .hero-progress-head, .compute-text span,
+  .dash-stat-sub, .dash-delta, .dash-bar-value, .flow-mini span,
+  .heatmap-cap, .dash-recent-meta, .dash-recent-time, .dash-topic-idx,
+  .dash-plat-tag
+) {
+  font-size: var(--font-size-caption);
+}
+.admin-workspace .original-studio:not(.radar-integrated) :is(.compute-text, .compute-text span, .dash-stat-sub, .dash-stat-label) {
+  line-height: 1.5;
+}
+.admin-workspace .original-studio .compute-text strong {
+  font-size: 14px;
+  line-height: 1.25;
+}
+.admin-workspace .original-studio .radar-dot em {
+  color: var(--ui-radar-text);
+  font-weight: 600;
+  text-shadow: none;
+  animation: none;
+}
+.admin-workspace .original-studio:not(.radar-integrated) :is(.nav-label, .nav-count) {
+  line-height: 15px;
+}
+
+/* Reuse the exact, locally hosted font assets from the approved prototype. */
+@font-face {
+  font-family: 'Radar Sans SC';
+  src: url('/fonts/radar/RadarSansSC-Preview.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+  unicode-range: U+2000-FFFF;
+}
+@font-face {
+  font-family: 'Radar Inter';
+  src: url('/fonts/radar/Inter-Variable.ttf') format('truetype');
+  font-weight: 100 900;
+  font-display: swap;
+}
+.admin-workspace .original-studio.radar-integrated {
+  --font-radar: 'Radar Inter', 'Radar Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+}
+.admin-workspace .radar-integrated .workbench > :not(.side-nav),
+.admin-workspace .radar-integrated .original-modal {
+  --sans: var(--font-radar);
+  font-family: var(--font-radar);
+  font-variant-numeric: tabular-nums;
+}

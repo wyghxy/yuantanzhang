@@ -1,0 +1,61 @@
+{
+  "name": "yuantanzhang-personal",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "author": "元探长",
+  "packageManager": "pnpm@9.15.9",
+  "engines": { "node": ">=22.23.2 <23" },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "build": "pnpm --filter @ytz/api build && pnpm --filter @ytz/worker build && pnpm --filter @ytz/web build",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "lint": "eslint apps scripts tests --ext .ts,.tsx,.mjs",
+    "test": "tsx --test tests/*.test.ts",
+    "test:integration": "tsx tests/integration.ts",
+    "test:backend-workflows": "tsx tests/backend-workflows.ts",
+    "test:demo": "tsx tests/demo-cleanup.integration.ts",
+    "test:browser": "tsx tests/browser.ts",
+    "check:release": "python3 scripts/check-release.py",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate deploy",
+    "setup": "tsx scripts/init-personal.ts && tsx scripts/seed-demo.ts",
+    "personal:init": "tsx scripts/init-personal.ts",
+    "demo:seed": "tsx scripts/seed-demo.ts",
+    "demo:clear": "tsx scripts/seed-demo.ts --clear"
+  },
+  "dependencies": {
+    "@nestjs/common": "11.2.3",
+    "@nestjs/core": "11.2.3",
+    "@nestjs/platform-express": "11.2.3",
+    "@prisma/client": "6.19.3",
+    "bcryptjs": "3.0.3",
+    "bullmq": "6.3.4",
+    "dotenv": "17.4.2",
+    "express": "5.1.0",
+    "ioredis": "6.0.0",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "@tiptap/extension-bubble-menu": "3.31.0",
+      "@tiptap/extension-floating-menu": "3.31.0"
+    }
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.5",
+    "@eslint/js": "^9.0.0",
+    "@next/eslint-plugin-next": "16.3.4",
+    "eslint": "^9.0.0",
+    "eslint-plugin-react-hooks": "^7.0.0",
+    "typescript-eslint": "^8.0.0",
+    "playwright": "^1.56.0",
+    "prisma": "6.19.3",
+    "tsx": "^4.20.0",
+    "typescript": "^5.6.0"
+  }
+}

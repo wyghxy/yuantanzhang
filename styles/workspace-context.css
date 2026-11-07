@@ -1,0 +1,87 @@
+/* context-shared-r4: one typeface for Chinese and numerals, not just equal CSS sizes. */
+:root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-stage > .workspace-context {
+  --context-body:17px;--context-body-leading:28px;
+  --intro-column-gap:20px;
+  --ui-font:'Radar Sans SC','Radar Inter',sans-serif;
+  font-family:var(--ui-font);
+  font-synthesis:none;
+}
+:root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context :is(h1,.daily-quote,.daily-quote-label,.daily-quote-text,.context-meta,.context-meta span,.clock time,.weather-reading,.weather-temperature,.weather-caption) {
+  font-family:var(--ui-font);font-synthesis:none;
+}
+:root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context .intro-copy {display:block;min-width:0;}
+:root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context .intro-title {display:flex;align-items:center;gap:12px;}
+:root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context .intro-copy > p {display:none;}
+:root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context h1 {
+  margin:0;font-size:var(--context-body);line-height:var(--context-body-leading);font-weight:400;color:var(--text);
+  text-wrap:initial;white-space:nowrap;
+}
+:root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context :is(.daily-quote-content,.daily-quote-text,.daily-quote-decoration) {
+  font-size:var(--context-body);line-height:var(--context-body-leading);
+}
+:root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context .daily-quote-text {
+  font-weight:400;color:var(--text);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:1;
+  overflow:hidden;text-wrap:initial;max-width:none;
+}
+:root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context :is(.daily-quote-label,.context-meta,.context-meta span,.clock time,.weather-reading,.weather-temperature,.weather-caption,#clock-date,#ops-clock-date,#plan-clock-date) {
+  font-size:var(--context-body);line-height:var(--context-body-leading);font-weight:400;color:var(--text);
+}
+:root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context .daily-quote-caption {display:none;}
+:root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context .daily-quote-label {
+  position:absolute;left:50%;bottom:calc(50% + var(--context-body-leading) / 2);
+  transform:translateX(-50%);display:flex;align-items:center;justify-content:center;
+  width:24px;height:24px;margin:0;gap:0;
+}
+:root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context :is(.clock,.clock time) {display:block;line-height:var(--context-body-leading);}
+:root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context :is(.context-meta,.context-meta span,.clock time,.weather-temperature) {font-variant-numeric:tabular-nums;}
+:root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context .quote-edit {
+  display:flex;align-items:center;justify-content:center;
+  width:24px;height:24px;min-width:0;min-height:0;margin:0;padding:0;color:var(--muted);
+}
+:root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context .quote-edit .icon {width:16px;height:16px;}
+@media (min-width:1280px) {
+  :root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-stage > .workspace-context {
+    grid-template-columns:fit-content(32%) minmax(0,1fr) max-content!important;
+    height:80px;min-height:80px!important;padding:12px 20px!important;gap:var(--intro-column-gap);
+    box-sizing:border-box;align-items:center;
+  }
+  :root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context :is(.daily-quote,.heading-tools) {
+    min-height:0;height:52px;align-self:center!important;padding-block:0;
+  }
+  :root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context .daily-quote {
+    position:relative;display:flex;flex-direction:row;flex-wrap:nowrap;
+    width:calc(100% + var(--intro-column-gap));margin:0;gap:8px;padding-inline:20px;
+    justify-self:stretch;align-items:center;justify-content:center;text-align:center;
+  }
+  :root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context .daily-quote-content {max-width:100%;min-width:0;}
+  :root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context .heading-tools {
+    display:flex;flex-direction:row;align-items:center;justify-content:flex-start;
+    flex-wrap:nowrap;gap:16px;padding-left:20px;white-space:nowrap;width:auto;min-width:0;
+  }
+  :root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context .context-meta {flex:none;}
+  :root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context .context-readout {
+    display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:20px;flex:none;
+  }
+  :root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context .weather-reading {display:flex;align-items:center;gap:6px;white-space:nowrap;}
+  :root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context .weather-icon {width:18px;height:18px;flex:none;stroke-width:2;}
+  :root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context .workspace-emblem {flex:none;align-self:center;width:36px;height:36px;border-radius:12px;}
+  :root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context .workspace-emblem .icon {width:20px;height:20px;}
+}
+@media (min-width:1800px) {
+  :root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-stage > .workspace-context {
+    --context-body:21px;--context-body-leading:32px;
+    --intro-column-gap:24px;
+    height:96px;min-height:96px!important;padding:16px 28px!important;
+  }
+  :root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context :is(.daily-quote,.heading-tools) {height:60px;}
+  :root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context .heading-tools {padding-left:24px;gap:24px;}
+  :root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context .context-readout {gap:24px;}
+  :root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context .weather-icon {width:20px;height:20px;}
+  :root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-context .workspace-emblem {width:40px;height:40px;}
+}
+@media (max-width:1279px) {
+  :root body .admin-workspace :is(#radar-main,#accounts-workspace,#planning-workspace) .workspace-stage > .workspace-context {display:none!important;}
+}
+
+/* Dashboard-only privacy action matches the adjacent refresh control. */
+:root body .radar-integrated .hero-topline .icon-button[aria-pressed] {width:44px;height:44px;min-width:44px;border-radius:50%;padding:0;flex:none;background:transparent;}

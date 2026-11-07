@@ -1,0 +1,13 @@
+.native-workspace .workspace-switcher {position:fixed;margin:auto;padding:0;border:1px solid var(--ws-border);border-radius:16px;max-width:min(420px,calc(100vw - 32px));width:420px;background:var(--ui-popover);color:var(--ws-text);box-shadow:var(--ui-shadow);}
+.workspace-switcher::backdrop {background:var(--ui-backdrop);backdrop-filter:blur(3px);}
+.workspace-switcher-heading {display:flex;justify-content:space-between;align-items:center;padding:22px 24px 10px;}
+.workspace-switcher-heading h2 {font-size:19px;font-weight:650;}
+.admin-workspace.native-workspace .workspace-switcher .admin-sidebar {background:transparent;display:flex;position:static;transform:none;visibility:visible;width:100%;height:auto;max-height:65dvh;border:0;padding:10px 20px 20px;}
+.workspace-switcher .creator-station-brand {display:none;}
+.workspace-switcher .admin-nav-caption {padding:4px 12px 12px;font-size:12px;}
+.native-workspace .workspace-switcher .admin-nav-link {font-size:15px;padding:13px 15px;margin:4px 0;gap:14px;border-radius:8px;}
+.workspace-switcher-account {display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--ws-border);padding:18px 24px;color:var(--ws-muted);}
+.workspace-switcher-account button {display:flex;align-items:center;gap:7px;}
+
+.native-workspace{--ws-border:var(--ui-border);--ws-text:var(--ui-text);--ws-muted:var(--ui-text-muted)}
+.workspace-switcher .admin-nav-link{display:flex;align-items:center;text-decoration:none}

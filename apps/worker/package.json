@@ -1,0 +1,16 @@
+{
+  "name": "@ytz/worker",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "start": "node dist/main.js",
+    "dev": "tsx watch src/main.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "6.19.3",
+    "bullmq": "6.3.4",
+    "dotenv": "^17.2.2"
+  }
+}

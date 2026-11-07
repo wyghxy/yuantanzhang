@@ -1,0 +1,9 @@
+import type { WritingAnalysis, WritingConfig, WritingDocument, WritingKind, WritingProfile } from '@/lib/writing-domain'
+import type { WritingSnapshot } from '@/lib/writing-snapshot'
+
+export interface MaterialView { id: number; title: string; platform: string; url: string | null; author: string | null; revision: number; rawTranscript: string; correctedTranscript: string; transcriptSource: string | null; analysis: WritingAnalysis | null; analysisRevision: number | null; status: string; lastError: string | null; sourceItemId: number | null; sourceItem: { id: number; status: string; evidenceNotes: string | null } | null }
+export interface DraftView { id: number; revision: number; document: WritingDocument; adoptedVersion: number | null; inputSnapshot: WritingSnapshot; job: { kind: string } | null; createdAt: string }
+export interface JobView { id: number; kind: WritingKind; status: string; stage: string; error: string | null; attempts: number; model: string | null; createdAt: string; events: { at: string; text: string }[] }
+export interface WritingState { materials: MaterialView[]; drafts: DraftView[]; jobs: JobView[]; settings: { revision: number; config: WritingConfig }; profile: { revision: number; config: WritingProfile }; master: { title: string; body: string; version: number; confirmedAt: string | null } | null; history: { id: number; version: number; snapshot: { title: string; body: string }; createdAt: string }[]; capabilities: { model: boolean; modelName: string | null; asr: boolean; storage: boolean } }
+export type WritingAction = (path: string, method: string, body?: unknown) => Promise<Record<string, unknown>>
+export const PLATFORM_LABELS: Record<string, string> = { douyin: '抖音', bilibili: 'B站', xiaohongshu: '小红书', youtube: 'YouTube', text: '逐字稿', upload: '上传素材' }

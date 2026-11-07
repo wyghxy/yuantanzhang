@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">巷口晨光 · 演示案例</title>
+  <desc id="desc">原创几何插画，表现巷口的建筑、路面和晨光，并非实拍素材。</desc>
+  <defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="#e9edf1"/><stop offset="1" stop-color="#f5e4c8"/></linearGradient><linearGradient id="road" x2="0" y2="1"><stop stop-color="#cbd0cf"/><stop offset="1" stop-color="#a7b5ba"/></linearGradient></defs>
+  <path fill="url(#sky)" d="M0 0h960v540H0z"/>
+  <circle cx="664" cy="178" r="64" fill="#f7d99a"/>
+  <path fill="#9eaaa9" d="M0 124 192 78v302H0z"/><path fill="#c0c9c7" d="m192 78 108 90v212H192z"/>
+  <path fill="#d6cec0" d="M735 75h225v340H735z"/><path fill="#b2b9b7" d="m635 178 100-103v340H635z"/>
+  <path fill="url(#road)" d="m300 350 335-25 325 215H0z"/>
+  <path fill="#efddb8" d="m516 346 107-7 192 201H478z"/>
+  <g fill="#657e88"><path d="M34 160h44v72H34zM108 145h44v72h-44zM35 272h44v72H35zM108 257h44v72h-44z"/><path d="M774 124h47v75h-47zM854 124h47v75h-47zM774 244h47v75h-47zM854 244h47v75h-47z"/></g>
+  <path d="M379 343V182m0 0h44m-44 8h31" fill="none" stroke="#576e79" stroke-width="10" stroke-linecap="round"/>
+  <path d="m368 383 25-18 30 7m-8 69 68-12" fill="none" stroke="#f6f4ec" stroke-width="6" stroke-linecap="round" opacity=".7"/>
+  <rect x="36" y="34" width="86" height="32" rx="16" fill="#fff" opacity=".88"/><text x="79" y="56" text-anchor="middle" font-family="sans-serif" font-size="17" fill="#52616c">演示</text>
+</svg>

@@ -1,0 +1,131 @@
+.task {
+  flex-shrink: 0;
+  border-top: 1px solid var(--border-subtle);
+  padding: 6px 24px;
+  background: var(--bg-subtle);
+  font-size: 11.5px;
+}
+.task > div:first-child {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+}
+.task > div > strong {
+  font-weight: 500;
+}
+.root .task > div > button {
+  margin-left: auto;
+  font-size: 11px;
+  padding: 2px 4px;
+  background: transparent;
+  border: 0;
+}
+.taskDot,
+.taskDotActive {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-faint);
+}
+.taskDotActive {
+  background: var(--writing-green);
+}
+.task > p {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+  margin: 4px 0;
+}
+.task progress {
+  display: block;
+  width: 100%;
+  height: 3px;
+  accent-color: var(--writing-green);
+  margin-top: 5px;
+}
+.logs {
+  list-style: none;
+  padding: 0;
+  max-height: 150px;
+  overflow: auto;
+  margin: 8px 0 0;
+  font-size: 11px;
+}
+.logs li {
+  padding: 5px 0;
+  border-top: 1px solid var(--border-subtle);
+}
+.logs time {
+  color: var(--text-faint);
+  margin-right: 8px;
+}
+.logs span {
+  overflow-wrap: anywhere;
+}
+.renderProgress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+.renderProgress button {
+  margin-left: auto;
+}
+.mobileSwitch {
+  display: none;
+}
+.downloads {
+  flex: 0 1 auto;
+  min-height: 0;
+  max-height: min(140px, 18dvh);
+  overflow: auto;
+  overscroll-behavior: contain;
+  border-top: 1px solid var(--border-subtle);
+  padding: 8px 12px;
+}
+.downloads h3 {
+  font-size: 12px;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+.downloads > p {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin: 0 0 8px;
+}
+.downloads > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.downloads > div > div {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+}
+.fileLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  padding: 5px 9px;
+  border: 1px solid var(--border-active);
+  border-radius: 6px;
+  background: var(--writing-green-soft);
+  text-decoration: none;
+}
+.fileLink:hover {
+  text-decoration: underline;
+}
+.fileLink[aria-disabled='true'] {
+  color: var(--text-muted);
+  border-color: var(--border-subtle);
+  background: var(--bg-subtle);
+  cursor: not-allowed;
+}
+.downloads > div > div > span {
+  font-size: 11px;
+  color: var(--text-muted);
+}

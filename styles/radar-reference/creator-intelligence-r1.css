@@ -1,0 +1,103 @@
+/*
+ * 对标账号页的情报状态与抓取范围。
+ * 生成的原型样式负责几何与配色，这里只补三件事：行内抓取条数选择、
+ * 情报状态标签的角色、资料面板的开启／关闭／删除三个按键。
+ * 不新增色板，全部引用本页已有的语义角色。
+ */
+.admin-workspace .original-studio.radar-integrated .radar-source-page #view-creators .creator-capture-scope {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-muted);
+  font-size: 11.5px;
+  white-space: nowrap;
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page #view-creators .creator-capture-scope select {
+  min-height: 30px;
+  padding: 3px 4px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--bg-subtle);
+  color: var(--text-main);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page #view-creators .creator-capture-scope select:disabled {
+  opacity: .6;
+  cursor: default;
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page #view-creators .creator-capture-scope select:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page #view-creators .ctx-fact-label {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+/* 快捷操作要在一排放下「条数 + 抓取 + 主页」：把这列加宽，其余列按比例让出
+   空间，行内间距收到 6px；条数选择器自身带「5 条」文字，不再额外写「最近」。 */
+.admin-workspace .original-studio.radar-integrated .radar-source-page #view-creators .creator-table-wrap :is(th, td):nth-child(1) {
+  width: 26%;
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page #view-creators .creator-table-wrap :is(th, td):nth-child(2) {
+  width: 9%;
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page #view-creators .creator-table-wrap :is(th, td):nth-child(3) {
+  width: 10%;
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page #view-creators .creator-table-wrap :is(th, td):nth-child(4) {
+  width: 12%;
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page #view-creators .creator-table-wrap :is(th, td):nth-child(5) {
+  width: 10%;
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page #view-creators .creator-table-wrap :is(th, td):nth-child(6) {
+  width: 33%;
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page #view-creators .creator-row-actions {
+  gap: 6px;
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page #view-creators .creator-capture-scope select {
+  min-width: 62px;
+}
+/* 表格里的情报状态不用胶囊：胶囊自带内边距和圆点，会把文字整体推到表头右侧，
+   视觉上「情」字下面空着。改成从列左边缘起排的纯色文字，与表头同一条左线。 */
+.admin-workspace .original-studio.radar-integrated .radar-source-page #view-creators .creator-row .tracking-status-chip {
+  padding: 0;
+  background: transparent;
+  border: 0;
+  font-weight: 600;
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page #view-creators .creator-row .tracking-status-chip :is(.pulse-dot, .static-dot) {
+  display: none;
+}
+/* 情报状态另起一行：标签与下面「粉丝／已收录作品／采集记录」共用同一条左边线，
+   状态值紧跟标签，不再被平台徽章推到右侧。 */
+.admin-workspace .original-studio.radar-integrated .radar-source-page #creatorPanel .ctx-facts + .ctx-facts-status {
+  margin-top: 8px;
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page #creatorPanel .creator-profile-actions {
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-start;
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page #creatorPanel .creator-profile-actions .creator-homepage {
+  margin-left: auto;
+}
+.admin-workspace .original-studio.radar-integrated .radar-source-page #creatorPanel .creator-profile-actions .btn.is-on {
+  color: var(--primary);
+  background: var(--primary-light);
+  border-color: transparent;
+}
+/* 当前状态的那个按键保持可见，不用禁用灰把“正在开启／关闭”擦掉。 */
+.admin-workspace .original-studio.radar-integrated .radar-source-page #creatorPanel .creator-profile-actions .btn.is-on:disabled {
+  opacity: 1;
+  cursor: default;
+}
+/* 手机卡片里同一行的按钮是 40px 触控高度，选择器跟随，避免明显比按钮小一圈。 */
+@media (max-width: 650px) {
+  .admin-workspace .original-studio.radar-integrated .radar-source-page #view-creators .creator-capture-scope select {
+    min-height: 40px;
+  }
+}

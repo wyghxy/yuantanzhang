@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">窗台小葱 · 演示案例</title>
+  <desc id="desc">原创几何插画，表现窗台上三个栽种小葱的容器，并非实际观察记录。</desc>
+  <defs><linearGradient id="wall" x2="0" y2="1"><stop stop-color="#edf1eb"/><stop offset="1" stop-color="#d9e2d7"/></linearGradient></defs>
+  <path fill="url(#wall)" d="M0 0h960v540H0z"/>
+  <rect x="120" y="50" width="720" height="300" rx="8" fill="#f7f8ee"/>
+  <path d="M480 50v300M120 205h720" stroke="#c2d0c4" stroke-width="10"/>
+  <path fill="#d3dacb" d="m120 350 720-3 120 75H0z"/><path fill="#bfcabd" d="M0 422h960v118H0z"/>
+  <g fill="#a9b8a5"><ellipse cx="280" cy="438" rx="96" ry="18"/><ellipse cx="486" cy="438" rx="96" ry="18"/><ellipse cx="692" cy="438" rx="96" ry="18"/></g>
+  <g stroke-linecap="round" fill="none"><path d="m273 352-16-139m26 134 18-173m-33 176-42-107" stroke="#588c70" stroke-width="14"/><path d="m478 347 8-194m-1 197-45-156m48 152 44-126" stroke="#4a8062" stroke-width="14"/><path d="m679 350-28-169m34 167 29-157m-24 161 58-114" stroke="#6b9767" stroke-width="14"/></g>
+  <g fill="#c49c7b"><path d="m212 342 20 96h96l20-96z"/><path d="m418 342 20 96h96l20-96z"/><path d="m624 342 20 96h96l20-96z"/></g>
+  <g fill="#d5b496"><rect x="202" y="328" width="156" height="27" rx="5"/><rect x="408" y="328" width="156" height="27" rx="5"/><rect x="614" y="328" width="156" height="27" rx="5"/></g>
+  <g fill="#f5eee4"><rect x="252" y="377" width="56" height="28" rx="4"/><rect x="458" y="377" width="56" height="28" rx="4"/><rect x="664" y="377" width="56" height="28" rx="4"/></g>
+  <g fill="#677e65" text-anchor="middle" font-family="sans-serif" font-size="16"><text x="280" y="397">01</text><text x="486" y="397">04</text><text x="692" y="397">07</text></g>
+  <rect x="36" y="34" width="86" height="32" rx="16" fill="#fff" opacity=".88"/><text x="79" y="56" text-anchor="middle" font-family="sans-serif" font-size="17" fill="#52616c">演示</text>
+</svg>

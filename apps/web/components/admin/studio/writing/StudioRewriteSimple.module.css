@@ -1,0 +1,87 @@
+.content {
+  padding: 20px;
+  color: var(--ui-text);
+  font: 400 16px/1.7 var(--font-radar);
+}
+.section {
+  display: grid;
+  gap: 16px;
+}
+.scope {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ui-text-muted);
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.actions button {
+  min-height: 40px;
+  padding: 8px 10px;
+  border: 1px solid var(--ui-border);
+  border-radius: 6px;
+  color: var(--ui-text);
+  background: var(--ui-surface);
+  font: 400 14px/1.5 var(--font-radar);
+  cursor: pointer;
+}
+.field textarea {
+  display: block;
+  width: 100%;
+  min-height: 110px;
+  padding: 12px;
+  border: 1px solid var(--ui-border-control);
+  border-radius: 8px;
+  color: var(--ui-text);
+  background: var(--ui-surface);
+  font: inherit;
+  resize: vertical;
+}
+.generate {
+  display: inline-flex;
+  justify-self: end;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 6px;
+  color: var(--ui-on-accent);
+  background: var(--ui-accent);
+  font: 500 14px/1.5 var(--font-radar);
+  cursor: pointer;
+}
+.generate:disabled,
+.actions button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.selection {
+  position: relative;
+  font-size: 13px;
+  color: var(--ui-text-muted);
+}
+.selection > button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 6px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.selection p {
+  max-height: 120px;
+  overflow: auto;
+  margin: 10px 0 0;
+  padding-left: 12px;
+  border-left: 2px solid var(--ui-border);
+  white-space: pre-wrap;
+}
+.content :is(button, textarea):focus-visible {
+  outline: 2px solid var(--ui-focus);
+  outline-offset: 3px;
+}

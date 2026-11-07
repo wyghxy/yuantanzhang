@@ -1,0 +1,181 @@
+/* Semantic aliases and geometry only. All palette values remain in ui-theme.css. */
+/* theme-20260912-r1: sole color source for the site and isolated previews. */
+:root {
+  /* User-selected note formatting reuses the shared, theme-aware palette. */
+  --ui-note-ink-red: var(--ui-danger);
+  --ui-note-ink-blue: var(--ui-selected-text);
+  --ui-note-ink-green: var(--ui-success);
+  --ui-note-ink-purple: var(--ui-decor-purple);
+  --ui-note-highlight-yellow: var(--ui-warning-bg);
+  --ui-note-highlight-blue: var(--gp-selected);
+  --ui-note-highlight-green: var(--ui-success-bg);
+  --ui-note-highlight-pink: var(--ui-danger-bg);
+  --ui-note-highlight-text: var(--ui-text);
+  --ui-note-highlight-ink-gray: var(--ui-text-secondary);
+  --ui-note-highlight-ink-red: var(--ui-danger);
+  --ui-note-highlight-ink-blue: var(--ui-selected-text);
+  --ui-note-highlight-ink-green: var(--ui-success);
+  --ui-note-highlight-ink-purple: var(--ui-decor-purple);
+  --gp-page: var(--ui-page);
+  --gp-surface: var(--ui-surface);
+  --gp-sidebar: var(--ui-surface-secondary);
+  --gp-ink: var(--ui-text);
+  --gp-muted: var(--ui-text-muted);
+  --gp-faint: var(--ui-text-secondary);
+  --gp-border: var(--ui-border);
+  --gp-line: var(--ui-border);
+  --gp-hover: var(--ui-nav-hover);
+  --gp-green: var(--ui-success);
+  --gp-green-text: var(--ui-success);
+  --gp-green-soft: var(--ui-success-bg);
+  --gp-orange: var(--ui-warning);
+  --gp-orange-text: var(--ui-warning);
+  --gp-orange-soft: var(--ui-warning-bg);
+  --gp-purple: var(--ui-text-secondary);
+  --gp-overlay: var(--ui-backdrop);
+  --gp-shadow: var(--ui-shadow);
+  --ui-link: var(--ui-accent);
+  --ui-focus: var(--ui-accent);
+  --ui-button-text: var(--ui-text);
+  --ui-card: var(--ui-surface);
+  --ui-sidebar: var(--ui-surface-secondary);
+  --ui-popover: var(--ui-menu);
+  --ui-input-text: var(--ui-text);
+  --ui-input-border: var(--ui-border-control);
+  --ui-editor-bg: var(--ui-content);
+  --ui-editor-text: var(--ui-text);
+  --ui-editor-selection-bg: var(--ui-selection);
+  --ui-editor-selection-text: var(--ui-text);
+  --ui-chart-highlight: var(--ui-accent);
+  --ui-chart-context: var(--ui-text-muted);
+  --ui-radius-control: 8px;
+  --ui-radius-panel: 16px;
+  --ui-motion-control: 200ms;
+  --ui-nav-button-text: var(--ui-nav-active-text);
+  --ui-nav-active-bg: var(--ui-hover);
+  --ui-nav-button-hover: var(--ui-hover);
+  --ui-nav-button-bg: var(--ui-nav-hover);
+  --ui-nav-button-pressed: var(--ui-pressed);
+}
+
+
+
+:root, :root[data-theme="light"] {
+  color-scheme: light;
+  --ui-collaboration-edge: .08;
+  --ui-collaboration-end: 70%;
+  --ui-collaboration-bottom: 32%;
+}
+
+
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ui-collaboration-edge: .04;
+  --ui-collaboration-end: 72%;
+  --ui-collaboration-bottom: 35%;
+}
+
+
+
+/* Approved Radar prototype, 2026-09-23. Scoped to its integrated workspace. */
+.admin-workspace .original-studio.radar-integrated {
+  --ui-radar-library-active-bg: var(--ui-selection);
+  --ui-radar-library-active-text: var(--ui-selected-text);
+}
+
+
+:root[data-theme="dark"] .admin-workspace .original-studio.radar-integrated {
+  --ui-radar-library-active-bg: var(--ui-hover);
+  --ui-radar-library-active-text: var(--ui-text);
+  --ui-radar-library-rule: var(--ui-border);
+  --ui-radar-library-hover-border: var(--ui-border-control);
+  --ui-radar-library-adopt-border: var(--ui-border);
+  --ui-radar-library-adopt-hover: var(--ui-hover);
+}
+
+
+
+/* discussion-islands-adaptation-20261010-r1: isolated neutral surfaces + host blue. */
+[data-component-ui="islands"] {
+  color-scheme: light;
+  --ui-page: hsl(var(--background));
+  --ui-surface: hsl(var(--card));
+  --ui-surface-secondary: hsl(var(--muted));
+  --ui-text: hsl(var(--foreground));
+  --ui-text-secondary: hsl(var(--muted-foreground));
+  --ui-text-muted: hsl(var(--muted-foreground));
+  --ui-border: hsl(var(--border));
+  --ui-accent: hsl(var(--primary));
+  --ui-selection: hsl(var(--primary) / .09);
+  --ui-nav-active-bg: hsl(var(--primary) / .09);
+  --ui-hover: hsl(var(--foreground) / .04);
+  --ui-nav-hover: hsl(var(--foreground) / .04);
+  --ui-card: hsl(var(--card));
+  --ui-menu: hsl(var(--surface-elevated));
+  --ui-input-bg: hsl(var(--background));
+  --ui-border-control: hsl(var(--input));
+  --ui-focus: hsl(var(--primary));
+  --ui-on-accent: hsl(var(--primary-foreground));
+  --ui-on-accent-hover: hsl(var(--primary-foreground));
+  --ui-backdrop: hsl(var(--foreground) / .24);
+  --ui-shadow: var(--islands-shadow-elevated);
+}
+
+[data-component-ui="islands"][data-islands-theme="dark"] { color-scheme: dark; }
+
+/* Equal palette aliases; the sole literal values remain in ui-theme.css. */
+:root {
+  --ui-platform-f2074b6c: var(--auth-eye);
+  --ui-radar-bg: var(--ui-media-stage-bg);
+  --ui-on-image: var(--auth-eye);
+  --ui-image-edge: var(--ui-media-b34d3e79);
+}
+:root, :root[data-theme="light"] {
+  --ui-on-accent: var(--auth-eye);
+  --ui-on-accent-hover: var(--ui-mask-81ef715e);
+}
+:root[data-theme="dark"] {
+  --ui-on-accent: var(--ui-mask-81ef715e);
+  --ui-on-accent-hover: var(--auth-eye);
+}
+.admin-workspace .original-studio.radar-integrated {
+  --ui-radar-library-media: var(--ui-platform-0e684e51);
+  --ui-radar-library-play-text: var(--auth-eye);
+}
+.admin-workspace .original-studio.radar-integrated, .admin-workspace .accounts-native, .admin-workspace .planning-reference {
+  --radar-reference-color-e08de71387: var(--auth-eye);
+  --radar-reference-color-2976aa1e60: var(--ui-media-stage-bg);
+  --radar-reference-color-6db808b183: var(--ui-radar-fog-light);
+  --radar-reference-color-16e6baa9b6: var(--ui-radar-surface);
+  --radar-reference-color-f62328dee8: var(--ui-radar-text);
+  --radar-reference-color-e71a5e90b5: var(--ui-radar-muted);
+  --radar-reference-color-33d35df3d9: var(--ui-radar-signal);
+  --radar-reference-color-586ba53810: var(--ui-radar-amber);
+  --radar-reference-color-85f2d56cfd: var(--ui-radar-purple);
+  --radar-reference-color-6fec928a15: var(--ui-radar-border);
+  --radar-reference-color-b0d21595bf: var(--ui-platform-b0d21595);
+  --radar-reference-color-f2074b6cef: var(--auth-eye);
+  --radar-reference-color-7b2817bf9b: var(--ui-mask-81ef715e);
+  --radar-reference-color-81ef715e34: var(--ui-mask-81ef715e);
+  --radar-reference-color-31b1eecfc4: var(--ui-radar-blue);
+  --radar-reference-color-07ee686b3c: var(--auth-eye);
+  --radar-reference-color-2743f8feb5: var(--ui-radar-fog-light);
+  --radar-reference-color-44c1b9e0cc: var(--ui-radar-signal);
+  --radar-reference-color-e90bd25874: var(--ui-radar-blue);
+  --radar-reference-color-87277c1ce0: var(--ui-radar-coral);
+  --radar-reference-color-ac4dccd1c0: var(--ui-radar-amber);
+  --radar-reference-color-bb958cbf7c: var(--ui-radar-purple);
+  --radar-reference-color-0e684e5160: var(--ui-platform-0e684e51);
+  --radar-reference-color-4702b16c05: var(--ui-platform-4702b16c);
+  --radar-reference-color-5b218e748f: var(--ui-platform-5b218e74);
+  --radar-reference-color-e758364ae5: var(--ui-platform-e758364a);
+  --radar-reference-color-cb2995bdee: var(--ui-platform-cb2995bd);
+  --radar-reference-color-53f6716c5c: var(--ui-platform-53f6716c);
+  --radar-reference-color-3871da3420: var(--ui-platform-3871da34);
+  --radar-reference-color-4b54505300: var(--ui-platform-4b545053);
+  --radar-reference-color-6b3d6d843d: var(--ui-platform-6b3d6d84);
+  --radar-reference-color-2b6ebf2dc3: var(--ui-platform-2b6ebf2d);
+  --radar-reference-color-7672e1d56e: var(--ui-platform-7672e1d5);
+  --radar-reference-color-ba6807e665: var(--ui-platform-ba6807e6);
+}

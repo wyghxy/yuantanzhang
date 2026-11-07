@@ -1,0 +1,215 @@
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.helper {
+  font-size: 11px;
+  line-height: 1.7;
+  color: var(--text-muted);
+  margin: 8px 0;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 500;
+  margin: 0 0 16px;
+  min-width: 0;
+}
+.field :is(input, textarea, select) {
+  width: 100%;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.65;
+  padding: 8px 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+}
+.field textarea {
+  min-height: 65px;
+  resize: vertical;
+}
+.fieldRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.settingSection {
+  padding: 12px;
+  margin: 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.settingSection h3 {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 0 12px;
+}
+.settingSection h3 span {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: 6px;
+}
+.settingsDialog {
+  padding: 0 12px 12px;
+}
+.settingsDialog .settingSection {
+  padding: 12px;
+  border: 0;
+}
+.profileSettings {
+  margin: 0 0 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.profileSettings summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+.profileSettings .field {
+  margin-top: 12px;
+}
+.fullButton {
+  width: 100%;
+  font-size: 12px !important;
+}
+.quickActions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.quickActions button {
+  font-size: 11px !important;
+}
+.selection {
+  background: var(--writing-green-soft);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 7px 9px;
+  margin-bottom: 10px;
+  font-size: 11px;
+  color: var(--writing-green);
+}
+.selection > span {
+  flex: 1;
+}
+.root .selection > button {
+  border: 0;
+  background: transparent;
+  padding: 3px;
+}
+.selection p {
+  flex-basis: 100%;
+  max-height: 80px;
+  overflow: auto;
+  color: var(--text-main);
+  font-size: 12px;
+  white-space: pre-wrap;
+  margin-top: 7px;
+}
+.candidateList {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.root .candidateList button {
+  justify-content: space-between;
+  text-align: left;
+  padding: 9px 10px;
+  white-space: normal;
+}
+.candidateList strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+}
+.candidateList small {
+  display: block;
+  color: var(--text-muted);
+  font-size: 11px;
+  margin-top: 4px;
+}
+.empty,
+.loading {
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  gap: 12px;
+  text-align: center;
+  padding: 35px;
+}
+.empty {
+  display: flex;
+  flex-direction: column;
+  min-height: 180px;
+}
+.loading h2 {
+  font-size: 18px;
+}
+.error,
+.notice {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 8px 24px;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+.notice {
+  background: var(--writing-green-soft);
+  color: var(--writing-green);
+}
+.error {
+  background: var(--ws-danger-soft);
+  color: var(--ws-danger);
+}
+.root .error button,
+.root .notice button {
+  background: transparent;
+  border: 0;
+  color: inherit;
+  padding: 2px;
+}
+.recovery {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px 24px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-subtle);
+  font-size: 12px;
+}
+.recovery > div {
+  flex: 1;
+  min-width: 200px;
+}
+.recovery strong {
+  font-weight: 500;
+}
+.recovery p {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin: 4px 0;
+}
+.inlineWarning {
+  padding: 9px 12px;
+  margin: 5px 0;
+  background: var(--ws-warning-soft);
+  color: var(--ws-warning);
+  font-size: 12px;
+  line-height: 1.8;
+  border-radius: 6px;
+  flex-shrink: 0;
+}

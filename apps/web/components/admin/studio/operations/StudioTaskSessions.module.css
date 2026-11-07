@@ -1,0 +1,36 @@
+.taskSessions:global(#view-tasks) {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 56px);
+  min-height: 0;
+  overflow: hidden !important;
+}
+.taskSessions:global(#view-tasks) > :global(.fullview-head), .taskSessions:global(#view-tasks) > .pagination {
+  flex: 0 0 auto;
+}
+.taskSessions:global(#view-tasks) :global(#sessionTasks) {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  overflow-wrap: anywhere;
+  scrollbar-gutter: stable;
+}
+.taskSessions:global(#view-tasks) :global(.fullview-head) h2 { font-size: 22px; font-weight: 600; }
+.taskSessions:global(#view-tasks) :global(.fullview-head) p { font-size: 14px; line-height: 1.7; color: var(--ui-text-muted); }
+.taskSessions:global(#view-tasks) :global(.btn), .taskSessions:global(#view-tasks) > .pagination button {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 38px; padding: 8px 12px; border: 1px solid var(--ui-border-control);
+  border-radius: 8px; background: var(--ui-button-bg); color: var(--ui-button-text);
+  font-size: 14px; line-height: 20px; white-space: nowrap;
+}
+.taskSessions:global(#view-tasks) :global(.btn):hover, .taskSessions:global(#view-tasks) > .pagination button:hover { background: var(--ui-hover); }
+.taskSessions:global(#view-tasks) .taskRetry { background: var(--ui-accent-fill); color: var(--ui-on-accent); border-color: transparent; font-weight: 600; }
+.taskSessions:global(#view-tasks) .taskRetry:hover { background: var(--ui-accent-fill-hover); color: var(--ui-on-accent-hover); }
+.taskSessions:global(#view-tasks) :global(.btn):disabled, .taskSessions:global(#view-tasks) > .pagination button:disabled { opacity: .55; cursor: not-allowed; }
+.taskSessions:global(#view-tasks) :focus-visible { outline: 2px solid var(--ui-focus); outline-offset: 3px; }
+@media(max-width:767px) { .taskSessions:global(#view-tasks) { height: calc(100% - 32px); padding: 16px !important; } }
+
+.taskSessions:global(#view-tasks), .taskSessions:global(#view-tasks) :is(button,select,strong,h2,p) { font-family: var(--sidebar-font, 'Inter', 'Radar Sans SC', sans-serif); }
+:global(.admin-workspace .original-studio.radar-integrated):has(.taskSessions) { overflow: clip; }
+:global(#appContainer):has(.taskSessions) { display: flow-root; }

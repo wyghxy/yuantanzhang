@@ -1,0 +1,17 @@
+/* New source surfaces must not inherit geometry from the retired Studio UI.
+   Native dialogs and detail views retain their legacy styles until ported. */
+.admin-workspace .original-studio.radar-integrated :is(
+  .radar-source-page, .radar-source-page *, .topbar, .topbar *, .sidebar, .sidebar *, .statusbar, .statusbar *,
+  .workspace-stage, .workspace-stage *, .dino-stats, .dino-stats *, .dino-grid, .dino-grid *
+):not(svg, svg *) { all: revert; }
+
+/* Legacy decoration must be reset as well as its originating element.
+   Unlayered reference rules restore the source UI's own pseudo-elements. */
+.admin-workspace .original-studio.radar-integrated :is(
+  .radar-source-page, .radar-source-page *, .topbar, .topbar *, .sidebar, .sidebar *, .statusbar, .statusbar *,
+  .workspace-stage, .workspace-stage *, .dino-stats, .dino-stats *, .dino-grid, .dino-grid *
+):not(svg, svg *)::before,
+.admin-workspace .original-studio.radar-integrated :is(
+  .radar-source-page, .radar-source-page *, .topbar, .topbar *, .sidebar, .sidebar *, .statusbar, .statusbar *,
+  .workspace-stage, .workspace-stage *, .dino-stats, .dino-stats *, .dino-grid, .dino-grid *
+):not(svg, svg *)::after { all: revert; }

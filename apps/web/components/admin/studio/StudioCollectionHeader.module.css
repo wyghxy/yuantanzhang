@@ -1,0 +1,149 @@
+/* Scope these overrides to the collection header, preserving the upstream CSS. */
+:global(.admin-workspace .original-studio.radar-integrated .radar-source-page) .collection:global(#view-videos) {
+  :global(.fullview-head) {
+    gap: 16px;
+    min-height: 44px;
+    height: auto;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  :global(.library-heading-group) {
+    display: flex;
+    align-items: center;
+    gap: 8px 18px;
+    min-width: 0;
+    flex-wrap: wrap;
+  }
+
+  :global(.library-heading-status:empty) { display: none; }
+
+  :global(.library-heading-status .creator-identity-chip) {
+    align-self: center;
+    font: 400 14px/1.5 var(--sans);
+    color: var(--text-muted);
+    background: transparent;
+    border: 0;
+    padding: 0;
+    white-space: normal;
+  }
+
+  :global(.library-heading-actions) {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    min-width: 0;
+    margin-left: auto;
+    flex-wrap: wrap;
+  }
+
+  :global(.library-heading-actions .library-reset),
+  :global(.library-heading-actions .library-refresh) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 40px;
+    min-height: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    background: var(--bg-panel);
+    color: var(--text-main);
+    font: 400 14px var(--sans);
+    white-space: nowrap;
+  }
+
+  :global(.library-heading-actions .library-refresh) {
+    padding-inline: 16px;
+    background: var(--bg-subtle);
+    border-color: var(--border-strong);
+    font-weight: 500;
+  }
+
+  :global(.library-heading-actions button:hover:not(:disabled)),
+  :global(.library-heading-actions button[aria-pressed=true]) {
+    background: var(--bg-subtle);
+    border-color: var(--border-strong);
+  }
+
+  :global(.library-heading-actions button:disabled) { opacity: .5; cursor: not-allowed; }
+
+  :global(.library-filter-bar) {
+    display: flex;
+    gap: 12px;
+    padding-bottom: 16px;
+    align-items: center;
+    min-width: 0;
+  }
+
+  :global(.library-filter-search) {
+    flex: 0 1 340px;
+    width: 340px;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    outline: 0;
+    box-shadow: none;
+  }
+
+  :global(.library-filter-bar input),
+  :global(.library-filter-bar select) {
+    height: 40px;
+    min-height: 40px;
+    margin: 0;
+    padding-block: 0;
+    font: 400 14px var(--sans);
+    line-height: normal;
+    box-shadow: none;
+  }
+
+  :global(.library-filter-bar input:focus),
+  :global(.library-filter-bar select:focus) { box-shadow: none; }
+
+  :global(.library-search-field svg) { top: 50%; transform: translateY(-50%); }
+
+  :global(.library-filter-options) {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-template-columns: none;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 960px) {
+  :global(.admin-workspace .original-studio.radar-integrated .radar-source-page) .collection:global(#view-videos) {
+    :global(.library-heading-actions) { margin-left: 0; justify-content: flex-start; }
+
+    :global(.library-heading-actions .library-reset),
+    :global(.library-heading-actions .library-refresh) { min-height: 44px; height: 44px; }
+
+    :global(.library-filter-bar) { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
+    :global(.library-filter-search) { width: 100%; grid-column: auto; }
+    :global(.library-filter-bar input),
+    :global(.library-filter-bar select) { height: 44px; min-height: 44px; font-size: 16px; }
+
+    :global(.library-filter-options) { display: none; grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    &:global(.library-filters-open) :global(.library-filter-options) { display: grid; }
+  }
+}
+
+@media (max-width: 820px) {
+  :global(.admin-workspace .original-studio.radar-integrated .radar-source-page) .collection:global(#view-videos.library-detail-open) :global(.library-filter-bar) { display: none; }
+}
+
+/* The upstream legacy layer has a mobile display:flex!important. Keep its
+   priority local to this screen so an unopened detail cannot consume the list. */
+@layer radar-legacy {
+  @media (max-width: 820px) {
+    :global(.admin-workspace .original-studio.radar-integrated .radar-source-page) .collection:global(#view-videos:not(.library-detail-open)) :global(.library-context-panel) {
+      display: none !important;
+    }
+  }
+}

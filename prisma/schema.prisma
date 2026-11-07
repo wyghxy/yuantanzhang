@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+model PersonalUser {
+  id String @id @default(uuid())
+  singleton Int @unique @default(1)
+  username String @unique
+  passwordHash String
+  workspace Workspace?
+  sessions LoginSession[]
+}
+model Workspace {
+  id String @id @default(uuid())
+  ownerId String @unique
+  owner PersonalUser @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  name String @default("我的工作台")
+  preferences Json @default("{}")
+  preferenceVersion Int @default(1)
+  demoInitialized Boolean @default(false)
+  records StudioRecord[]
+  files StudioFile[]
+}
+model LoginSession {
+  digest String @id
+  ownerId String
+  owner PersonalUser @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  @@index([ownerId])
+}
+model StudioRecord {
+  id String @id @default(uuid())
+  workspaceId String
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  kind String
+  data Json
+  version Int @default(1)
+  sample Boolean @default(false)
+  deletedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  versions RecordVersion[]
+  files StudioFile[]
+  @@index([workspaceId, kind, deletedAt, updatedAt])
+}
+model RecordVersion {
+  id String @id @default(uuid())
+  recordId String
+  record StudioRecord @relation(fields: [recordId], references: [id], onDelete: Cascade)
+  version Int
+  data Json
+  deleted Boolean @default(false)
+  createdAt DateTime @default(now())
+  @@unique([recordId,version])
+}
+model StudioFile {
+  id String @id @default(uuid())
+  workspaceId String
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  recordId String
+  name String
+  record StudioRecord @relation(fields:[recordId],references:[id],onDelete:Cascade)
+  mediaType String
+  size Int
+  createdAt DateTime @default(now())
+  @@index([workspaceId,recordId])
+}

@@ -1,0 +1,12 @@
+{
+  "family": "Noto Sans SC",
+  "license": "SIL Open Font License 1.1",
+  "licenseFile": "NotoSansSC-OFL.txt",
+  "source": "https://github.com/google/fonts/blob/main/ofl/notosanssc/NotoSansSC%5Bwght%5D.ttf",
+  "sourceGitBlobSha1": "fb0637bafbcd804fe32152370a1225990745b4bc",
+  "sourceSha256": "a3041811a78c361b1de50f953c805e0244951c21c5bd412f7232ef0d899af0da",
+  "conversion": "fonttools 4.66.1, brotli 1.2.0, recalcTimestamp=False, full cmap retained",
+  "outputSha256": "aef8c34277afad81ecd0227138a830263c0caea65b7aea66d1195395f097b55a",
+  "outputBytes": 7782072,
+  "cmapEntries": 30890
+}

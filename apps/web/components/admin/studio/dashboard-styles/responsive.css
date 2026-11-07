@@ -1,0 +1,67 @@
+@keyframes sweep { to { rotate: 360deg; } }
+@keyframes signal-hit { 0%,8%,100% { scale: 1; } 1% { scale: 1.5; } 3% { scale: 1.25; } }
+@media (min-width: 1800px) {
+  .viewport { padding: 28px 40px !important; }
+  .intro { grid-template-columns: fit-content(36%) minmax(0,1fr) 280px; gap: 32px; min-height: 164px; padding: 24px 32px 28px; }
+  .introIdentity { gap: 20px; } .emblem { width: 56px; height: 56px; border-radius: 18px; }
+  .introIdentity h1 { font-size: 32px; line-height: 42px; } .introIdentity p { font-size: 20px; line-height: 32px; }
+  .quote { padding-inline: 32px; min-height: 108px; } .quoteLabel { font-size: 18px; } .quoteBody { font-size: 26px; line-height: 40px; }
+  .hero { grid-template-columns: 250px minmax(0,1.08fr) minmax(0,1fr); gap: 40px; padding: 32px; min-height: 350px; }
+  .hero h2 { font-size: 24px; } .radar { width: 224px; } .radarPoint { font-size: 14px !important; }
+  .radarCaption { font-size: 16px; } .radarCaption strong { font-size: 28px; }
+  .total strong { font-size: 72px; } .total span, .ready { font-size: 16px; }
+  .compute strong { font-size: 30px; } .compute > div > span { font-size: 16px; }
+  .periods button { font-size: 15px; min-height: 40px; } .sourceRow { font-size: 16px !important; min-height: 42px; }
+  .sourceTotal strong { font-size: 38px; } .sourceTotal > span { font-size: 15px; }
+  .stats > button { min-height: 132px; padding: 22px 28px; } .statValue strong { font-size: 36px; } .statValue > span { font-size: 18px; }
+  .statNote, .panelHeading p { font-size: 16px; } .panel { padding: 28px; } .panelHeading h2 { font-size: 24px; }
+  .materialCopy strong, .topicRow strong { font-size: 18px; } .materialCopy > span, .topicMeta { font-size: 15px; }
+}
+@media (max-width: 1599px) {
+  .hero { grid-template-columns: 220px minmax(0,1fr); gap: 28px; }
+  .distribution { grid-column: 1/-1; display: grid; grid-template-columns: 220px minmax(0,1fr); gap: 28px; border-left: 0; border-top: 1px solid var(--ui-radar-border); padding: 24px 0 0; }
+  .sourceHeading { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .sourceRow { grid-template-columns: 22px 96px minmax(60px,1fr) 40px; }
+}
+@media (max-width: 1439px) {
+  .contentGrid { grid-template-columns: 1fr; }
+  .intro { grid-template-columns: minmax(260px,1fr) minmax(200px,1fr) 184px; gap: 16px; padding-inline: 22px; }
+  .introIdentity h1 { font-size: 24px; } .introIdentity p { font-size: 15px; } .quote { padding-inline: 16px; } .quoteBody { font-size: 18px; }
+  .stats > button { padding: 18px; }
+}
+@media (max-width: 1199px) {
+  .viewport { padding: 24px !important; } .intro { grid-template-columns: minmax(0,1fr) 168px; padding: 20px; }
+  .quote { grid-column: 1/-1; grid-row: 2; flex-direction: row; gap: 14px; border-left: 0; border-top: 1px solid var(--ui-separator); padding: 12px 0 0; }
+  .quoteLabel { white-space: nowrap; font-size: 14px; } .quoteBody { font-size: 18px; }
+  .stats { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 767px) {
+  .viewport { padding: 16px !important; } .dashboard { gap: 16px; }
+  .intro { grid-template-columns: minmax(0,1fr); padding: 18px 16px; gap: 16px; border-radius: 22px 22px 0 0; }
+  .introIdentity { gap: 12px; } .introIdentity h1 { font-size: 22px; } .emblem { width: 44px; height: 44px; border-radius: 14px; }
+  .introIdentity p { font-size: 15px; } .quote { grid-row: auto; flex-direction: column; gap: 4px; padding-top: 12px; } .quoteBody { font-size: 17px; }
+  .quoteBody > :first-child, .quoteBody > :last-child { font-size: 22px; }
+  .hero { grid-template-columns: minmax(0,1fr); padding: 22px 18px; gap: 24px; border-radius: 22px; }
+  .radar { width: 188px; } .radarColumn { gap: 10px; } .assets { width: 100%; } .assetHeading { margin-bottom: 12px; }
+  .total { gap: 12px; } .total strong { font-size: 44px; } .total span { font-size: 13px; }
+  .compute { padding: 14px 0; margin-top: 18px; border-radius: 12px; } .compute > div { padding: 0 10px; }
+  .compute > div > div { gap: 5px; } .compute svg { width: 16px; flex: 0 0 auto; } .compute strong { font-size: 21px; }
+  .compute > div > span { font-size: 12px; gap: 4px; }
+  .distribution { grid-template-columns: minmax(0,1fr); gap: 8px; padding-top: 20px; }
+  .sourceHeading { flex-direction: row; align-items: center; gap: 10px; } .hero h2 { font-size: 18px; }
+  .periods button { padding: 6px 8px; font-size: 12px; } .sourceRow { grid-template-columns: 20px 72px minmax(40px,1fr) 32px; gap: 8px; }
+  .sourceTotal { margin: 10px 0 4px !important; }
+  .stats { gap: 12px; } .stats > button { min-height: 110px; padding: 14px; grid-template-columns: 32px minmax(0,1fr); gap: 8px; border-radius: 16px; }
+  .statIcon { width: 32px; height: 32px; border-radius: 10px; } .statIcon svg { width: 20px; }
+  .statValue strong { font-size: 26px; } .statValue > span { font-size: 14px; } .statNote { font-size: 12px; } .statArrow { top: 12px; right: 10px; width: 13px; }
+  .contentGrid { gap: 16px; } .panel { padding: 18px 16px; border-radius: 16px; } .panelHeading { gap: 10px; }
+  .panelHeading h2 { font-size: 18px; } .panelHeading p { font-size: 13px; } .textButton { font-size: 13px !important; gap: 4px; }
+  .tabs { gap: 4px; } .tabs button { padding: 8px 10px; font-size: 13px; }
+  .thumbnail { width: 76px; height: 54px; } .materialMain { gap: 12px; } .materialCopy strong { font-size: 15px; } .materialCopy > span { font-size: 12px; }
+  .reason, .readButton { margin-left: 88px; } .search { max-width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .radarSweep, .radarPoint .signal { animation: none !important; }
+  .dashboard * { transition: none !important; }
+}
+.ideaActions { display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap; }

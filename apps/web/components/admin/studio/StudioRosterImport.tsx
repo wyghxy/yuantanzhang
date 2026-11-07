@@ -1,0 +1,55 @@
+'use client'
+import { useStudioPrivacy } from './StudioPrivacy'
+import { useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
+import { api, object, text, errorText, type RecordData } from './studio-client'
+import { Field } from './StudioUI'
+import { studioDateTime } from './studio-operations-utils'
+import type { StudioRosterRow } from '@/lib/studio-roster-import'
+
+type Source = { id: number; version: number; title: string; sourceType: string; bindings: { connectionId: number; displayName: string; remoteId: string; fields: string[] }[] }
+const storageKey = 'yuantanzhang-studio-roster-preview'
+const controls = { display: 'flex', flexWrap: 'wrap', gap: 8 } as const
+const muted = { color: 'var(--text-muted)', fontSize: 12, lineHeight: 1.7 } as const
+export default function StudioRosterImport({ onAccounts, notify }: { onAccounts: () => void; notify: (value: string) => void }) {
+  const operation = useRef(false)
+  const { creatorName } = useStudioPrivacy()
+  const [sources, setSources] = useState<Source[]>([]), [total, setTotal] = useState(0), [offset, setOffset] = useState(0), [query, setQuery] = useState(''), [loadedKey, setLoadedKey] = useState('')
+  const [mode, setMode] = useState('body_lines'), [selected, setSelected] = useState<Record<number, { documentId: number; documentVersion: number; connectionId?: number }>>({})
+  const [mapping, setMapping] = useState<Record<string, string>>({ urlField: '', nameField: '', notesField: '', strategyField: '' }), [fieldNames, setFieldNames] = useState<string[]>([])
+  const [enabled, setEnabled] = useState(false), [strategy, setStrategy] = useState('default'), [notes, setNotes] = useState(''), [busy, setBusy] = useState(false), [error, setError] = useState(''), [preview, setPreview] = useState<RecordData | null>(null), [rowKeys, setRowKeys] = useState<string[]>([])
+  const requestKey = JSON.stringify([query, offset]), loading = loadedKey !== requestKey
+  useEffect(() => {
+    const controller = new AbortController(), timer = setTimeout(() => {
+      void api(`roster-imports/sources?${new URLSearchParams({ q: query, offset: String(offset) })}`, 'GET', undefined, controller.signal).then(data => { if (!controller.signal.aborted) { setSources(data.items as Source[]); setTotal(Number(data.total)); setError('') } }).catch(error => { if (!controller.signal.aborted) setError(errorText(error)) }).finally(() => { if (!controller.signal.aborted) setLoadedKey(requestKey) })
+    }, 180)
+    return () => { clearTimeout(timer); controller.abort() }
+  }, [query, offset, requestKey])
+  useEffect(() => {
+    const controller = new AbortController(), id = sessionStorage.getItem(storageKey)
+    if (id) void api(`roster-imports/${encodeURIComponent(id)}`, 'GET', undefined, controller.signal).then(data => { if (!controller.signal.aborted) { const value = object(data.preview); setPreview(value); setRowKeys(Array.isArray(value.rowKeys) ? value.rowKeys as string[] : (value.rows as StudioRosterRow[]).filter(row => row.status !== 'failure').map(row => row.key)) } }).catch(() => { if (!controller.signal.aborted) sessionStorage.removeItem(storageKey) })
+    return () => controller.abort()
+  }, [])
+  async function run(action: () => Promise<void>) { if (operation.current) return; operation.current = true; setBusy(true); setError(''); try { await action() } catch (error) { setError(errorText(error)) } finally { operation.current = false; setBusy(false) } }
+  function choose(source: Source, checked: boolean, connectionId?: number) {
+    setSelected(old => { const next = { ...old }; if (checked) next[source.id] = { documentId: source.id, documentVersion: source.version, ...(connectionId ? { connectionId } : {}) }; else delete next[source.id]; return next })
+    const fields = source.bindings.find(binding => binding.connectionId === connectionId)?.fields || []
+    setFieldNames(old => [...new Set([...old, ...fields])])
+  }
+  const rows = preview?.rows as StudioRosterRow[] | undefined, results = (preview?.results || []) as { rowKey: string; status: string; accountId: string | null; error: string | null }[]
+  return <div><p style={muted}>只读取你选择且已保存在本站的知识条目或表格字段。确认后写入本站对标库，默认暂停跟踪；不会自动读取外部平台、展开短链或采集作品。</p>
+    {error && <p role="alert" style={{ color: 'var(--danger)', fontSize: 13 }}>{error}</p>}
+    {preview ? <><div style={controls}><strong>{({ preview_ready: '待确认名单', running: '正在保存', completed: '名单保存完成', needs_attention: '部分行需重试' } as Record<string, string>)[text(preview.status)] || '名单预览'}</strong><span style={muted}>{studioDateTime(preview.createdAt)}</span></div><p style={muted}>{text(object(preview.summary).ready, '0')} 行可添加 · {text(object(preview.summary).duplicate, '0')} 行重复 · {text(object(preview.summary).failure, '0')} 行有误。每条错误与来源都保留在预览中。</p>
+      {rows?.map(row => { const result = results.find(result => result.rowKey === row.key); return <article key={row.key} style={{ borderBottom: '1px solid var(--border-subtle)', padding: '10px 0' }}><label style={{ display: 'flex', alignItems: 'start', gap: 8 }}><input type="checkbox" disabled={busy || row.status === 'failure' || preview.status !== 'preview_ready'} checked={rowKeys.includes(row.key)} onChange={event => setRowKeys(old => event.target.checked ? [...old, row.key] : old.filter(key => key !== row.key))} /><span><strong>{row.account ? creatorName(row.account.name) : row.originalInput || '空字段'}</strong><span style={{ display: 'block', ...muted, overflowWrap: 'anywhere' }}>{row.originalInput}</span></span></label><p style={muted}>来源：{row.sourceTitle} · v{row.documentVersion} · 第 {row.line} 行{row.requiresResolution ? ' · 短链尚未展开，保存为待识别订阅' : ''}</p><p style={muted}>{result ? ({ success: '已新增', duplicate: '已有账号，未覆盖', failure: '保存失败' } as Record<string, string>)[result.status] : row.status === 'ready' ? '等待确认后新增' : row.status === 'duplicate' ? `重复记录 ${row.existingAccountId || row.duplicateOf}` : row.error?.message}{result?.error ? ` · ${result.error}` : ''}{result?.accountId ? ` · 账号 ${result.accountId}` : ''}</p>{row.account && <p style={muted}>策略 {text(row.account.strategy)} · {row.account.enabled ? '跟踪开启' : '暂停跟踪'}{row.account.notes ? ` · 备注 ${text(row.account.notes)}` : ''}</p>}</article> })}
+      <div style={{ ...controls, marginTop: 16 }}><button className="btn ghost" disabled={busy} onClick={() => void run(async () => setPreview(object((await api(`roster-imports/${encodeURIComponent(text(preview.id))}`)).preview)))}>读取最新回执</button>{(preview.status === 'preview_ready' || preview.canRetry === true) && <button className="btn btn-emerald" disabled={busy || !rowKeys.length} onClick={() => void run(async () => { const result = await api(`roster-imports/${encodeURIComponent(text(preview.id))}/confirm`, 'POST', { expectedVersion: preview.version, confirmed: true, rowKeys }); setPreview(object(result.preview)); notify('名单处理结果已保存，请核对逐行回执') })}>{preview.canRetry === true ? '继续保存未完成行' : `确认添加选中 ${rowKeys.length} 行`}</button>}<button className="btn ghost" disabled={busy || preview.status === 'running' && preview.canRetry !== true} onClick={() => { setPreview(null); setRowKeys([]); sessionStorage.removeItem(storageKey) }}>选择另一份名单</button><button className="btn ghost" onClick={onAccounts}>查看对标博主库</button></div>
+    </> : <>
+      <Field label="名单格式"><select disabled={busy} value={mode} onChange={event => { setMode(event.target.value); setSelected({}); setFieldNames([]) }}><option value="body_lines">知识正文，每行一个主页链接</option><option value="fields">已同步的飞书表格字段</option></select></Field>
+      <Field label="搜索本站知识条目"><input value={query} onChange={event => { setQuery(event.target.value); setOffset(0) }} placeholder="输入名单标题" /></Field>
+      {loading ? <p role="status" style={muted}>正在读取已保存来源…</p> : sources.length ? sources.map(source => <div key={source.id} style={{ padding: '8px 0', borderBottom: '1px solid var(--border-subtle)' }}><label style={{ display: 'flex', gap: 8, alignItems: 'center' }}><input type="checkbox" disabled={busy || mode === 'fields' && !source.bindings.length} checked={!!selected[source.id]} onChange={event => choose(source, event.target.checked, mode === 'fields' ? source.bindings[0]?.connectionId : undefined)} /><span>{source.title} <small style={muted}>v{source.version} · {source.sourceType}</small></span></label>{mode === 'fields' && source.bindings.length > 0 && <select aria-label={`${source.title}使用的表格记录`} disabled={busy || !selected[source.id]} value={selected[source.id]?.connectionId || source.bindings[0].connectionId} onChange={event => choose(source, true, Number(event.target.value))}>{source.bindings.map(binding => <option value={binding.connectionId} key={binding.connectionId}>{binding.displayName} · {binding.remoteId}</option>)}</select>}{mode === 'fields' && !source.bindings.length && <small style={muted}>此条目没有已选择表格记录的本地快照</small>}</div>) : <p style={muted}>没有匹配的本站知识条目。可在连接管理中添加逐行名单后导入。</p>}
+      <div style={{ ...controls, margin: '12px 0' }}><button className="btn ghost" disabled={busy || !offset} onClick={() => setOffset(old => Math.max(0, old - 40))}>上一页</button><span style={muted}>{total} 份来源 · 已选 {Object.keys(selected).length} 份</span><button className="btn ghost" disabled={busy || offset + 40 >= total} onClick={() => setOffset(old => old + 40)}>下一页</button></div>
+      {mode === 'fields' && [['urlField', '主页链接字段（必选）'], ['nameField', '账号名称字段（可选）'], ['notesField', '备注字段（可选）'], ['strategyField', '采集策略字段（可选）']].map(([key, label]) => <Field key={key} label={label}><select value={mapping[key]} disabled={busy} onChange={event => setMapping(old => ({ ...old, [key]: event.target.value }))}><option value="">{key === 'urlField' ? '请选择字段' : '不映射'}</option>{fieldNames.map(field => <option value={field} key={field}>{field}</option>)}</select></Field>)}
+      <Field label="默认采集策略"><select value={strategy} disabled={busy} onChange={event => setStrategy(event.target.value)}><option value="default">默认完整素材</option><option value="metadata">仅作品信息和指标</option><option value="media">完整素材与转写</option></select></Field><Field label="默认备注"><textarea value={notes} disabled={busy} maxLength={2000} onChange={event => setNotes(event.target.value)} /></Field><label style={{ ...controls, marginBottom: 14 }}><input type="checkbox" checked={enabled} disabled={busy} onChange={event => setEnabled(event.target.checked)} />添加后启用跟踪（此操作本身不采集）</label>
+      <div style={controls}><button className="btn btn-emerald" disabled={busy || !Object.keys(selected).length || mode === 'fields' && !mapping.urlField} onClick={() => void run(async () => { const result = await api('roster-imports/preview', 'POST', { sources: Object.values(selected), mapping: mode === 'fields' ? { mode, ...mapping } : { mode }, defaults: { enabled, strategy, notes } }), value = object(result.preview); setPreview(value); setRowKeys((value.rows as StudioRosterRow[]).filter(row => row.status !== 'failure').map(row => row.key)); sessionStorage.setItem(storageKey, text(value.id)) })}>预览字段映射与逐行结果</button><Link className="btn ghost" href="/workspace/knowledge?tab=connections">知识沉淀连接管理</Link></div>
+    </>}
+  </div>
+}

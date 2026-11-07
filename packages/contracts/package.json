@@ -1,0 +1,90 @@
+{
+  "name": "@ytz/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "exports": {
+    "./creation-page": {
+      "types": "./src/creation-page.ts",
+      "default": "./src/creation-page.ts"
+    },
+    "./creation-time": {
+      "types": "./src/creation-time.ts",
+      "default": "./src/creation-time.ts"
+    },
+    "./creation-types": {
+      "types": "./src/creation-types.ts",
+      "default": "./src/creation-types.ts"
+    },
+    "./creation-validation": {
+      "types": "./src/creation-validation.ts",
+      "default": "./src/creation-validation.ts"
+    },
+    "./http-error": {
+      "types": "./src/http-error.ts",
+      "default": "./src/http-error.ts"
+    },
+    "./intelligence-opportunities": {
+      "types": "./src/intelligence-opportunities.ts",
+      "default": "./src/intelligence-opportunities.ts"
+    },
+    "./knowledge-catalog": {
+      "types": "./src/knowledge-catalog.ts",
+      "default": "./src/knowledge-catalog.ts"
+    },
+    "./native-studio-provenance": {
+      "types": "./src/native-studio-provenance.ts",
+      "default": "./src/native-studio-provenance.ts"
+    },
+    "./station-handoff-provenance": {
+      "types": "./src/station-handoff-provenance.ts",
+      "default": "./src/station-handoff-provenance.ts"
+    },
+    "./studio-assistant": {
+      "types": "./src/studio-assistant.ts",
+      "default": "./src/studio-assistant.ts"
+    },
+    "./studio-material-notes": {
+      "types": "./src/studio-material-notes.ts",
+      "default": "./src/studio-material-notes.ts"
+    },
+    "./studio-note-document": {
+      "types": "./src/studio-note-document.ts",
+      "default": "./src/studio-note-document.ts"
+    },
+    "./studio-original-publication": {
+      "types": "./src/studio-original-publication.ts",
+      "default": "./src/studio-original-publication.ts"
+    },
+    "./studio-playback": {
+      "types": "./src/studio-playback.ts",
+      "default": "./src/studio-playback.ts"
+    },
+    "./studio-radar": {
+      "types": "./src/studio-radar.ts",
+      "default": "./src/studio-radar.ts"
+    },
+    "./studio-roster-import": {
+      "types": "./src/studio-roster-import.ts",
+      "default": "./src/studio-roster-import.ts"
+    },
+    "./studio-source-tools": {
+      "types": "./src/studio-source-tools.ts",
+      "default": "./src/studio-source-tools.ts"
+    },
+    "./writing-domain": {
+      "types": "./src/writing-domain.ts",
+      "default": "./src/writing-domain.ts"
+    },
+    "./writing-snapshot": {
+      "types": "./src/writing-snapshot.ts",
+      "default": "./src/writing-snapshot.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc --noEmit",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.6"
+  }
+}
