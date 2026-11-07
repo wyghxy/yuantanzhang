@@ -3,32 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>元探长</title>
+  <meta name="description" content="元探长开源个人工作台：在同一处整理素材、研究对标、沉淀选题和编辑稿件。选择本机个人版或官方在线版。">
+  <title>元探长 · 开始使用</title>
   <style>
-    :root{color-scheme:light dark;--bg:#f4f6f8;--panel:#fff;--text:#202932;--muted:#687681;--border:#e0e6eb;--accent:#1766cf}
-    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif}main{max-width:940px;margin:0 auto;padding:70px 28px 40px}.brand{display:flex;align-items:center;gap:12px;font-size:19px;font-weight:700}.brand img{width:38px;height:38px;border-radius:10px}h1{font-size:36px;line-height:1.4;letter-spacing:-1px;margin:46px 0 8px}.intro{color:var(--muted);margin:0 0 30px}.choices{display:grid;grid-template-columns:1fr 1fr;gap:20px}.choice{padding:30px;background:var(--panel);border:1px solid var(--border);border-radius:18px;display:flex;flex-direction:column;min-height:260px}.tag{color:var(--accent);font-size:12px;font-weight:600}h2{font-size:24px;margin:10px 0}.choice p{color:var(--muted);margin:0 0 24px}.button{align-self:flex-start;margin-top:auto;padding:10px 20px;background:var(--accent);border:1px solid var(--accent);color:#fff;border-radius:9px;text-decoration:none;font-weight:600}.button.secondary{background:transparent;color:var(--accent);border-color:var(--border)}.note{display:block;color:var(--muted);font-size:12px;margin-top:12px}footer{display:flex;gap:22px;flex-wrap:wrap;margin-top:26px;font-size:13px;color:var(--muted)}footer a{color:inherit;text-underline-offset:3px}a:focus-visible{outline:3px solid var(--accent);outline-offset:4px}@media(max-width:640px){main{padding:32px 20px}.choices{grid-template-columns:1fr}h1{font-size:28px;margin-top:32px}.choice{padding:24px;min-height:240px}}@media(prefers-color-scheme:dark){:root{--bg:#15191d;--panel:#1d2329;--text:#edf0f3;--muted:#9ca9b4;--border:#343f48;--accent:#7cb4ff}.button{background:#236bc4;color:#fff;border-color:#236bc4}}
+    :root{color-scheme:light dark;--bg:#f5f7fa;--panel:#fff;--text:#172b43;--muted:#607187;--border:#dce4ed;--accent:#086cff;--soft:#edf4ff}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.75 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif}main{max-width:1184px;margin:auto;padding:40px 32px 28px}a{color:var(--accent);text-underline-offset:4px}nav{display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:12px;font-size:21px;font-weight:750;white-space:nowrap}.brand img{width:38px;height:38px;border-radius:10px}.nav-links{display:flex;gap:22px;font-size:14px}.nav-links a{color:var(--muted);text-decoration:none}.hero{padding:64px 0 34px}.eyebrow{color:var(--accent);font-size:13px;font-weight:650;letter-spacing:1px}h1{font-size:clamp(29px,4.3vw,50px);line-height:1.3;letter-spacing:-1.5px;margin:16px 0 20px;max-width:1000px}h1 span{display:block}.intro{color:var(--muted);max-width:750px;margin:0}.choices{display:grid;grid-template-columns:1fr 1fr;gap:20px;scroll-margin-top:24px}.choice{padding:28px;background:var(--panel);border:1px solid var(--border);border-radius:16px;display:flex;flex-direction:column;min-height:290px}.choice.official{border-color:var(--accent)}.tag{color:var(--accent);font-size:12px;font-weight:650}h2{font-size:27px;line-height:1.4;letter-spacing:-.4px;margin:10px 0 12px}.choice p{color:var(--muted);margin:0 0 24px}.button{align-self:flex-start;margin-top:auto;padding:11px 22px;background:var(--accent);border:1px solid var(--accent);color:#fff;border-radius:9px;text-decoration:none;font-weight:650;font-size:15px}.button.secondary{background:transparent;color:var(--accent);border-color:var(--border)}.note{display:block;color:var(--muted);font-size:12px;margin-top:12px}.product{margin-top:68px;scroll-margin-top:24px}.section-intro{color:var(--muted);margin:0 0 22px}.screenshot{margin:0;background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden}.screenshot img{display:block;width:100%;height:auto}.screenshot figcaption{padding:12px 18px;border-top:1px solid var(--border);font-size:13px;color:var(--muted)}.features{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;list-style:none;margin:30px 0 0;padding:0}.features li{border-top:2px solid var(--border);padding-top:16px;color:var(--muted);font-size:14px}.features strong{display:block;color:var(--text);font-size:16px;margin-bottom:7px}.about{margin:64px 0 0;padding:32px 0;border-top:1px solid var(--border)}.about p{max-width:940px;color:var(--muted);margin:12px 0}.about details{margin-top:24px;padding:20px 24px;background:var(--panel);border:1px solid var(--border);border-radius:12px}.about summary{cursor:pointer;font-weight:650;min-height:32px}.scope{padding-left:20px;color:var(--muted);font-size:14px}.scope li{margin:10px 0}footer{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid var(--border);padding-top:22px;font-size:13px;color:var(--muted)}footer div{display:flex;gap:22px;flex-wrap:wrap}footer a{color:inherit}a:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:5px}a:hover{text-decoration:underline}@media(max-width:800px){.features{grid-template-columns:1fr 1fr}.hero{padding-top:46px}}@media(max-width:640px){main{padding:24px 20px}.nav-links{gap:14px;font-size:12px}.brand{font-size:18px;gap:9px}.brand img{width:32px;height:32px}.hero{padding:38px 0 28px}h1{letter-spacing:-1px}.intro{font-size:15px}.choices{grid-template-columns:1fr}.choice{padding:24px;min-height:290px}h2{font-size:23px}.features{gap:22px 18px}.features li{font-size:13px}.features strong{font-size:15px}.product{margin-top:46px}.about{margin-top:42px;padding-top:24px}.about details{padding:18px}.screenshot figcaption{font-size:12px;padding:10px 12px}}@media(prefers-color-scheme:dark){:root{--bg:#101820;--panel:#17232f;--text:#eef4fb;--muted:#a6b8cb;--border:#304253;--accent:#81b8ff;--soft:#1c3450}.button{background:#206dd4;color:#fff;border-color:#206dd4}.button.secondary{background:transparent;color:var(--accent);border-color:var(--border)}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
   </style>
 </head>
 <body>
   <main>
-    <div class="brand"><img src="apps/web/public/demo/brand-mark.svg" alt="">元探长</div>
-    <h1>选一种方式，开始创作。</h1>
-    <p class="intro">使用自己的本机工作台，或直接进入官方在线版。</p>
-    <div class="choices">
+    <nav aria-label="项目入口"><div class="brand"><img src="apps/web/public/demo/brand-mark.svg" alt="">元探长</div><div class="nav-links"><a href="#workflow">看看界面</a><a href="https://github.com/wyghxy/yuantanzhang">GitHub ↗</a></div></nav>
+    <header class="hero">
+      <span class="eyebrow">MIT 开源 · 本机优先</span>
+      <h1><span>把收集、研究和创作，</span><span>放进一个工作台。</span></h1>
+      <p class="intro">面向内容创作者，将素材、对标研究、选题和稿件连在一起。用自己的工作区持续积累，也可以直接选择由元探长维护的官方在线服务。</p>
+    </header>
+    <div class="choices" id="start">
       <section class="choice" aria-labelledby="personal-title">
-        <span class="tag">本机运行</span><h2 id="personal-title">个人版</h2>
-        <p>默认免登录，稿件与素材保存在自己的电脑。需要先在本机安装并启动项目。</p>
+        <span class="tag">源码开放 · 自己掌握</span><h2 id="personal-title">个人版</h2>
+        <p>在自己的电脑运行，默认免登录，数据保存在本机。四个核心模块、编辑器与可点击案例一起提供。</p>
         <a class="button secondary" href="http://127.0.0.1:3310/workspace/viral">打开本机个人版</a>
-        <small class="note">首次运行方式见下载包中的 README.md。</small>
+        <small class="note">先安装 Node.js、pnpm，并按 README 初始化与启动。本页用于选择入口。</small>
       </section>
-      <section class="choice" aria-labelledby="official-title">
-        <span class="tag">无需本地部署</span><h2 id="official-title">官方在线版</h2>
-        <p>由元探长提供在线工作台和服务，直接在浏览器中使用。</p>
+      <section class="choice official" aria-labelledby="official-title">
+        <span class="tag">在线服务 · 省去本地部署</span><h2 id="official-title">官方在线版</h2>
+        <p>直接进入元探长网站，由官方维护运行环境和在线服务，使用网站账号开始创作。</p>
         <a class="button" href="https://yuantanzhang.cn/workspace/viral">立即使用官方在线版 ↗</a>
-        <small class="note">在线版使用网站账号，服务与使用条件以官网为准。</small>
+        <small class="note">线上账号、数据与本机实例独立；服务范围和使用条件以官网为准。</small>
       </section>
     </div>
-    <footer><a href="https://yuantanzhang.cn/">元探长官网</a><a href="https://github.com/wyghxy/yuantanzhang">GitHub 开源仓库</a><span>Copyright © 2026 元探长</span></footer>
+    <section class="product" id="workflow" aria-labelledby="workflow-title">
+      <span class="eyebrow">从素材到成稿</span><h2 id="workflow-title">让收集的内容，接得上下一篇稿件。</h2>
+      <p class="section-intro">在同一个工作台保留来源、对标、选题和写作关系，减少来回翻找素材。</p>
+      <figure class="screenshot"><a href="docs/screenshots/creation.png"><img src="docs/screenshots/creation.png" alt="元探长创作中心：左侧选题库，右侧情报流，展示可点击的演示案例" width="1440" height="900" loading="lazy"></a><figcaption>真实运行界面 · 创作中心的选题库与情报流。图中为可打开、编辑的虚构演示案例。</figcaption></figure>
+      <ul class="features">
+        <li><strong>情报中心</strong>查看已有素材的概览和来源分布，找到值得继续研究的内容。</li>
+        <li><strong>创作中心</strong>把素材关联到选题和稿件，边参考原文、已有拆解和笔记，边编辑正文。</li>
+        <li><strong>对标中心</strong>整理博主资料、平台身份和关联作品，让后续研究保留上下文。</li>
+        <li><strong>采集库</strong>收录原文与本地文件，检索、筛选、做笔记，也能连接自己运行的采集程序。</li>
+      </ul>
+    </section>
+    <section class="about" aria-labelledby="origin-title">
+      <span class="eyebrow">为什么分享这个项目</span><h2 id="origin-title">从服务器版，到你自己的工作台。</h2>
+      <p>元探长原版面向服务器部署与在线运营。我们将开发过程中积累的四个核心模块，整理为适合本机运行的个人版，开放其前端、后端、数据结构、演示案例与开发文档，方便你直接使用，也方便按自己的需求继续修改。</p>
+      <p>个人版已经适配 SQLite 与本地任务，不要求另装 PostgreSQL、Redis 或 Docker。按 README 启动后，可以管理内容和编辑稿件；需要自动抓取、生成或转写时，再接入自己的程序或处理服务。</p>
+      <details><summary>查看开源范围与服务边界</summary><ul class="scope"><li>四个模块的页面、子页面、编辑与绑定入口，以及本仓库对应的个人业务代码和本地存储一并开放。</li><li>官方商业运营账号管理体系、付费接口及其接入实现由线上版单独维护，不包含在这个个人版中。第三方服务的使用权限、账号凭据和官方持续运行资源不随源码包提供。</li><li>通用本机采集接入口已经提供；具体平台抓取程序及其定时运行由使用者自行实现和启动。演示内容不代表实际平台采集结果。</li><li>项目自有代码采用标准 MIT，允许修改、分发和商用，分发时保留版权声明与许可文本。</li></ul></details>
+    </section>
+    <footer><div><a href="https://yuantanzhang.cn/">元探长官网</a><a href="https://github.com/wyghxy/yuantanzhang/blob/main/README.md">安装与项目说明</a><a href="https://github.com/wyghxy/yuantanzhang/blob/main/LICENSE">MIT 许可证</a></div><span>Copyright © 2026 元探长</span></footer>
   </main>
 </body>
 </html>
